@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""Write the README's third-party table from skill-registry.json and licenses.json.
+
+Every upstream skill gets a row linking the original at the commit it was copied from,
+so the table can only say what is vendored. `--check` exits non-zero when the README
+is out of date, which is how the test suite keeps it honest.
+"""
+
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "lib" / "python"))
+
+from dotkit import ui
+
+README = ROOT / "README.md"
+START = "<!-- attribution:start -->"
+END = "<!-- attribution:end -->"
+
+
+def skill_name(entry):
+    if entry.get("name"):
+        return entry["name"]
+    return Path(entry["upstream_path"].rstrip("/")).name
+
+
+def skill_url(repo, commit, upstream_path):
+    path = upstream_path.strip("/")
+    base = f"https://github.com/{repo}/tree/{commit}"
+    return base if path in ("", ".") else f"{base}/{path}"
+
+
+def license_cell(info):
+    label = info.get("license") or "No license"
+    cell = f"[{label}]({info['file']})" if info.get("file") else label
+    if info.get("notice"):
+        cell += f", [NOTICE]({info['notice']})"
+    return cell
+
+
+def render(registry, licenses):
+    rows = []
+    for key, source in registry["upstream"].items():
+        repo = key.rstrip("/")
+        info = licenses["upstream"][repo]
+        for entry in source["skills"]:
+            url = skill_url(repo, source["commit"], entry["upstream_path"])
+            rows.append((repo.lower(), skill_name(entry), repo, url, license_cell(info)))
+
+    lines = [
+        START,
+        "",
+        "| Skill | Source | License |",
+        "|---|---|---|",
+    ]
+    for _, name, repo, url, cell in sorted(rows):
+        lines.append(f"| [`{name}`]({url}) | [{repo}](https://github.com/{repo}) | {cell} |")
+
+    notes = [(repo, info["note"]) for repo, info in licenses["upstream"].items() if info.get("note")]
+    if notes:
+        lines += ["", "Notes on individual sources:", ""]
+        lines += [f"- [{repo}](https://github.com/{repo}): {note}" for repo, note in sorted(notes, key=lambda n: n[0].lower())]
+
+    lines += [
+        "",
+        "Written here, but distilled from third-party material, so they carry its license:",
+        "",
+        "| Skill | Derived from | License |",
+        "|---|---|---|",
+    ]
+    for name, info in sorted(licenses["derived"].items()):
+        lines.append(f"| `{name}` | [{info['source']}]({info['url']}) | [{info['license']}]({info['license_url']}) |")
+    lines += ["", END]
+    return "\n".join(lines)
+
+
+def updated_readme():
+    registry = json.loads((ROOT / "skill-registry.json").read_text())
+    licenses = json.loads((ROOT / "licenses.json").read_text())
+    missing = sorted(repo.rstrip("/") for repo in registry["upstream"] if repo.rstrip("/") not in licenses["upstream"])
+    if missing:
+        raise SystemExit(f"licenses.json has no entry for: {', '.join(missing)}")
+    text = README.read_text()
+    head, _, rest = text.partition(START)
+    _, _, tail = rest.partition(END)
+    return head + render(registry, licenses) + tail
+
+
+def main(argv):
+    check = "--check" in argv
+    current = README.read_text()
+    if START not in current or END not in current:
+        ui.err(f"{README.name} has no {START} ... {END} block")
+        return 1
+    wanted = updated_readme()
+    if wanted == current:
+        ui.ok("Attribution table is current")
+        return 0
+    if check:
+        ui.err("Attribution table is stale; run `make attribution`")
+        return 1
+    README.write_text(wanted)
+    ui.ok("Rewrote the attribution table")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
