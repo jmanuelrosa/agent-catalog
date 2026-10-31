@@ -100,6 +100,11 @@ def check_text(label, text):
         fail(f"{label} contains an em/en dash; use a hyphen, comma, colon, or parentheses", EXIT_BLOCKED)
 
 
+def is_deletion(path):
+    """Gone from the working tree but tracked at HEAD, so committing it can only remove it."""
+    return not os.path.lexists(path) and git("cat-file", "-e", f"HEAD:{path}").returncode == 0
+
+
 def check_path(label, path):
     if TASKS_PATH_RE.search(path):
         fail(f"{label}: {path} is local-only agent state (.claude/tasks/) and must never be committed", EXIT_BLOCKED)
@@ -120,7 +125,8 @@ def validate_commits(commits):
             fail(f"commit {i}: header exceeds {HEADER_MAX} chars: {header!r}", EXIT_BLOCKED)
         check_text(f"commit {i} message", message)
         for path in files:
-            check_path(f"commit {i}", path)
+            if not is_deletion(path):
+                check_path(f"commit {i}", path)
 
 
 def branch_exists(name):
@@ -208,8 +214,8 @@ def commit_all(commits):
         print(f"[{i}/{len(commits)}] {commit['message'].splitlines()[0]}")
 
 
-def changed_files(base_ref):
-    proc = git("diff", "--name-only", "-z", f"{base_ref}...HEAD")
+def changed_files(base_ref, *flags):
+    proc = git("diff", "--name-only", "-z", *flags, f"{base_ref}...HEAD")
     return [path for path in proc.stdout.split("\0") if path] if proc.returncode == 0 else []
 
 
@@ -362,7 +368,8 @@ def main():
     files = changed_files(base_ref)
     if not files:
         fail(f"{branch} has no changes against {base_ref}, nothing to ship", EXIT_BLOCKED)
-    for path in files:
+    # A deleted file takes nothing onto the branch, whatever its name says.
+    for path in changed_files(base_ref, "--diff-filter=d"):
         check_path("branch", path)
     derived = CONTEXT.derive_title(branch, files)
     title = derived["title"]

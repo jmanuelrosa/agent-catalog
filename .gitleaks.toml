@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Skill documentation with illustrative (non-real) credentials"
+paths = [
+  '''skills/playwright(-best-practices)?/advanced/authentication-flows\.md''',
+]
