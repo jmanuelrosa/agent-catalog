@@ -28,6 +28,34 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  sast:
+    name: SAST (Bearer)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run Bearer
+        uses: bearer/bearer-action@828eeb928ce2f4a7ca5ed57fb8b59508cb8c79bc # v2
+        with:
+          version: v2.1.3
+          diff: ${{ github.event_name == 'pull_request' }}
+          format: sarif
+          output: bearer.sarif
+
+      - name: Upload Bearer results to code scanning
+        if: always() && hashFiles('bearer.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          sarif_file: bearer.sarif
+          category: bearer
+
   test:
     name: Python Tests
     runs-on: macos-latest
