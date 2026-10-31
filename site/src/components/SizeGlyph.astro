@@ -1,0 +1,87 @@
+---
+import type { Size } from '../lib/usecases';
+
+interface Props {
+  size: Size;
+  scale?: 'small' | 'large';
+}
+
+const { size, scale = 'small' } = Astro.props;
+
+type Tile = 'know' | 'seat' | 'gate';
+const seatWithChecklist: Tile[] = ['seat', 'know', 'know', 'know'];
+const blocks: Record<Size, Tile[][]> = {
+  skill: [['know']],
+  agent: [['seat']],
+  bundle: [seatWithChecklist],
+  pipeline: [seatWithChecklist, ['gate'], seatWithChecklist, seatWithChecklist],
+};
+---
+
+<span class:list={['glyph', size, scale]} aria-hidden="true">
+  {
+    blocks[size].map((block) => (
+      <span class:list={['block', { single: block.length === 1 }]}>
+        {block.map((tile) => (
+          <i class={tile} />
+        ))}
+      </span>
+    ))
+  }
+</span>
+
+<style>
+  .glyph {
+    --tile: 0.55rem;
+    --gap: 2px;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: calc(var(--gap) * 2);
+    flex-shrink: 0;
+  }
+
+  .glyph.large {
+    --tile: 1.1rem;
+    --gap: 3px;
+  }
+
+  .block {
+    display: grid;
+    grid-template-columns: repeat(2, var(--tile));
+    gap: var(--gap);
+  }
+
+  .block.single {
+    grid-template-columns: var(--tile);
+  }
+
+  i {
+    display: block;
+    width: var(--tile);
+    height: var(--tile);
+    border-radius: var(--radius-tile);
+  }
+
+  .know {
+    background: var(--ai);
+  }
+
+  .seat {
+    background: var(--slate);
+  }
+
+  .glyph.agent {
+    padding: 4px;
+  }
+
+  .agent .seat {
+    outline: 1.5px solid var(--slate);
+    outline-offset: 2px;
+  }
+
+  .gate {
+    width: calc(var(--tile) / 2);
+    height: calc(var(--tile) * 2 + var(--gap));
+    background: var(--ochre);
+  }
+</style>
