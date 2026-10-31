@@ -11,7 +11,7 @@ It is the catalog [kura](https://github.com/jmanuelrosa/kura) projects into each
 | `agents/` | Standalone agents, one Markdown file each |
 | `bundles/` | Seat and product bundles: an agent plus the skills it owns, described by `bundle.json` |
 | `skill-registry.json`, `agent-registry.json`, `bundle-registry.json` | What each artifact is, where it comes from, its groups and dependencies |
-| `lib/python/dotkit/` | The output module the catalog's own scripts print through |
+| `lib/python/dotkit/` | The output module the catalog's own scripts print through, vendored from [dotkit](https://github.com/jmanuelrosa/dotkit) and pinned in `dotkit.json` |
 | `licenses.json`, `LICENSES/` | The license of every third-party source, and its text |
 | `docs/` | How the registries, seat bundles and the product-team pipeline work |
 
