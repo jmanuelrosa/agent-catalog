@@ -385,6 +385,30 @@ def test_secrets_and_agent_state_are_refused(stubs, repo, tmp_path, path):
     assert execute(stubs, repo, plan).returncode == apply_ship.EXIT_BLOCKED
 
 
+def test_deleting_a_file_named_like_a_secret_ships(stubs, repo, tmp_path):
+    write(repo, "docs/credentials.md")
+    commit(repo, "docs: add credentials guide")
+    git_out(repo, "update-ref", "refs/remotes/origin/main", "main")
+    git_out(repo, "switch", "-q", "-c", "chore/a")
+    (repo / "docs/credentials.md").unlink()
+    plan = plan_file(tmp_path, {"action": "keep"}, [{"files": ["docs/credentials.md"], "message": "chore: drop guide"}])
+
+    result = execute(stubs, repo, plan)
+
+    assert result.returncode == apply_ship.EXIT_OK, result.stderr
+    assert subjects(repo, 1) == ["chore: drop guide"]
+
+
+def test_a_branch_that_adds_a_secret_is_refused_on_resume(stubs, repo, tmp_path):
+    git_out(repo, "switch", "-q", "-c", "fix/a")
+    write(repo, "config/credentials.yml")
+    commit(repo, "fix: a")
+    plan = plan_file(tmp_path, {"action": "keep"}, [])
+
+    assert execute(stubs, repo, plan, "--from", "push").returncode == apply_ship.EXIT_BLOCKED
+    assert pushes(stubs) == []
+
+
 def test_an_existing_branch_name_is_refused(stubs, repo, tmp_path):
     git_out(repo, "branch", "fix/a")
     write(repo, "a.ts")
