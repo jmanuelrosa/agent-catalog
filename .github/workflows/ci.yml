@@ -49,6 +49,10 @@ jobs:
           format: sarif
           output: bearer.sarif
 
+      - name: Replace the null results Bearer writes when it finds nothing
+        if: always() && hashFiles('bearer.sarif') != ''
+        run: jq '.runs |= map(.results //= [])' bearer.sarif > bearer.fixed.sarif && mv bearer.fixed.sarif bearer.sarif
+
       - name: Upload Bearer results to code scanning
         if: always() && hashFiles('bearer.sarif') != ''
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
