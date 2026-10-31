@@ -1,0 +1,158 @@
+---
+import { stats } from '../lib/catalog';
+---
+
+<figure class="kura">
+  <div class="col">
+    <h4>The catalog</h4>
+    <p>One git repository you own.</p>
+    <ul>
+      <li>{stats.skills} skills as folders of Markdown</li>
+      <li>{stats.agents} agents in {stats.bundles} bundles and <code>agents/</code></li>
+      <li><code>skill-registry.json</code> pins every upstream source to a commit</li>
+    </ul>
+  </div>
+  <div class="link" aria-hidden="true"><span></span></div>
+  <div class="col engine">
+    <h4>kura</h4>
+    <p>Decides what each place should see, and links it there.</p>
+    <ul>
+      <li><code>sync</code> for what every repo gets</li>
+      <li><code>add</code>, <code>scout</code> for one project</li>
+      <li><code>doctor</code>, <code>restore</code> when links drift</li>
+      <li><code>update</code> to pull upstream</li>
+    </ul>
+  </div>
+  <div class="link" aria-hidden="true"><span></span></div>
+  <div class="col views">
+    <h4>Native views</h4>
+    <p>Plain symlinks each harness already knows how to read.</p>
+    <div class="view">
+      <strong>Claude Code</strong>
+      <code>.claude/skills/</code>
+      <code>.claude/agents/</code>
+    </div>
+    <div class="view">
+      <strong>Pi</strong>
+      <code>.agents/skills/</code>
+      <code>.pi/agents/</code>
+    </div>
+    <div class="view">
+      <strong>Every repo on the machine</strong>
+      <code>~/.claude/skills/</code>
+      <code>~/.agents/skills/</code>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .kura {
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 2.5rem minmax(0, 1fr) 2.5rem minmax(0, 1.1fr);
+    align-items: stretch;
+  }
+
+  .col {
+    padding: 1.2rem 1.3rem;
+    color: var(--sumi);
+    background: var(--grout);
+    border: 1px solid var(--rule);
+    font-size: var(--step--1);
+  }
+
+  .col h4 {
+    margin-bottom: 0.2rem;
+  }
+
+  .col p {
+    color: var(--sumi-soft);
+    margin-bottom: 0.8rem;
+  }
+
+  .col ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .col li + li {
+    margin-top: 0.3rem;
+  }
+
+  .engine {
+    background: var(--ai);
+    color: var(--grout);
+    border-color: var(--ai);
+  }
+
+  .engine h4 {
+    font-size: var(--step-3);
+    font-weight: 800;
+  }
+
+  .engine p {
+    color: #dfe5ef;
+  }
+
+  .engine code {
+    background: var(--ai-ink);
+    color: #e2c47f;
+  }
+
+  .view {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .view code {
+    justify-self: start;
+  }
+
+  .link {
+    display: grid;
+    place-items: center;
+  }
+
+  .link span {
+    width: 100%;
+    height: 2px;
+    background: #7f8c91;
+    position: relative;
+  }
+
+  .link span::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left: 7px solid #7f8c91;
+    border-right: none;
+  }
+
+  @media (max-width: 900px) {
+    .kura {
+      grid-template-columns: 1fr;
+    }
+
+    .link {
+      height: 2rem;
+    }
+
+    .link span {
+      width: 2px;
+      height: 100%;
+    }
+
+    .link span::after {
+      right: -4px;
+      top: auto;
+      bottom: -1px;
+      border: 5px solid transparent;
+      border-top: 7px solid #7f8c91;
+      border-bottom: none;
+    }
+  }
+</style>

@@ -1,0 +1,367 @@
+---
+import Base from '../layouts/Base.astro';
+import { agents, bundles, firstSentence, skills, stats } from '../lib/catalog';
+import { links, upstreamUrl } from '../lib/site';
+
+const groupCounts = new Map<string, number>();
+for (const skill of skills) for (const group of skill.groups) groupCounts.set(group, (groupCounts.get(group) ?? 0) + 1);
+const groups = [...groupCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+
+<Base
+  title="Catalog | Agent Catalog"
+  description={`Browse all ${stats.skills} skills, ${stats.agents} agents and ${stats.bundles} bundles, with where each one came from.`}
+>
+  <div class="wrap page">
+    <header class="intro">
+      <h1>The catalog</h1>
+      <p class="lede">
+        Every skill, agent and bundle, generated from the catalog's own registries at build time. Indigo means written here;
+        ochre means it came from an open-source repository, linked at the commit it was copied from.
+      </p>
+    </header>
+
+    <form class="filters" role="search" data-filters hidden>
+      <label class="search">
+        <span>Find a skill</span>
+        <input type="search" name="q" placeholder="vite, review, terraform…" autocomplete="off" />
+      </label>
+      <label>
+        <span>Topic</span>
+        <select name="group">
+          <option value="">All topics</option>
+          {groups.map(([group, count]) => <option value={group}>{group} ({count})</option>)}
+        </select>
+      </label>
+      <fieldset>
+        <legend>Origin</legend>
+        <label><input type="radio" name="origin" value="" checked /> All</label>
+        <label><input type="radio" name="origin" value="local" /> Written here</label>
+        <label><input type="radio" name="origin" value="upstream" /> Upstream</label>
+      </fieldset>
+      <p class="count" aria-live="polite" data-count>{stats.skills} skills</p>
+    </form>
+
+    <section aria-labelledby="skills-h">
+      <h2 id="skills-h" class="visually-hidden">Skills</h2>
+      <ul class="skills" data-skills>
+        {
+          skills.map((skill) => (
+            <li
+              id={skill.bundle ? `${skill.bundle}-${skill.name}` : skill.name}
+              class={skill.provenance}
+              data-text={`${skill.name} ${skill.description} ${skill.source ?? ''}`.toLowerCase()}
+              data-groups={skill.groups.join('|')}
+              data-origin={skill.provenance}
+            >
+              <h3>
+                <code>{skill.name}</code>
+              </h3>
+              <p>{firstSentence(skill.description)}</p>
+              <p class="meta">
+                {skill.source && skill.commit ? (
+                  <a class="chip upstream" href={upstreamUrl(skill.source, skill.commit)}>
+                    {skill.source}
+                  </a>
+                ) : (
+                  <span class="chip local">written here</span>
+                )}
+                {skill.bundle && <span class="chip">in the {skill.bundle} bundle</span>}
+                {skill.global && <span class="chip">every repo</span>}
+                {skill.dependencyOnly && <span class="chip">only through {skill.usedBy.join(', ')}</span>}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="empty" data-empty hidden>No skill matches. Try a shorter word, or clear the topic.</p>
+    </section>
+
+    <section aria-labelledby="bundles-h" class="block">
+      <h2 id="bundles-h">Bundles</h2>
+      <table>
+        <thead><tr><th>Bundle</th><th>Agents</th><th>Skills</th><th>Also installs</th></tr></thead>
+        <tbody>
+          {
+            bundles.map((bundle) => (
+              <tr id={`bundle-${bundle.name}`}>
+                <td><code>{bundle.name}</code></td>
+                <td>{bundle.agents.join(', ')}</td>
+                <td>{bundle.skills.join(', ')}</td>
+                <td>{bundle.requires.join(', ') || 'nothing'}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="agents-h" class="block">
+      <h2 id="agents-h">Agents</h2>
+      <ul class="agents">
+        {
+          agents.map((agent) => (
+            <li id={`agent-${agent.name}`}>
+              <code>{agent.name}</code>
+              <span>{firstSentence(agent.description)}</span>
+              <small>{agent.bundle ? `${agent.bundle} bundle` : 'standalone, every repo'}</small>
+            </li>
+          ))
+        }
+      </ul>
+      <p>Each entry is a Markdown file in the <a href={links.catalog}>catalog repository</a>; open it to read the full instructions.</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-filters]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-skills] > li')];
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  if (form && count && empty) {
+    form.hidden = false;
+    const apply = () => {
+      const data = new FormData(form);
+      const query = String(data.get('q') ?? '').trim().toLowerCase();
+      const group = String(data.get('group') ?? '');
+      const origin = String(data.get('origin') ?? '');
+      let shown = 0;
+      for (const item of items) {
+        const visible =
+          (!query || (item.dataset.text ?? '').includes(query)) &&
+          (!group || (item.dataset.groups ?? '').split('|').includes(group)) &&
+          (!origin || item.dataset.origin === origin);
+        item.hidden = !visible;
+        if (visible) shown++;
+      }
+      count.textContent = `${shown} of ${items.length} skills`;
+      empty.hidden = shown > 0;
+    };
+    form.addEventListener('input', apply);
+    form.addEventListener('submit', (event) => event.preventDefault());
+  }
+</script>
+
+<style>
+  .page {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .intro {
+    max-width: 48rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .intro .lede {
+    margin-top: 1.25rem;
+  }
+
+  .filters {
+    position: sticky;
+    top: 4rem;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem 1.5rem;
+    padding: 1rem 0;
+    background: var(--plaster);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.5rem;
+  }
+
+  .filters label > span,
+  legend {
+    display: block;
+    font-size: var(--step--1);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .search {
+    flex: 1 1 18rem;
+  }
+
+  input[type='search'],
+  select {
+    font: inherit;
+    font-size: var(--step--1);
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-panel);
+    background: var(--grout);
+    color: var(--sumi);
+  }
+
+  input[type='search']:focus,
+  select:focus {
+    border-color: var(--ai);
+  }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    font-size: var(--step--1);
+  }
+
+  legend {
+    width: 100%;
+    float: left;
+  }
+
+  .count {
+    margin: 0 0 0.5rem auto;
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+  }
+
+  .skills {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+
+  .skills li {
+    padding: 1.1rem 1.2rem 1rem 1.35rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    scroll-margin-top: 10rem;
+  }
+
+  .skills li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.1rem;
+    bottom: 1rem;
+    width: 3px;
+    background: var(--ai);
+  }
+
+  .skills li.upstream::before {
+    background: var(--ochre);
+  }
+
+  .skills li:target {
+    background: var(--grout);
+    outline: 2px solid var(--ai);
+    outline-offset: -2px;
+  }
+
+  .skills li[hidden] {
+    display: none;
+  }
+
+  .skills h3 {
+    font-family: var(--font-code);
+    font-size: var(--step-0);
+    font-weight: 400;
+    margin-bottom: 0.35rem;
+  }
+
+  .skills h3 code {
+    background: none;
+    padding: 0;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .skills p {
+    font-size: var(--step--1);
+    margin-bottom: 0.6rem;
+    color: var(--sumi-soft);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+  }
+
+  .meta a.chip {
+    text-decoration: none;
+  }
+
+  .meta a.chip:hover {
+    text-decoration: underline;
+  }
+
+  .empty {
+    padding: 2rem 0;
+  }
+
+  .block {
+    margin-top: 5rem;
+  }
+
+  .block h2 {
+    font-size: var(--step-3);
+    margin-bottom: 1.25rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    display: block;
+    overflow-x: auto;
+  }
+
+  th {
+    text-align: left;
+    border-bottom: 2px solid var(--sumi);
+    padding: 0.5rem 1rem 0.5rem 0;
+  }
+
+  td {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.6rem 1rem 0.6rem 0;
+    vertical-align: top;
+  }
+
+  .agents {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .agents li {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 11rem);
+    gap: 0.25rem 1.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--step--1);
+  }
+
+  .agents code {
+    background: none;
+    padding: 0;
+    color: var(--ai-ink);
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  .agents small {
+    color: var(--sumi-soft);
+  }
+
+  @media (max-width: 760px) {
+    .agents li {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
