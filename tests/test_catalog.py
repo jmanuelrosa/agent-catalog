@@ -1,6 +1,7 @@
 """The catalog is consistent with its registries, its licenses and its own README."""
 
 import configparser
+import hashlib
 import json
 import subprocess
 import sys
@@ -100,6 +101,18 @@ def test_every_dotkit_link_resolves_to_the_catalog_copy():
     for link in links:
         assert not link.readlink().is_absolute(), f"{link.relative_to(ROOT)} must be relative"
         assert link.resolve() == real.resolve(), f"{link.relative_to(ROOT)} -> {link.resolve()}"
+
+
+DOTKIT_LOCK = json.loads((ROOT / "dotkit.json").read_text())
+
+
+@pytest.mark.parametrize("name", sorted(DOTKIT_LOCK["files"]))
+def test_the_vendored_dotkit_copy_is_unedited(name):
+    """ui.py and colors.py are copies from the dotkit repository. Change them there and
+    run its `bin/dotkit-vendor` against this checkout, so every consumer gets the edit."""
+    copy = ROOT / DOTKIT_LOCK["target"] / name
+    actual = hashlib.sha256(copy.read_bytes()).hexdigest()
+    assert actual == DOTKIT_LOCK["files"][name], f"{copy.relative_to(ROOT)} differs from dotkit {DOTKIT_LOCK['rev'][:12]}"
 
 
 def suite_roots():
