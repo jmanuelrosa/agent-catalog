@@ -1,0 +1,169 @@
+---
+import SizeGlyph from './SizeGlyph.astro';
+import { ladder } from '../lib/usecases';
+
+interface Props {
+  mode?: 'link' | 'filter';
+}
+
+const { mode = 'link' } = Astro.props;
+const casesPage = '/docs/use-cases/';
+---
+
+<div class:list={['ladder', mode]}>
+  <p class="axis" aria-hidden="true"><span>Smaller job</span><span>Bigger job</span></p>
+  <ul class="rungs" role="list" data-ladder>
+    {
+      ladder.map((rung) => {
+        const body = (
+          <Fragment>
+            <span class="mark">
+              <SizeGlyph size={rung.size} scale="large" />
+            </span>
+            <span class="when">{rung.when}</span>
+            <span class="add">{rung.add}</span>
+            <span class="means">{rung.means}</span>
+            <code class="example">{rung.example}</code>
+          </Fragment>
+        );
+        return (
+          <li>
+            {mode === 'link' ? (
+              <a class="rung" href={`${casesPage}?size=${rung.size}`}>
+                {body}
+              </a>
+            ) : (
+              <button class="rung" type="button" data-size={rung.size} aria-pressed="false">
+                {body}
+              </button>
+            )}
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>
+
+<style>
+  .ladder {
+    margin-block: 1.5rem 2rem;
+  }
+
+  .axis {
+    display: flex;
+    justify-content: space-between;
+    max-width: none;
+    margin: 0 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1.5px solid var(--sumi);
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+    position: relative;
+  }
+
+  .axis::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    bottom: -5px;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid var(--sumi);
+    border-right: 1.5px solid var(--sumi);
+    transform: rotate(45deg);
+  }
+
+  .ladder .rungs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .ladder .rungs > li {
+    display: flex;
+    margin: 0;
+  }
+
+  .rung {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 1rem 1rem 1.1rem;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-panel);
+    background: transparent;
+    color: var(--sumi);
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+  }
+
+  .rung:hover {
+    border-color: var(--rule);
+    background: var(--grout);
+    color: var(--sumi);
+  }
+
+  .filter .rung {
+    cursor: pointer;
+  }
+
+  .rung[aria-pressed='true'] {
+    border-color: var(--sumi);
+    background: var(--grout);
+  }
+
+  .mark {
+    display: flex;
+    align-items: flex-end;
+    height: 3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .when {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .add {
+    font-weight: 700;
+    color: var(--ai-ink);
+  }
+
+  .means {
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--sumi-soft);
+  }
+
+  .example {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+  }
+
+  @media (max-width: 760px) {
+    .ladder .rungs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 460px) {
+    .ladder .rungs {
+      grid-template-columns: 1fr;
+    }
+
+    .axis {
+      display: none;
+    }
+  }
+</style>

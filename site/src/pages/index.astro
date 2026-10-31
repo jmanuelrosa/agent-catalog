@@ -6,10 +6,13 @@ import LoadingDiagram from '../components/LoadingDiagram.astro';
 import PipelineDiagram from '../components/PipelineDiagram.astro';
 import KuraDiagram from '../components/KuraDiagram.astro';
 import Playbooks from '../components/Playbooks.astro';
+import SizeLadder from '../components/SizeLadder.astro';
+import ProfileLanes from '../components/ProfileLanes.astro';
 import Terminal from '../components/Terminal.astro';
 import { bundles, sources, stats } from '../lib/catalog';
 import { scope } from '../lib/seats';
 import { links } from '../lib/site';
+import { caseCount } from '../lib/usecases';
 
 const topSources = sources.slice(0, 8);
 const remainingSources = sources.length - topSources.length;
@@ -93,38 +96,30 @@ const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
     <LoadingDiagram />
   </Section>
 
-  <Section id="parts" question="Skills, agents, bundles: which is which?">
-    <dl class="parts">
-      <div>
-        <dt>Skill</dt>
-        <dd>
-          Know-how the agent loads into its own head when the task matches: how to configure Vite, how to review a diff,
-          what to check before calling a form done. <a href="/catalog/">{stats.skills} of them</a>.
-        </dd>
-      </div>
-      <div>
-        <dt>Agent</dt>
-        <dd>
-          A specialist your agent hands work to. It gets its own fresh context, its own tools and its own rules, and
-          returns a report. The architect writes specs; the code-reviewer cannot edit, by design.
-        </dd>
-      </div>
-      <div>
-        <dt>Bundle</dt>
-        <dd>
-          A staff-engineer seat packaged with the checklists it is held to. Add <code>frontend</code> and you get a
-          frontend specialist and eight failure-mode checklists from accessibility to routing.
-        </dd>
-      </div>
-      <div>
-        <dt>Harness</dt>
-        <dd>
-          The program that runs the model and reads these files: Claude Code or Pi. Skills are plain Markdown, so the
-          knowledge travels; kura handles the wiring for each.
-        </dd>
-      </div>
-    </dl>
-    <p><a href="/docs/concepts/">Read the concepts page</a> for the anatomy of each, with real files.</p>
+  <Section id="parts" question="Skills, agents, bundles: which one do I need?">
+    <Fragment slot="aside">
+      <p>Pick a size to see the jobs that need it, with the exact commands.</p>
+    </Fragment>
+    <p class="lede">
+      The size of the job decides. Most work needs one skill; a whole pipeline is for the few changes that cross layers.
+    </p>
+    <SizeLadder />
+    <p>
+      All of it runs inside your harness, the program that runs the model: Claude Code or Pi. Skills are plain Markdown, so
+      the knowledge travels, and kura handles the wiring for each. <a href="/docs/concepts/">Read the concepts page</a> for
+      the anatomy of each, with real files.
+    </p>
+  </Section>
+
+  <Section id="who" question="Who uses it, and where do they come in?" tone="deep">
+    <Fragment slot="aside">
+      <p>Gold cells are gates: a person decides there, and nothing moves on until they do.</p>
+    </Fragment>
+    <p class="lede">
+      Product managers shape the work, engineers build it, and stakeholders decide at the gates. Each one reaches for a
+      different part of the catalog.
+    </p>
+    <ProfileLanes />
   </Section>
 
   <Section id="seats" question="Who is on the team?" tone="dark">
@@ -169,7 +164,9 @@ const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
       <p>Pick the situation closest to yours. Each one is the commands you type and what runs because of them.</p>
     </Fragment>
     <Playbooks />
-    <p class="more"><a href="/docs/playbooks/">All playbooks, with the reasoning behind each step</a>.</p>
+    <p class="more">
+      <a href="/docs/playbooks/">All playbooks, with the reasoning behind each step</a>, or <a href="/docs/use-cases/">browse {caseCount} use cases by size</a>.
+    </p>
   </Section>
 
   <Section id="kura" question="Why kura?" tone="dark">
@@ -561,39 +558,6 @@ const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
   .pm strong {
     color: var(--grout);
   }
-  .parts {
-    margin: 0 0 2rem;
-    display: grid;
-    gap: 0;
-  }
-
-  .parts > div {
-    display: grid;
-    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
-    gap: 1.5rem;
-    padding-block: 1.3rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .parts dt {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  .parts dd {
-    margin: 0;
-    max-width: var(--measure);
-  }
-
-  @media (max-width: 560px) {
-    .parts > div {
-      grid-template-columns: 1fr;
-      gap: 0.4rem;
-    }
-  }
-
   .more {
     margin-top: 1.75rem;
   }
