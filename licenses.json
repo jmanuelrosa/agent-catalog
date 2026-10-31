@@ -1,0 +1,171 @@
+{
+  "upstream": {
+    "addyosmani/agent-skills": {
+      "license": "MIT",
+      "file": "LICENSES/addyosmani-agent-skills.txt"
+    },
+    "antfu/skills": {
+      "license": "MIT",
+      "file": "LICENSES/antfu-skills.txt"
+    },
+    "anthropics/claude-plugins-official": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/anthropics-claude-plugins-official.txt"
+    },
+    "apollographql/skills": {
+      "license": "MIT",
+      "file": "LICENSES/apollographql-skills.txt"
+    },
+    "astrolicious/agent-skills": {
+      "license": "MIT",
+      "file": null,
+      "note": "MIT per the skill frontmatter only; no license file upstream."
+    },
+    "avdlee/swift-concurrency-agent-skill": {
+      "license": "MIT",
+      "file": "LICENSES/avdlee-swift-concurrency-agent-skill.txt"
+    },
+    "avdlee/swift-testing-agent-skill": {
+      "license": "MIT",
+      "file": "LICENSES/avdlee-swift-testing-agent-skill.txt"
+    },
+    "avdlee/swiftui-agent-skill": {
+      "license": "MIT",
+      "file": "LICENSES/avdlee-swiftui-agent-skill.txt"
+    },
+    "aws/agent-toolkit-for-aws": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/aws-agent-toolkit-for-aws.txt",
+      "notice": "LICENSES/aws-agent-toolkit-for-aws.NOTICE.txt"
+    },
+    "blader/humanizer": {
+      "license": "MIT",
+      "file": "LICENSES/blader-humanizer.txt"
+    },
+    "brianlovin/agent-config": {
+      "license": null,
+      "file": null,
+      "note": "No license upstream; all rights reserved. Included with attribution."
+    },
+    "coreyhaines31/marketingskills": {
+      "license": "MIT",
+      "file": "LICENSES/coreyhaines31-marketingskills.txt"
+    },
+    "currents-dev/playwright-best-practices-skill": {
+      "license": "MIT",
+      "file": "LICENSES/currents-dev-playwright-best-practices-skill.txt"
+    },
+    "cursor/plugins": {
+      "license": "MIT",
+      "file": "LICENSES/cursor-plugins.txt"
+    },
+    "DeckardGer/tanstack-agent-skills": {
+      "license": "MIT",
+      "file": "LICENSES/DeckardGer-tanstack-agent-skills.txt"
+    },
+    "DietrichGebert/ponytail": {
+      "license": "MIT",
+      "file": "LICENSES/DietrichGebert-ponytail.txt"
+    },
+    "emilkowalski/skill": {
+      "license": "MIT",
+      "file": "LICENSES/emilkowalski-skill.txt"
+    },
+    "expo/skills": {
+      "license": "MIT",
+      "file": "LICENSES/expo-skills.txt"
+    },
+    "getsentry/skills": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/getsentry-skills.txt"
+    },
+    "github/awesome-copilot": {
+      "license": "MIT",
+      "file": "LICENSES/github-awesome-copilot.txt"
+    },
+    "google/skills": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/google-skills.txt"
+    },
+    "grafana/skills": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/grafana-skills.txt"
+    },
+    "hashicorp/agent-skills": {
+      "license": "MPL-2.0",
+      "file": "LICENSES/hashicorp-agent-skills.txt"
+    },
+    "honojs/skills": {
+      "license": "MIT",
+      "file": "LICENSES/honojs-skills.txt"
+    },
+    "kadajett/agent-nestjs-skills": {
+      "license": "MIT",
+      "file": null,
+      "note": "MIT per the skill frontmatter only; no license file upstream."
+    },
+    "mattpocock/skills": {
+      "license": "MIT",
+      "file": "LICENSES/mattpocock-skills.txt"
+    },
+    "mcollina/skills": {
+      "license": "MIT",
+      "file": "LICENSES/mcollina-skills.txt"
+    },
+    "module-federation/agent-skills": {
+      "license": null,
+      "file": null,
+      "note": "No license upstream; all rights reserved. Included with attribution."
+    },
+    "neondatabase/agent-skills": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/neondatabase-agent-skills.txt"
+    },
+    "nrwl/nx-ai-agents-config": {
+      "license": "MIT",
+      "file": "LICENSES/nrwl-nx-ai-agents-config.txt"
+    },
+    "pulumi/agent-skills": {
+      "license": "Apache-2.0",
+      "file": "LICENSES/pulumi-agent-skills.txt"
+    },
+    "remix-run/react-router": {
+      "license": "MIT",
+      "file": "LICENSES/remix-run-react-router.txt"
+    },
+    "rstackjs/agent-skills": {
+      "license": "MIT",
+      "file": "LICENSES/rstackjs-agent-skills.txt"
+    },
+    "sickn33/antigravity-awesome-skills": {
+      "license": "MIT",
+      "file": "LICENSES/sickn33-antigravity-awesome-skills.txt",
+      "note": "MIT collection; the skill is marked `source: community`, original author unknown."
+    },
+    "spacelift-io/claude-plugins": {
+      "license": "MIT",
+      "file": "LICENSES/spacelift-io-claude-plugins.txt"
+    },
+    "vercel-labs/agent-skills": {
+      "license": "MIT",
+      "file": null,
+      "note": "MIT per the repository README and skill frontmatter; no license file upstream."
+    },
+    "vercel/turborepo": {
+      "license": "MIT",
+      "file": "LICENSES/vercel-turborepo.txt"
+    },
+    "wshobson/agents": {
+      "license": "MIT",
+      "file": "LICENSES/wshobson-agents.txt"
+    }
+  },
+  "derived": {
+    "owasp": {
+      "source": "OWASP Cheat Sheet Series",
+      "url": "https://github.com/OWASP/CheatSheetSeries/tree/29994dd8a2e6f50fa3d5607b046b54d7c6945afd/cheatsheets",
+      "license": "CC-BY-SA-4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  }
+}
