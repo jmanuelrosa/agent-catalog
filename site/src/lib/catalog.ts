@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
+// Every catalog path this file reads is mirrored in the paths filter of .github/workflows/site.yml.
+// A new read needs a matching entry there, or a merge that changes only that file never deploys.
 const root = resolve(process.env.CATALOG_ROOT ?? join(process.cwd(), '..'));
 
 type Frontmatter = Record<string, string>;
