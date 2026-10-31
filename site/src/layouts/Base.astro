@@ -1,0 +1,237 @@
+---
+import '../styles/global.css';
+import { links } from '../lib/site';
+import { stats } from '../lib/catalog';
+
+interface Props {
+  title: string;
+  description: string;
+  dark?: boolean;
+}
+
+const { title, description, dark = false } = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/docs/concepts/', label: 'Concepts' },
+  { href: '/docs/playbooks/', label: 'Playbooks' },
+  { href: '/docs/workflow/', label: 'Workflow' },
+  { href: '/docs/kura/', label: 'kura' },
+  { href: '/catalog/', label: 'Catalog' },
+  { href: '/attribution/', label: 'Attribution' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#2f3a40" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class:list={['site-header', { dark }]}>
+      <div class="wrap bar">
+        <a class="mark" href="/" aria-label="Agent Catalog home">
+          <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+            <rect width="32" height="32" rx="3" fill="#2f3a40"></rect>
+            <path d="M16 4 28 16 16 28 4 16Z" fill="none" stroke="#f7f8f4" stroke-width="2.4"></path>
+            <path d="M16 11 21 16 16 21 11 16Z" fill="#b8862b"></path>
+          </svg>
+          <span>Agent Catalog</span>
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {
+              nav.map(({ href, label }) => (
+                <li>
+                  <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <a class="repo" href={links.catalog}>GitHub</a>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap foot">
+        <div>
+          <p class="foot-title">Agent Catalog</p>
+          <p>
+            {stats.skills} skills, {stats.agents} agents and {stats.bundles} bundles for Claude Code and Pi.
+            Local content is MIT; every upstream skill keeps its own license and is listed on the <a
+              href="/attribution/">attribution page</a>.
+          </p>
+        </div>
+        <ul>
+          <li><a href={links.catalog}>Catalog repository</a></li>
+          <li><a href={links.kura}>kura repository</a></li>
+          <li><a href="/docs/start/">Get started</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    background: var(--sumi);
+    color: var(--grout);
+    padding: 0.5rem 0.9rem;
+    z-index: 10;
+  }
+
+  .skip:focus {
+    top: 1rem;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--plaster) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-header.dark {
+    background: color-mix(in srgb, #1b2226 88%, transparent);
+    border-bottom-color: #34404a;
+  }
+
+  .dark .mark {
+    color: var(--grout);
+  }
+
+  .dark nav a,
+  .dark .repo {
+    color: #b9c3c7;
+  }
+
+  .dark nav a:hover,
+  .dark .repo:hover {
+    color: var(--grout);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    min-height: 4rem;
+  }
+
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-1);
+    color: var(--sumi);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  nav {
+    flex: 1;
+    overflow-x: auto;
+  }
+
+  nav ul,
+  .foot ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 1.4rem;
+  }
+
+  nav a,
+  .repo {
+    color: var(--sumi-soft);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--step--1);
+    white-space: nowrap;
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'],
+  .repo:hover {
+    color: var(--sumi);
+    text-decoration: underline;
+  }
+
+  nav a[aria-current='page'] {
+    text-decoration-color: var(--ochre);
+    text-decoration-thickness: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .bar {
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      padding-block: 0.6rem;
+    }
+
+    nav {
+      order: 3;
+      flex-basis: 100%;
+      padding-bottom: 0.25rem;
+    }
+
+    .repo {
+      margin-left: auto;
+    }
+  }
+
+  .site-footer {
+    background: var(--slate);
+    color: #d5dad6;
+    margin-top: 6rem;
+    padding-block: 3.5rem 4rem;
+  }
+
+  .foot {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .foot-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-2);
+    color: var(--grout);
+    margin-bottom: 0.4rem;
+  }
+
+  .foot a {
+    color: #c3d1ec;
+  }
+
+  .foot li + li {
+    margin-top: 0.4rem;
+  }
+
+  @media (max-width: 640px) {
+    .foot {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

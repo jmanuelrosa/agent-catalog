@@ -1,0 +1,212 @@
+---
+interface Props {
+  detailed?: boolean;
+}
+
+const { detailed = false } = Astro.props;
+---
+
+<figure class="pipeline">
+  <ol class="rail">
+    <li class="station">
+      <h4>A request arrives</h4>
+      <p>A Jira key, a GitHub or GitLab issue, a Slack thread, or a Sentry error.</p>
+    </li>
+    <li class="station">
+      <h4><code>triage</code> reads the code it touches</h4>
+      <p>Read-only. It picks exactly one route and drafts any reply without posting it.</p>
+      <ul class="routes" aria-label="Triage routes">
+        <li class="go">automate<small>small and clear: one seat builds it</small></li>
+        <li class="go">spec<small>needs design before anyone builds</small></li>
+        <li>clarify<small>a question goes back to the author</small></li>
+        <li>park<small>not now, with the reason written down</small></li>
+      </ul>
+    </li>
+    <li class="station">
+      <h4><code>ux-shaper</code> and <code>architect</code> write it down</h4>
+      <p>
+        Every screen and state first, then a spec in <code>docs/specs/</code> with one owner per slice, the contract between
+        slices, and an ADR for each choice that is hard to undo.
+      </p>
+    </li>
+    <li class="station gate">
+      <h4>You approve the spec</h4>
+      <p>Nothing is built before a person has read what will be built.</p>
+    </li>
+    <li class="station">
+      <h4>Staff seats build in parallel</h4>
+      <p>Each seat owns its files, works in its own git worktree, and clears its failure-modes checklist before it may report done.</p>
+      <ul class="seats" aria-label="Example seats">
+        <li>frontend</li>
+        <li>backend</li>
+        <li>database</li>
+        <li>qa</li>
+      </ul>
+      <aside class="branch">
+        <h5>When a seat hits a choice it may not make alone</h5>
+        <p>
+          Adding a dependency, breaking a shared API, inventing a design token: the seat stops and returns
+          <code>needs-decision</code> with a recommendation. <code>decision-judge</code> looks for a precedent in your ADRs
+          and past rulings. With one, it answers and cites it. Without one, the question comes to you, and your answer is
+          recorded so the next run does not ask again.
+        </p>
+      </aside>
+    </li>
+    <li class="station">
+      <h4><code>code-reviewer</code> reads the diff twice</h4>
+      <p>It has no write tools, so the diff it reviewed is the diff that ships. Round one returns fix briefs; round two only reports.</p>
+    </li>
+    <li class="station gate">
+      <h4>You review and ship</h4>
+      <p><code>/code-review</code>, then <code>/ship</code> for conventional commits and the PR. No agent ever commits, pushes or merges.</p>
+    </li>
+  </ol>
+  {
+    detailed && (
+      <figcaption>
+        The ochre stations are the only places the pipeline waits. Everything between them runs without you, and everything
+        that crosses one has your name on it.
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .pipeline {
+    margin: 0;
+  }
+
+  .rail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .rail::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 0.8rem;
+    bottom: 0.8rem;
+    width: 2px;
+    background: var(--slate);
+  }
+
+  .station {
+    position: relative;
+    padding: 0 0 2rem 2.6rem;
+  }
+
+  .station::before {
+    content: '';
+    position: absolute;
+    left: 0.2rem;
+    top: 0.35rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: var(--plaster);
+    border: 2px solid var(--slate);
+    transform: rotate(45deg);
+  }
+
+  .gate::before {
+    background: var(--ochre);
+    border-color: var(--ochre);
+    width: 1.1rem;
+    height: 1.1rem;
+    left: 0.1rem;
+  }
+
+  .gate h4 {
+    color: var(--ochre-ink);
+  }
+
+  .station h4 {
+    font-size: var(--step-1);
+    margin-bottom: 0.3rem;
+  }
+
+  .station h4 code {
+    background: none;
+    padding: 0;
+    color: var(--ai-ink);
+    font-size: 0.85em;
+  }
+
+  .station p {
+    margin: 0;
+    color: var(--sumi-soft);
+  }
+
+  .routes,
+  .seats {
+    list-style: none;
+    padding: 0;
+    margin: 0.9rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .routes li,
+  .seats li {
+    margin: 0;
+  }
+
+  .routes li {
+    font-family: var(--font-code);
+    font-size: var(--step--1);
+    padding: 0.45rem 0.7rem;
+    border: 1px dashed var(--rule);
+    border-radius: var(--radius-tile);
+    color: var(--sumi-soft);
+    display: flex;
+    flex-direction: column;
+    max-width: 14rem;
+  }
+
+  .routes li.go {
+    border: 1.5px solid var(--slate);
+    color: var(--sumi);
+  }
+
+  .routes small {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--sumi-soft);
+  }
+
+  .seats li {
+    background: var(--ai);
+    color: var(--grout);
+    font-weight: 700;
+    font-size: var(--step--1);
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-tile);
+  }
+
+  .branch {
+    margin-top: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--ochre-wash);
+    border-left: 3px solid var(--ochre);
+  }
+
+  .branch h5 {
+    margin: 0 0 0.3rem;
+    font-size: var(--step-0);
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+
+  .branch p {
+    font-size: var(--step--1);
+    color: var(--sumi);
+  }
+
+  figcaption {
+    color: var(--sumi-soft);
+    max-width: var(--measure);
+  }
+</style>

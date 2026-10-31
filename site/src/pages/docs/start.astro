@@ -1,0 +1,90 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import Terminal from '../../components/Terminal.astro';
+import { links } from '../../lib/site';
+import { skills } from '../../lib/catalog';
+
+const globalCount = skills.filter((skill) => skill.global).length;
+---
+
+<Docs
+  title="Get started"
+  description="Install kura, link the catalog, and set up your first project in about ten minutes."
+  intro="Ten minutes from nothing to an agent that triages, reviews and ships the way this catalog describes. You set up the machine once, then each project in a minute."
+>
+  <h2>Before you begin</h2>
+  <ul>
+    <li><strong>A harness.</strong> Claude Code or Pi. Either works; both is fine.</li>
+    <li><strong>git and Python 3.</strong> kura is a single executable Python file.</li>
+    <li><strong>kura itself.</strong> Follow the install step in the <a href={links.kura}>kura repository</a>, then check it runs.</li>
+  </ul>
+  <Terminal lines={[{ text: 'kura --version' }]} />
+
+  <h2>Set up the machine once</h2>
+  <p>
+    Clone the catalog somewhere you keep code, and tell kura where it is. kura reads the catalog through a link, so pulling
+    new commits later is all it takes to update.
+  </p>
+  <Terminal
+    label="Link the catalog"
+    lines={[
+      { text: `git clone ${links.catalog} ~/Developer/agent-catalog` },
+      { text: 'ln -s ~/Developer/agent-catalog ~/.config/kura/catalog' },
+      { text: 'kura config --harness claude --harness pi --yes' },
+      { text: 'kura sync' },
+      { text: 'kura doctor' },
+    ]}
+  />
+  <p>
+    <code>kura config</code> chooses which harnesses get the global layer; drop <code>--harness pi</code> if you only use
+    Claude Code. <code>kura sync</code> links the {globalCount} skills and the standalone agents that are useful in every
+    repository: triage, commit, pr, ship, review, the teammate skills, the architect and the code-reviewer.
+    <code>kura doctor</code> should come back clean.
+  </p>
+
+  <h2>Set up a project</h2>
+  <p>Run these from the root of the repository you want to work in.</p>
+  <Terminal
+    label="Project setup"
+    lines={[
+      { text: 'kura init --harness claude --yes' },
+      { text: 'kura scout' },
+      { text: 'kura scout --add' },
+      { text: 'kura add frontend qa --type bundle' },
+      { text: 'kura trust --on' },
+    ]}
+  />
+  <ul>
+    <li><code>kura init</code> writes a <code>kura.json</code> at the root. It records what this project uses.</li>
+    <li><code>kura scout</code> reads your manifests and config and lists strong matches, each with the evidence behind it. <code>--add</code> installs them.</li>
+    <li>Add the seats for the layers you change most. You can add more later; nothing breaks if you start small.</li>
+    <li><code>kura trust --on</code> records the project as trusted in each harness you selected, so it opens without a trust prompt.</li>
+  </ul>
+  <p class="note">
+    Commit <code>kura.json</code>. A teammate with kura and the catalog runs <code>kura restore</code> after cloning and gets
+    the same set of links.
+  </p>
+
+  <h2>Your first hour</h2>
+  <p>Three things worth trying before anything bigger, roughly in order of how much they ask of you.</p>
+  <h3>Ask about code you did not write</h3>
+  <Terminal lines={[{ kind: 'agent', text: '/teammate how are sessions created and expired in this app?' }]} />
+  <p>You get a plain explanation with each claim pointing at a file or commit, and a note wherever no evidence was found.</p>
+  <h3>Hand it a ticket</h3>
+  <Terminal lines={[{ kind: 'agent', text: '/triage PROJ-123' }]} />
+  <p>Triage reads the ticket and the code it touches, then says whether the work is ready to automate, needs a spec, needs a question answered, or should wait.</p>
+  <h3>Ship a small change</h3>
+  <Terminal lines={[{ kind: 'agent', text: '/ship' }]} />
+  <p>After any change, <code>/ship</code> groups it into conventional commits and opens the pull request after one confirmation.</p>
+
+  <h2>When something looks wrong</h2>
+  <table>
+    <thead><tr><th>Symptom</th><th>Run</th></tr></thead>
+    <tbody>
+      <tr><td>A skill you added is not showing up</td><td><code>kura doctor</code>, then <code>kura restore</code></td></tr>
+      <tr><td>Links point at files that moved</td><td><code>kura converge</code></td></tr>
+      <tr><td>Every project on the machine needs reconciling</td><td><code>kura converge --all --root ~/Developer</code></td></tr>
+      <tr><td>You linked skills by hand and want kura to own them</td><td><code>kura adopt --dry-run</code>, then <code>kura adopt</code></td></tr>
+    </tbody>
+  </table>
+</Docs>

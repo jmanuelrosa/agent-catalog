@@ -1,0 +1,229 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  intro: string;
+}
+
+const { title, description, intro } = Astro.props;
+const path = Astro.url.pathname;
+const pages = [
+  { href: '/docs/start/', label: 'Get started' },
+  { href: '/docs/concepts/', label: 'Concepts' },
+  { href: '/docs/playbooks/', label: 'Playbooks' },
+  { href: '/docs/workflow/', label: 'Workflow' },
+  { href: '/docs/kura/', label: 'kura' },
+  { href: '/catalog/', label: 'Catalog' },
+  { href: '/attribution/', label: 'Attribution' },
+];
+const index = pages.findIndex(({ href }) => path.startsWith(href));
+const next = pages[index + 1];
+---
+
+<Base title={`${title} | Agent Catalog`} description={description}>
+  <div class="wrap docs">
+    <aside class="side">
+      <nav aria-label="Documentation">
+        <ol>
+          {
+            pages.map(({ href, label }) => (
+              <li>
+                <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+    </aside>
+    <article class="prose">
+      <header>
+        <h1>{title}</h1>
+        <p class="lede">{intro}</p>
+      </header>
+      <slot />
+      {
+        next && (
+          <a class="next" href={next.href}>
+            <small>Next</small>
+            <span>{next.label}</span>
+          </a>
+        )
+      }
+    </article>
+  </div>
+</Base>
+
+<style>
+  .docs {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .side nav {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .side ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid var(--rule);
+  }
+
+  .side a {
+    display: block;
+    padding: 0.35rem 0 0.35rem 1rem;
+    margin-left: -2px;
+    border-left: 2px solid transparent;
+    color: var(--sumi-soft);
+    text-decoration: none;
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  .side a:hover {
+    color: var(--sumi);
+  }
+
+  .side a[aria-current='page'] {
+    border-left-color: var(--ochre);
+    color: var(--sumi);
+    font-weight: 700;
+  }
+
+  @media (max-width: 860px) {
+    .docs {
+      grid-template-columns: 1fr;
+    }
+
+    .side nav {
+      position: static;
+    }
+
+    .side ol {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.5rem;
+      border-left: none;
+    }
+
+    .side a {
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-panel);
+      margin: 0;
+    }
+
+    .side a[aria-current='page'] {
+      border-color: var(--ochre);
+    }
+  }
+
+  .prose {
+    min-width: 0;
+    max-width: 52rem;
+  }
+
+  .prose header {
+    margin-bottom: 3rem;
+  }
+
+  .prose h1 {
+    font-size: var(--step-4);
+    max-width: 18ch;
+  }
+
+  .prose .lede {
+    margin-top: 1.25rem;
+  }
+
+  .prose :global(h2) {
+    font-size: var(--step-3);
+    margin: 3.5rem 0 1rem;
+  }
+
+  .prose :global(h3) {
+    font-size: var(--step-1);
+    margin: 2.25rem 0 0.6rem;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol:not([class])) {
+    padding-left: 1.2rem;
+    max-width: var(--measure);
+  }
+
+  .prose :global(li + li) {
+    margin-top: 0.4rem;
+  }
+
+  .prose :global(.terminal),
+  .prose :global(figure) {
+    margin-block: 1.5rem 2rem;
+  }
+
+  .prose :global(table:not(.plain)) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block: 1.25rem 2rem;
+    font-size: var(--step--1);
+  }
+
+  .prose :global(table:not(.plain) th) {
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 2px solid var(--sumi);
+    padding: 0.5rem 1rem 0.5rem 0;
+  }
+
+  .prose :global(table:not(.plain) td) {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.6rem 1rem 0.6rem 0;
+    vertical-align: top;
+  }
+
+  .prose :global(.note) {
+    padding: 1rem 1.25rem;
+    background: var(--ochre-wash);
+    border-left: 3px solid var(--ochre);
+    margin-block: 1.5rem;
+    max-width: none;
+  }
+
+  .next {
+    display: inline-flex;
+    flex-direction: column;
+    margin-top: 4rem;
+    padding: 1rem 1.4rem;
+    border: 1.5px solid var(--sumi);
+    border-radius: var(--radius-panel);
+    text-decoration: none;
+    color: var(--sumi);
+  }
+
+  .next small {
+    color: var(--sumi-soft);
+  }
+
+  .next span {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 800;
+  }
+
+  .next:hover {
+    background: var(--sumi);
+    color: var(--grout);
+  }
+
+  .next:hover small {
+    color: #c7cfcb;
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import Docs from '../layouts/Docs.astro';
+import { derived, sources, stats } from '../lib/catalog';
+import { links, upstreamUrl } from '../lib/site';
+---
+
+<Docs
+  title="Attribution"
+  description={`The ${stats.sources} open-source repositories this catalog draws ${stats.upstream} skills from, each pinned to a commit and credited by name.`}
+  intro={`${stats.upstream} of the ${stats.skills} skills in this catalog were written by other people and published in the open. This page names every source, links to the exact commit each copy came from, and says how the work is kept honest.`}
+>
+  <h2>How credit is kept</h2>
+  <ul>
+    <li><strong>Pinned, not forked.</strong> Each upstream skill records its source repository, its path there, and the full commit it was copied from. The links below open that commit.</li>
+    <li><strong>Unchanged in place.</strong> Upstream skills are kept as published, apart from the occasional folder rename. Local judgment lives in the catalog's own skills and agents, not in edits to someone else's.</li>
+    <li><strong>Licenses travel with the work.</strong> Every source keeps its own license, and a source without a license entry fails the catalog's test suite. Where a repository publishes no license at all, that is recorded too, and its skills are included with attribution only.</li>
+    <li><strong>Refreshed in the open.</strong> <code>kura update</code> pulls a new version and records the new commit, so every change from upstream is a reviewable diff.</li>
+  </ul>
+  <p>
+    Content written for this catalog is MIT licensed. If you maintain one of these repositories and want something changed
+    or removed, open an issue on the <a href={links.catalog}>catalog repository</a>.
+  </p>
+
+  <h2>Sources</h2>
+  <ol class="sources">
+    {
+      sources.map((source) => (
+        <li>
+          <div class="head">
+            <span class="count">{source.skills.length}</span>
+            <div>
+              <a href={upstreamUrl(source.repo, source.commit)}>
+                <code>{source.repo}</code>
+              </a>
+              <small>
+                at <code>{source.commit.slice(0, 7)}</code>
+                {source.license && <span>, {source.license}</span>}
+                {!source.license && source.licenseNote && <span>, {source.licenseNote}</span>}
+              </small>
+            </div>
+          </div>
+          <p class="names">
+            {source.skills.map((name, index) => (
+              <>
+                <a href={`/catalog/#${name}`}>{name}</a>
+                {index < source.skills.length - 1 && ', '}
+              </>
+            ))}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+  {
+    derived.length > 0 && (
+      <>
+        <h2>Derived work</h2>
+        <p>Some local skills are distilled from published material rather than copied from a skill repository.</p>
+        <ul>
+          {derived.map((entry) => (
+            <li>
+              <a href={`/catalog/#${entry.skill}`}>
+                <code>{entry.skill}</code>
+              </a>{' '}
+              is derived from the <a href={entry.url}>{entry.source}</a>, under {entry.license}.
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</Docs>
+
+<style>
+  .sources {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sources li {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+    margin: 0;
+  }
+
+  .head {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .count {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-2);
+    color: var(--ochre-ink);
+    min-width: 3ch;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .head a code {
+    background: none;
+    padding: 0;
+    font-size: var(--step-0);
+  }
+
+  .head small {
+    display: block;
+    color: var(--sumi-soft);
+  }
+
+  .names {
+    margin: 0.4rem 0 0 calc(3ch + 1rem);
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+    max-width: none;
+  }
+
+  .names a {
+    color: var(--sumi-soft);
+  }
+</style>

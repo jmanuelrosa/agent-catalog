@@ -1,0 +1,213 @@
+---
+import { playbooks } from '../lib/playbooks';
+import Terminal from './Terminal.astro';
+
+const kindLabel = { skill: 'skill', agent: 'agent', human: 'you', kura: 'kura' } as const;
+---
+
+<div class="playbooks" data-tabs>
+  <div class="tabs" role="tablist" aria-label="Situations">
+    {
+      playbooks.map((playbook, index) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${playbook.id}`}
+          aria-controls={`panel-${playbook.id}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+        >
+          {playbook.label}
+        </button>
+      ))
+    }
+  </div>
+  {
+    playbooks.map((playbook, index) => (
+      <div
+        class="panel"
+        role="tabpanel"
+        id={`panel-${playbook.id}`}
+        aria-labelledby={`tab-${playbook.id}`}
+        hidden={index !== 0}
+      >
+        <p class="situation">{playbook.situation}</p>
+        <div class="session">
+          <Terminal
+            label={`Commands for ${playbook.label}`}
+            lines={[
+              ...playbook.setup.map((text) => ({ text })),
+              { kind: 'comment', text: '# then, inside your agent' },
+              { kind: 'agent', text: playbook.prompt },
+            ]}
+          />
+        </div>
+        <ol class="steps">
+          {playbook.steps.map((step) => (
+            <li class={step.kind}>
+              <span class="who">
+                <code>{step.actor}</code>
+                <small>{kindLabel[step.kind]}</small>
+              </span>
+              <span class="does">{step.does}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="outcome">
+          <strong>What you end up with.</strong> {playbook.outcome}
+        </p>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tabs]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (next: HTMLButtonElement) => {
+      for (const tab of tabs) {
+        const selected = tab === next;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
+        if (panel) panel.hidden = !selected;
+      }
+    };
+    root.querySelector('[role="tablist"]')?.addEventListener('keydown', (event) => {
+      const key = (event as KeyboardEvent).key;
+      const current = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      if (current < 0) return;
+      const moves: Record<string, number> = {
+        ArrowRight: (current + 1) % tabs.length,
+        ArrowLeft: (current - 1 + tabs.length) % tabs.length,
+        Home: 0,
+        End: tabs.length - 1,
+      };
+      const target = tabs[moves[key] ?? -1];
+      if (!target) return;
+      event.preventDefault();
+      target.focus();
+      select(target);
+    });
+    for (const tab of tabs) tab.addEventListener('click', () => select(tab));
+  }
+</script>
+
+<style>
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.75rem;
+  }
+
+  [role='tab'] {
+    font: inherit;
+    font-weight: 500;
+    font-size: var(--step--1);
+    padding: 0.45em 0.95em;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-panel);
+    background: transparent;
+    color: var(--sumi-soft);
+    cursor: pointer;
+  }
+
+  [role='tab']:hover {
+    border-color: var(--sumi);
+    color: var(--sumi);
+  }
+
+  [role='tab'][aria-selected='true'] {
+    background: var(--sumi);
+    border-color: var(--sumi);
+    color: var(--grout);
+  }
+
+  .situation {
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .session {
+    margin-block: 1.5rem 2rem;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    border-left: 2px solid var(--rule);
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: 0.4rem 1.5rem;
+    padding: 0.85rem 0 0.85rem 1.4rem;
+    position: relative;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: -0.8rem;
+    top: 0.9rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: grid;
+    place-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--plaster);
+    border: 2px solid var(--rule);
+    border-radius: 50%;
+  }
+
+  .steps li.human::before {
+    background: var(--ochre);
+    border-color: var(--ochre);
+    color: var(--grout);
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .who code {
+    background: none;
+    padding: 0;
+    color: var(--ai-ink);
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  .human .who code {
+    color: var(--ochre-ink);
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+
+  .who small {
+    color: var(--sumi-soft);
+    font-size: 0.8rem;
+  }
+
+  .outcome {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--grout);
+    border-left: 4px solid var(--ai);
+    max-width: none;
+  }
+
+  @media (max-width: 640px) {
+    .steps li {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

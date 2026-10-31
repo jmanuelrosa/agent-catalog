@@ -1,0 +1,83 @@
+---
+interface Props {
+  id: string;
+  question: string;
+  tone?: 'plain' | 'deep' | 'dark';
+}
+
+const { id, question, tone = 'plain' } = Astro.props;
+---
+
+<section id={id} class:list={['section', tone]} aria-labelledby={`${id}-q`}>
+  <div class="wrap grid">
+    <div class="ask">
+      <h2 id={`${id}-q`}>{question}</h2>
+      <slot name="aside" />
+    </div>
+    <div class="answer">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: clamp(4rem, 9vw, 7.5rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .section.deep {
+    background: var(--plaster-deep);
+  }
+
+  .section.dark {
+    background: #1b2226;
+    color: #dde2de;
+    border-top-color: #1b2226;
+  }
+
+  .dark :global(.lede),
+  .dark .ask :global(p) {
+    color: #b9c3c7;
+  }
+
+  .dark :global(a) {
+    color: #a9bfe6;
+  }
+
+  .dark :global(:not(pre) > code) {
+    background: #2b353a;
+    color: #f0dca8;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .ask h2 {
+    font-size: var(--step-3);
+    position: sticky;
+    top: 6rem;
+  }
+
+  .ask :global(p) {
+    margin-top: 1rem;
+    color: var(--sumi-soft);
+  }
+
+  .answer {
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ask h2 {
+      position: static;
+    }
+  }
+</style>

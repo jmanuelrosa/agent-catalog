@@ -1,0 +1,20 @@
+{
+  "name": "agent-catalog-site",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@fontsource/fragment-mono": "^5.3.0",
+    "@fontsource/shippori-mincho": "^5.3.0",
+    "@fontsource/zen-kaku-gothic-new": "^5.3.1",
+    "astro": "^7.4.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6"
+  }
+}
