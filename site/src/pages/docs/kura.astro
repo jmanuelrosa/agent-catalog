@@ -1,0 +1,158 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import KuraDiagram from '../../components/KuraDiagram.astro';
+import Terminal from '../../components/Terminal.astro';
+import { links } from '../../lib/site';
+
+const commands = [
+  {
+    group: 'Every day',
+    rows: [
+      ['kura add NAME… --type skill|agent|bundle', 'Add to this project. --group TAG adds everything with a tag; --global links a skill everywhere, temporarily.'],
+      ['kura remove NAME… --type …', 'Take it out of this project again.'],
+      ['kura scout [--focus TAG] [--add]', 'Recommend what fits this project, with evidence. --add installs the strong matches.'],
+      ['kura list --type … [--group] [--json]', 'What is installed and where it is linked.'],
+    ],
+  },
+  {
+    group: 'Setting up',
+    rows: [
+      ['kura init --harness claude|pi --yes', 'Make this directory a kura project and write kura.json.'],
+      ['kura config --harness … --yes', 'Choose which harnesses get the machine-wide layer.'],
+      ['kura sync', 'Link the global skills and agents into every enabled harness.'],
+      ['kura trust --on | --off', 'Record this project as trusted, or refused, in each harness.'],
+    ],
+  },
+  {
+    group: 'When links drift',
+    rows: [
+      ['kura doctor', 'Inspect machine, catalog, project, links, instructions and trust, and report what is off.'],
+      ['kura restore', 'Recreate missing links. Never deletes anything.'],
+      ['kura converge [--all --root PATH]', 'Reconcile this project, or every project under a folder. --quiet is for hooks.'],
+      ['kura adopt', 'Turn links you made by hand into recorded intent.'],
+    ],
+  },
+  {
+    group: 'Maintaining the catalog',
+    rows: [
+      ['kura outdated --type skill', 'Which upstream skills are behind their source.'],
+      ['kura update --type skill [NAME…]', 'Pull the new version and record the new commit.'],
+    ],
+  },
+];
+---
+
+<Docs
+  title="kura"
+  description="kura manages one declared set of skills, agents and bundles across Claude Code and Pi, per machine and per project."
+  intro="kura (蔵) is the Japanese word for a storehouse: a fireproof building where a household kept what it could not afford to lose. kura the tool keeps your catalog in one place and puts the right parts of it in front of each project and each harness."
+>
+  <h2>What problem it solves</h2>
+  <p>
+    Without a manager, skills are copied into each project and each harness by hand. Copies drift: a fix in one never reaches
+    the others, nobody remembers which project has what, and switching harness means doing it all again.
+  </p>
+  <p>
+    kura replaces copies with links and replaces memory with a file. The catalog holds every skill once. A
+    <code>kura.json</code> in each project says what it uses. kura makes each harness's folders match that file, and tells
+    you when they stop matching.
+  </p>
+  <KuraDiagram />
+
+  <h2>The three places kura reads</h2>
+  <h3>The catalog</h3>
+  <p>
+    A git repository, linked at <code>~/.config/kura/catalog</code>. Its registries say which skills exist, which are global,
+    what each depends on, and for upstream skills, the source repository and the exact commit they came from.
+  </p>
+  <h3>Machine configuration</h3>
+  <p>Which harnesses you use, kept in <code>~/.config/kura/config.json</code> and changed with <code>kura config</code>.</p>
+  <h3>Project intent</h3>
+  <p>The <code>kura.json</code> at a project's root. This one is from a real project:</p>
+  <pre class="json"><code>{`{
+  "schemaVersion": 2,
+  "harnesses": ["claude", "pi"],
+  "skills": ["ai-seo", "apollo-client", "astro", "ci-cd-and-automation", …],
+  "agents": [],
+  "bundles": ["cloud", "design", "dx", "frontend", "seo"]
+}`}</code></pre>
+  <p>Commit it. It is the difference between "works on my machine" and "works for the team".</p>
+
+  <h2>Commands</h2>
+  {
+    commands.map(({ group, rows }) => (
+      <>
+        <h3>{group}</h3>
+        <table>
+          <tbody>
+            {rows.map(([command, does]) => (
+              <tr>
+                <td>
+                  <code>{command}</code>
+                </td>
+                <td>{does}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    ))
+  }
+  <p>Most commands that change links accept <code>--dry-run</code> to show the plan first. <code>kura COMMAND --help</code> has the full flags.</p>
+
+  <h2>Recipes</h2>
+  <h3>A new machine</h3>
+  <Terminal
+    lines={[
+      { text: `git clone ${links.catalog} ~/Developer/agent-catalog` },
+      { text: 'ln -s ~/Developer/agent-catalog ~/.config/kura/catalog' },
+      { text: 'kura config --harness claude --harness pi --yes' },
+      { text: 'kura sync' },
+      { text: 'kura converge --all --root ~/Developer' },
+    ]}
+  />
+  <h3>A teammate clones a project that already uses kura</h3>
+  <Terminal lines={[{ text: 'kura restore' }, { text: 'kura trust --on' }, { text: 'kura doctor' }]} />
+  <h3>Everything tagged for testing, in one go</h3>
+  <Terminal lines={[{ text: 'kura scout --type skill --focus testing' }, { text: 'kura add --group testing --type skill' }]} />
+  <h3>Pulling upstream changes into the catalog</h3>
+  <p>Run inside the catalog repository, then review the diff like any other change.</p>
+  <Terminal
+    lines={[
+      { text: 'kura outdated --type skill' },
+      { text: 'kura update --type skill vite react-router' },
+      { text: 'make attribution' },
+      { text: 'make test' },
+    ]}
+  />
+  <p>
+    <code>make attribution</code> regenerates the credits, and <code>make test</code> fails if a new source has no license
+    entry, so nothing enters the catalog without its attribution.
+  </p>
+
+  <h2>Limits worth knowing</h2>
+  <ul>
+    <li>kura wires two harnesses: Claude Code and Pi. Other harnesses can use any skill folder by hand.</li>
+    <li><code>update</code> and <code>outdated</code> cover skills. Agents and bundles in this catalog are all written here, so they have no upstream to follow.</li>
+    <li>Upstream skills are snapshots. They change only when someone runs <code>kura update</code> and commits the result.</li>
+  </ul>
+</Docs>
+
+<style>
+  .json {
+    background: var(--grout);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--ai);
+    border-radius: var(--radius-panel);
+    padding: 1rem 1.25rem;
+    font-size: var(--step--1);
+  }
+
+  td:first-child {
+    width: 46%;
+  }
+
+  td code {
+    white-space: normal;
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import PipelineDiagram from '../../components/PipelineDiagram.astro';
+import Terminal from '../../components/Terminal.astro';
+
+const productStages = [
+  { name: '0-refine-idea', does: 'Sharpen the idea. Gate 0: you kill it or let it proceed.', gate: true },
+  { name: '1-research', does: 'Competitors, market size and user evidence, each from its own researcher agent.' },
+  { name: '2-write-prd', does: 'A product requirements document grounded in that research.' },
+  { name: '3-red-team', does: 'An adversarial read of the PRD. Gate 1 is yours.', gate: true },
+  { name: '4-tech-shape', does: 'ux-shaper and a design doc, with ADRs for the hard-to-undo choices.' },
+  { name: '5-decompose', does: 'Stories small enough for one seat, each with acceptance criteria.' },
+  { name: '6-verify', does: 'A definition-of-ready check that passes or fails each story.' },
+  { name: '7-push-to-board', does: 'Epics and sub-issues on GitHub.' },
+  { name: '8-living-spec', does: 'After shipping: the spec is updated to what was actually built.' },
+];
+---
+
+<Docs
+  title="Workflow"
+  description="How a request becomes a reviewed pull request: triage, specs, staff seats, review and shipping, with people at the gates."
+  intro="Three rules hold the whole workflow together. The filesystem is the orchestrator: specs, rulings and reports are files you can read. Every gate is a person. No agent ever commits, pushes or merges."
+>
+  <h2>Pick the right size first</h2>
+  <p>Most work does not need the full pipeline. Match the machinery to the change.</p>
+  <table>
+    <thead><tr><th>The work is…</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>A question about how or why something works</td><td><code>/teammate</code></td></tr>
+      <tr><td>A small, clear change in one layer</td><td>Ask your agent; it delegates to the matching seat</td></tr>
+      <tr><td>A ticket you have not read closely yet</td><td><code>/triage</code> and let it pick the route</td></tr>
+      <tr><td>A change across several layers</td><td><code>/feature-team</code></td></tr>
+      <tr><td>An idea that is not yet a feature</td><td><code>/0-refine-idea</code> from the product-team bundle</td></tr>
+    </tbody>
+  </table>
+
+  <h2>The engineering pipeline</h2>
+  <PipelineDiagram detailed />
+
+  <h3>What /feature-team does, step by step</h3>
+  <ol>
+    <li>Restates the brief. If it is fuzzy, it suggests <code>/grill-me</code> first.</li>
+    <li>Checks which seats are installed with <code>kura list --type bundle --json</code>, and asks you to add any that are missing.</li>
+    <li>Has the architect write the spec, with ux-shaper first when there is UI.</li>
+    <li>Waits for you to approve the spec.</li>
+    <li>Dispatches every slice marked parallel at once, each seat in its own git worktree, one owner per file.</li>
+    <li>Integrates, then runs the held slices in dependency order.</li>
+    <li>Exercises the change end to end, through the qa seat when it is installed.</li>
+    <li>Runs two code-reviewer rounds: the first sends a fix brief per blocker or important finding, the second only reports.</li>
+    <li>Writes an integration report and stops. Committing is yours.</li>
+  </ol>
+  <Terminal
+    label="After feature-team"
+    lines={[
+      { kind: 'agent', text: '/code-review max' },
+      { kind: 'agent', text: '/ship' },
+      { kind: 'agent', text: '/8-living-spec' },
+    ]}
+  />
+
+  <h2>When an agent needs a decision</h2>
+  <p>
+    Seats are told what they may decide. When they reach something they may not, they return <code>needs-decision</code>
+    with a recommendation instead of guessing. The orchestrator sends it to <code>decision-judge</code>, which reads your ADRs,
+    past rulings and house rules and gives exactly one verdict:
+  </p>
+  <table>
+    <thead><tr><th>Verdict</th><th>Means</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><code>decided</code></td><td>A precedent answers it</td><td>The answer goes back to the seat, with the citation</td></tr>
+      <tr><td><code>sent-back</code></td><td>The question is malformed, or the code already answers it</td><td>The seat tries again</td></tr>
+      <tr><td><code>held</code></td><td>Nobody has ruled on this yet</td><td>It comes to you</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Your answer is appended to <code>docs/decisions/rulings.md</code>, so the same question is decided by precedent next time.
+    Some questions are always held: a new dependency, a new step on a design scale, a brand change, or a breaking API.
+  </p>
+
+  <h2>Reviewing a change</h2>
+  <p>Every review, by a person or an agent, speaks the same four words, so findings from different places can be ranked together.</p>
+  <table>
+    <thead><tr><th>Severity</th><th>Means</th></tr></thead>
+    <tbody>
+      <tr><td><code>blocker</code></td><td>Wrong, unsafe or unshippable as written. Do not merge.</td></tr>
+      <tr><td><code>important</code></td><td>A real cost. Fix it now or file it.</td></tr>
+      <tr><td><code>nit</code></td><td>Preference or polish. At most three, and none when there is a blocker.</td></tr>
+      <tr><td><code>pre-existing</code></td><td>The diff exposed it but did not cause it. Named once, never blocks.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Findings are checked on eight axes in a fixed order, from correctness and data integrity down to dead weight, so when the
+    list has to be cut, a convention breach goes before a bug does. A finding that cannot describe a concrete way things break
+    is dropped as opinion.
+  </p>
+
+  <h2>Shipping</h2>
+  <ul>
+    <li><code>/commit</code> groups the working tree into atomic, conventional commits and stops.</li>
+    <li><code>/pr</code> writes the description and opens a GitHub pull request or GitLab merge request.</li>
+    <li><code>/ship</code> does both after a single confirmation.</li>
+  </ul>
+
+  <h2>The product pipeline</h2>
+  <p>
+    For ideas that are not features yet, the <code>product-team</code> bundle runs nine stages with two gates. Its output is a
+    board of stories, each of which goes through <code>/feature-team</code> one at a time.
+  </p>
+  <ol class="stages">
+    {
+      productStages.map((stage) => (
+        <li class:list={{ gate: stage.gate }}>
+          <code>{stage.name}</code>
+          <span>{stage.does}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <h2>Keeping watch</h2>
+  <p>
+    The <code>watch</code> skill is meant to be scheduled. <code>watch sentry</code> sweeps new and regressed production
+    errors through triage. <code>watch janitor</code> looks for dead code, unused dependencies, and instructions written to
+    work around a model that newer models no longer need. Both write a report and change nothing.
+  </p>
+</Docs>
+
+<style>
+  .stages {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 0;
+    border-left: 2px solid var(--slate);
+  }
+
+  .stages li {
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.6rem 0 0.6rem 1.25rem;
+    margin: 0;
+  }
+
+  .stages li.gate {
+    background: var(--ochre-wash);
+    border-left: 4px solid var(--ochre);
+    margin-left: -3px;
+  }
+
+  .stages code {
+    background: none;
+    padding: 0;
+    font-weight: 600;
+    color: var(--ai-ink);
+  }
+
+  @media (max-width: 560px) {
+    .stages li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

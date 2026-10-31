@@ -1,0 +1,97 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import Terminal from '../../components/Terminal.astro';
+import { playbooks } from '../../lib/playbooks';
+import { skillByName } from '../../lib/catalog';
+
+const kindLabel = { skill: 'skill', agent: 'agent', human: 'you', kura: 'kura' } as const;
+---
+
+<Docs
+  title="Playbooks"
+  description="Six common situations, from an empty repository to a production bug, with the exact commands and what runs because of them."
+  intro="Each playbook is a situation you will recognise, the commands you type, and what the catalog does with them. Use them as starting points; the agent adapts the rest to your code."
+>
+  <nav class="jump" aria-label="Playbooks on this page">
+    {playbooks.map((playbook) => <a href={`#${playbook.id}`}>{playbook.label}</a>)}
+  </nav>
+  {
+    playbooks.map((playbook) => (
+      <section id={playbook.id} class="book">
+        <h2>{playbook.label}</h2>
+        <p>{playbook.situation}</p>
+        <Terminal
+          label={`Commands for ${playbook.label}`}
+          lines={[
+            ...playbook.setup.map((text) => ({ text })),
+            { kind: 'comment', text: '# then, inside your agent' },
+            { kind: 'agent', text: playbook.prompt },
+          ]}
+        />
+        <h3>What runs</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Who</th>
+              <th>What it does</th>
+            </tr>
+          </thead>
+          <tbody>
+            {playbook.steps.map((step) => {
+              const skill = step.kind === 'skill' ? skillByName(step.actor) : undefined;
+              return (
+                <tr>
+                  <td>
+                    {skill ? (
+                      <a href={`/catalog/#${skill.name}`}>
+                        <code>{step.actor}</code>
+                      </a>
+                    ) : (
+                      <code>{step.actor}</code>
+                    )}
+                    <br />
+                    <small>{kindLabel[step.kind]}</small>
+                  </td>
+                  <td>{step.does}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p class="note">
+          <strong>What you end up with.</strong> {playbook.outcome}
+        </p>
+      </section>
+    ))
+  }
+</Docs>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .jump a {
+    padding: 0.35rem 0.8rem;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-panel);
+    text-decoration: none;
+    color: var(--sumi);
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  .jump a:hover {
+    border-color: var(--sumi);
+  }
+
+  .book td small {
+    color: var(--sumi-soft);
+  }
+
+  .book td:first-child {
+    width: 14rem;
+  }
+</style>

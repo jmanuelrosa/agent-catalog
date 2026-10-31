@@ -1,0 +1,53 @@
+---
+export type Line = { kind?: 'cmd' | 'comment' | 'agent' | 'out'; text: string };
+
+interface Props {
+  lines: Line[];
+  label?: string;
+}
+
+const { lines, label = 'Terminal' } = Astro.props;
+---
+
+<div class="terminal" role="group" aria-label={label}>
+  {
+    lines.map(({ kind = 'cmd', text }) => (
+      <code class={kind}>
+        {kind === 'cmd' && <span class="prompt">$ </span>}
+        {kind === 'agent' && <span class="prompt">&gt; </span>}
+        {text}
+      </code>
+    ))
+  }
+</div>
+
+<style>
+  .terminal {
+    overflow-x: auto;
+  }
+
+  code {
+    display: block;
+    white-space: pre;
+    background: none;
+    padding: 0;
+    font-size: 1em;
+    color: inherit;
+  }
+
+  code.comment {
+    color: #9aa5ab;
+  }
+
+  code.agent {
+    color: #e2c47f;
+  }
+
+  code.out {
+    color: #b9c3c7;
+  }
+
+  code + code.comment {
+    margin-top: 0.6em;
+  }
+</style>

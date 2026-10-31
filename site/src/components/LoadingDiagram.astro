@@ -1,0 +1,195 @@
+---
+import { stats } from '../lib/catalog';
+---
+
+<figure class="loading">
+  <div class="task">
+    <span class="label">You ask</span>
+    <p>“Add a newsletter signup form to the footer.”</p>
+  </div>
+  <ol class="layers">
+    <li class="layer shelf">
+      <div class="head">
+        <h4>The shelf labels</h4>
+        <p>Always in context. One line per installed skill, so the agent knows what exists without reading any of it.</p>
+      </div>
+      <div class="sample">
+        <code class="dim">vite: Vite build tool configuration, plugin API, SSR…</code>
+        <code class="hit">frontend-failure-modes: Failure-mode checklists for frontend work… forms…</code>
+        <code class="dim">triage: Decide what an incoming request deserves…</code>
+      </div>
+    </li>
+    <li class="layer drawer">
+      <div class="head">
+        <h4>The drawer</h4>
+        <p>Loaded only when your task matches the label. Here, the skill body is a routing table.</p>
+      </div>
+      <div class="sample">
+        <table>
+          <thead><tr><th>The brief or diff touches…</th><th>Read</th></tr></thead>
+          <tbody>
+            <tr class="hit"><td>Forms, inputs, validation, submission flows, file uploads</td><td><code>forms-and-input.md</code></td></tr>
+            <tr class="dim"><td>Routes, links, URL parameters, navigation flows</td><td><code>routing-and-navigation.md</code></td></tr>
+            <tr class="hit"><td>Any interactive element, form, dynamic content</td><td><code>accessibility.md</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </li>
+    <li class="layer box">
+      <div class="head">
+        <h4>The box inside</h4>
+        <p>Opened only when a row fires. Every item ends in a check the agent must clear before calling the work done.</p>
+      </div>
+      <blockquote class="sample">
+        <p><strong>Double submit.</strong> A slow response plus an impatient user creates the resource twice; disable-on-click alone leaves the button dead after a failed request.</p>
+        <p class="check">Check: submission is guarded by in-flight state and re-enabled on failure; the operation is idempotent end to end.</p>
+      </blockquote>
+    </li>
+  </ol>
+  <figcaption>
+    This is why {stats.skills} installed skills do not drown the model: it reads labels, opens one drawer and two boxes, and leaves the rest shut.
+  </figcaption>
+</figure>
+
+<style>
+  .loading {
+    margin: 0;
+  }
+
+  .label {
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+    font-weight: 500;
+  }
+
+  .task p {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    margin: 0.2rem 0 1.5rem;
+  }
+
+  .layers {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .layer {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 1.5rem;
+    padding: 1.4rem 1.5rem;
+    background: var(--grout);
+    border: 1px solid var(--rule);
+  }
+
+  .layer + .layer {
+    border-top: none;
+  }
+
+  .drawer {
+    margin-inline: 1rem;
+  }
+
+  .box {
+    margin-inline: 2rem;
+    background: var(--ai-wash);
+    border-color: #b8c5dc;
+  }
+
+  .head h4 {
+    margin-bottom: 0.35rem;
+  }
+
+  .head p {
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+    margin: 0;
+  }
+
+  .sample {
+    font-size: var(--step--1);
+    min-width: 0;
+    margin: 0;
+  }
+
+  .sample code {
+    display: block;
+    background: none;
+    padding: 0.2rem 0;
+    white-space: normal;
+  }
+
+  .dim {
+    opacity: 0.45;
+  }
+
+  .hit {
+    color: var(--ai-ink);
+    font-weight: 600;
+  }
+
+  code.hit::before,
+  tr.hit td:first-child::before {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    background: var(--ochre);
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+    vertical-align: 0.1em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--sumi-soft);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.3rem;
+  }
+
+  td {
+    padding: 0.3rem 0.5rem 0.3rem 0;
+    vertical-align: top;
+  }
+
+  td code {
+    padding: 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0.5rem;
+  }
+
+  .check {
+    font-weight: 600;
+    color: var(--ai-ink);
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: 1.25rem;
+    color: var(--sumi-soft);
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 760px) {
+    .layer {
+      grid-template-columns: 1fr;
+    }
+
+    .drawer,
+    .box {
+      margin-inline: 0;
+    }
+  }
+</style>

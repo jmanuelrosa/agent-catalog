@@ -1,0 +1,726 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import KuraMosaic from '../components/KuraMosaic.astro';
+import LoadingDiagram from '../components/LoadingDiagram.astro';
+import PipelineDiagram from '../components/PipelineDiagram.astro';
+import KuraDiagram from '../components/KuraDiagram.astro';
+import Playbooks from '../components/Playbooks.astro';
+import Terminal from '../components/Terminal.astro';
+import { bundles, sources, stats } from '../lib/catalog';
+import { scope } from '../lib/seats';
+import { links } from '../lib/site';
+
+const topSources = sources.slice(0, 8);
+const remainingSources = sources.length - topSources.length;
+const seats = bundles.filter((bundle) => bundle.agents.some((agent) => agent.endsWith('-staff-engineer')));
+const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
+---
+
+<Base
+  dark
+  title="Agent Catalog: skills, agents and bundles for Claude Code and Pi"
+  description={`${stats.skills} skills, ${stats.agents} agents and ${stats.bundles} bundles that teach your coding agent how your team works, installed per project with kura.`}
+>
+  <section class="hero" data-hero>
+    <KuraMosaic />
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Teach your coding agent how your team works.</h1>
+        <p class="lede">
+          {stats.skills} skills and {stats.agents} specialist agents that give your agent judgment, checklists, and the habit of
+          asking before it does something you would have stopped. kura puts the right ones in each project.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/docs/start/">Set it up in ten minutes</a>
+          <a class="button ghost" href="#what">See how a skill works</a>
+        </div>
+      </div>
+      <div class="glyph-slot" data-glyph-slot aria-hidden="true"></div>
+    </div>
+    <div class="wrap hero-foot">
+      <p class="hint">蔵 means storehouse. Every gold or indigo tile is one skill; hover to read its label.</p>
+      <ul class="legend">
+        <li><i class="local"></i>{stats.local} written here</li>
+        <li><i class="upstream"></i>{stats.upstream} from {stats.sources} open-source repos</li>
+        <li><i class="spare"></i>stone, no skill yet</li>
+      </ul>
+    </div>
+  </section>
+
+  <Section id="problem" question="What goes wrong without it?">
+    <p class="lede">
+      A coding agent takes the shortest path that looks finished. Ask both of these for the same thing and watch where they
+      stop.
+    </p>
+    <div class="duel">
+      <figure class="session plain">
+        <figcaption>Your agent, on its own</figcaption>
+        <div class="screen">
+          <p class="you">&gt; Add a newsletter signup form to the footer</p>
+          <p>Installing react-hook-form and zod…</p>
+          <p class="flag">Created NewsletterForm.tsx<span class="note">You replaced that library last year.</span></p>
+          <p class="flag">Styled the button with #3b82f6<span class="note">Not your blue. Yours is a token.</span></p>
+          <p class="flag">Wired submit to POST /api/subscribe<span class="note">Nothing stops a second click.</span></p>
+          <p class="flag">Done. All tests pass ✓<span class="note">There were no tests for this.</span></p>
+        </div>
+      </figure>
+      <figure class="session catalog">
+        <figcaption>Your agent, with the catalog</figcaption>
+        <div class="screen">
+          <p class="you">&gt; Add a newsletter signup form to the footer</p>
+          <p class="seat">frontend-staff-engineer</p>
+          <p>Stack: React 19, forms through <span class="ok">ui/form</span></p>
+          <p>Opened: forms-and-input, accessibility, errors-and-resilience</p>
+          <p><span class="ok">✓</span> Double submit guarded, re-enabled on failure</p>
+          <p><span class="ok">✓</span> Errors announced, labels tied to inputs</p>
+          <p><span class="ask">needs-decision</span> Add an email validator, or reuse ui/form? Recommend: reuse.</p>
+          <p class="report">Status: needs-decision, one question for you</p>
+        </div>
+      </figure>
+    </div>
+    <p>
+      The model is the one you already use. The difference is that it reads instructions written by people who have shipped
+      this kind of change before, at the moment they matter.
+    </p>
+  </Section>
+
+  <Section id="what" question="What is a skill, and how does it stay out of the way?" tone="deep">
+    <p class="lede">
+      A skill is a folder with a Markdown file in it. The first lines say when to use it. The rest says how. Your agent reads
+      the first part always and the rest only when your task calls for it.
+    </p>
+    <LoadingDiagram />
+  </Section>
+
+  <Section id="parts" question="Skills, agents, bundles: which is which?">
+    <dl class="parts">
+      <div>
+        <dt>Skill</dt>
+        <dd>
+          Know-how the agent loads into its own head when the task matches: how to configure Vite, how to review a diff,
+          what to check before calling a form done. <a href="/catalog/">{stats.skills} of them</a>.
+        </dd>
+      </div>
+      <div>
+        <dt>Agent</dt>
+        <dd>
+          A specialist your agent hands work to. It gets its own fresh context, its own tools and its own rules, and
+          returns a report. The architect writes specs; the code-reviewer cannot edit, by design.
+        </dd>
+      </div>
+      <div>
+        <dt>Bundle</dt>
+        <dd>
+          A staff-engineer seat packaged with the checklists it is held to. Add <code>frontend</code> and you get a
+          frontend specialist and eight failure-mode checklists from accessibility to routing.
+        </dd>
+      </div>
+      <div>
+        <dt>Harness</dt>
+        <dd>
+          The program that runs the model and reads these files: Claude Code or Pi. Skills are plain Markdown, so the
+          knowledge travels; kura handles the wiring for each.
+        </dd>
+      </div>
+    </dl>
+    <p><a href="/docs/concepts/">Read the concepts page</a> for the anatomy of each, with real files.</p>
+  </Section>
+
+  <Section id="seats" question="Who is on the team?" tone="dark">
+    <Fragment slot="aside">
+      <p>Add a seat with <code>kura add frontend --type bundle</code>. Each one arrives with the checklist it is held to.</p>
+    </Fragment>
+    <p class="lede">
+      Sixteen staff-engineer seats, one per discipline. Your agent hands each one the slice it owns; the seat clears its own
+      failure-modes checklist before it may report done.
+    </p>
+    <ol class="chart">
+      {
+        seats.map((bundle) => (
+          <li>
+            <h3>{bundle.name}</h3>
+            <p>{scope[bundle.name]}</p>
+          </li>
+        ))
+      }
+    </ol>
+    {
+      productTeam && (
+        <p class="pm">
+          Plus <strong>product-team</strong>: {productTeam.agents.length} agents and {productTeam.skills.length} skills that take a
+          raw idea through research, a PRD and a red team before any engineer is involved.
+        </p>
+      )
+    }
+  </Section>
+
+  <Section id="flow" question="How does a request turn into a reviewed pull request?">
+    <p class="lede">
+      For work bigger than one file, the catalog runs a pipeline. Agents do the reading, writing and checking. You stand at
+      the two gates where a wrong call is expensive.
+    </p>
+    <PipelineDiagram />
+    <p><a href="/docs/workflow/">The full workflow</a>, including the product pipeline that comes before it.</p>
+  </Section>
+
+  <Section id="playbooks" question="What does this look like on a real project?" tone="deep">
+    <Fragment slot="aside">
+      <p>Pick the situation closest to yours. Each one is the commands you type and what runs because of them.</p>
+    </Fragment>
+    <Playbooks />
+    <p class="more"><a href="/docs/playbooks/">All playbooks, with the reasoning behind each step</a>.</p>
+  </Section>
+
+  <Section id="kura" question="Why kura?" tone="dark">
+    <p class="lede">
+      Copying skill folders by hand works for three skills. At three hundred, across several projects and two harnesses, you
+      need something that knows what each repository is supposed to see. kura (蔵, a storehouse) is that something.
+    </p>
+    <KuraDiagram />
+    <ul class="reasons">
+      <li><strong>One source of truth.</strong> Skills live once, in the catalog. Projects get links, never copies, so a fix lands everywhere.</li>
+      <li><strong>Per-project intent.</strong> A <code>kura.json</code> at the repo root says what this project uses. Commit it and your team gets the same setup.</li>
+      <li><strong>Evidence, not guesses.</strong> <code>kura scout</code> reads your manifests and recommends skills with the line that justifies each one.</li>
+      <li><strong>Drift is visible.</strong> <code>kura doctor</code> reports broken links, missing skills and untrusted projects before your agent trips on them.</li>
+      <li><strong>Upstream stays fresh.</strong> <code>kura outdated</code> and <code>kura update</code> pull new versions from each source repo at a pinned commit.</li>
+    </ul>
+    <Terminal
+      label="A first kura session"
+      lines={[
+        { kind: 'comment', text: '# in any project' },
+        { text: 'kura init --harness claude --harness pi --yes' },
+        { text: 'kura scout' },
+        { kind: 'out', text: 'Strong match' },
+        { kind: 'out', text: '  · react-router (skill) [engineering, frontend, react-router]' },
+        { kind: 'out', text: '    Why:  react-router in package.json' },
+        { kind: 'out', text: '  · frontend (bundle) [engineering, frontend, observability]' },
+        { kind: 'out', text: '    Adds: frontend-staff-engineer (agent), frontend-failure-modes' },
+        { text: 'kura scout --add' },
+        { text: 'kura trust --on' },
+        { text: 'kura doctor' },
+      ]}
+    />
+    <p class="more"><a href="/docs/kura/">The kura guide</a> covers every command and when to reach for it.</p>
+  </Section>
+
+  <Section id="fit" question="Is it worth it for me?">
+    <div class="ledger">
+      <div>
+        <h3>Where it earns its keep</h3>
+        <ul>
+          <li>You work in one codebase long enough for its conventions to matter.</li>
+          <li>Changes cross layers, and you want each layer checked by something that knows it.</li>
+          <li>You would rather be asked than surprised: dependencies, breaking APIs, new design tokens.</li>
+          <li>You want the same agent behavior on every machine and for every teammate.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Where it costs more than it gives</h3>
+        <ul>
+          <li>One-off scripts and quick questions. The full pipeline is a tax on a two-line fix; use one seat or none.</li>
+          <li>Token budgets. Seats default to the strongest model at high effort, and a feature team runs several of them.</li>
+          <li>Full autonomy. Every gate is a person by design, and no agent commits, pushes or merges.</li>
+          <li>Harnesses other than Claude Code and Pi. The Markdown travels, but kura only wires those two.</li>
+        </ul>
+      </div>
+    </div>
+    <p>
+      One more honest number: {sources[0]?.skills.length} of the {stats.upstream} upstream skills come from a single source, {sources[0]?.repo},
+      and most of them cover Google Cloud. If you do not use it, you will not install them, but they do inflate the total.
+    </p>
+  </Section>
+
+  <Section id="credit" question="Who wrote all of this?" tone="deep">
+    <p class="lede">
+      {stats.local} skills and every agent were written for this catalog. The other {stats.upstream} skills come from {stats.sources}
+      open-source repositories, kept as they were published and credited by name.
+    </p>
+    <ol class="sources">
+      {
+        topSources.map((source) => (
+          <li>
+            <span class="count">{source.skills.length}</span>
+            <code>{source.repo}</code>
+          </li>
+        ))
+      }
+    </ol>
+    <p>
+      and {remainingSources} more. Each upstream skill is pinned to the exact commit it was copied from, keeps its license, and
+      is listed on the <a href="/attribution/">attribution page</a> with a link back to its source.
+    </p>
+  </Section>
+
+  <Section id="start" question="How do I get the most out of it?">
+    <ol class="climb">
+      <li>
+        <h3>Install the global layer</h3>
+        <p>Clone the catalog, point kura at it, run <code>kura sync</code>. Every repository on your machine now has triage, commit, ship, review and the teammate skills.</p>
+      </li>
+      <li>
+        <h3>Let scout pick the project layer</h3>
+        <p><code>kura init</code> then <code>kura scout --add</code> in each project. Commit <code>kura.json</code> so your team gets the same set.</p>
+      </li>
+      <li>
+        <h3>Add the seats your work touches</h3>
+        <p><code>kura add frontend backend qa --type bundle</code>. A seat is worth adding when you would want a specialist reviewing that layer.</p>
+      </li>
+      <li>
+        <h3>Write your decisions down</h3>
+        <p>ADRs and recorded rulings are what let <code>decision-judge</code> answer instead of asking. The second month is quieter than the first.</p>
+      </li>
+      <li>
+        <h3>Route work instead of prompting it</h3>
+        <p>Start from <code>/triage</code> or <code>/feature-team</code> rather than a blank prompt, and end with <code>/ship</code>.</p>
+      </li>
+      <li>
+        <h3>Keep it fresh</h3>
+        <p><code>kura outdated</code> once a week, <code>kura doctor</code> when something feels off, and the <code>watch</code> skill to sweep for dead code and stale workarounds.</p>
+      </li>
+    </ol>
+    <div class="actions">
+      <a class="button primary" href="/docs/start/">Start the setup guide</a>
+      <a class="button" href={links.catalog}>Open the repository</a>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    background: #1b2226;
+    color: var(--grout);
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(27, 34, 38, 0.94) 0%, rgba(27, 34, 38, 0.82) 34%, rgba(27, 34, 38, 0) 58%),
+      linear-gradient(0deg, rgba(27, 34, 38, 0.9) 0%, rgba(27, 34, 38, 0) 22%);
+  }
+
+  .hero-grid,
+  .hero-foot {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+    min-height: min(calc(100svh - 9rem), 58rem);
+    padding-block: clamp(2.5rem, 6vw, 5rem) 1rem;
+  }
+
+  .hero-copy {
+    pointer-events: auto;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 6.4vw, 6.25rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    max-width: 11ch;
+    color: var(--grout);
+  }
+
+  .hero .lede {
+    margin-top: 2rem;
+    max-width: 34rem;
+    color: #c7cfcb;
+  }
+
+  .glyph-slot {
+    aspect-ratio: 1;
+    width: 100%;
+    max-height: min(72svh, 44rem);
+    justify-self: end;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .button.ghost {
+    color: var(--grout);
+    border-color: #6b7a82;
+  }
+
+  .button.ghost:hover {
+    background: var(--grout);
+    border-color: var(--grout);
+    color: var(--sumi);
+  }
+
+  .hero-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem 2.25rem;
+    font-size: var(--step--1);
+    color: #9fabb0;
+  }
+
+  .hint {
+    margin: 0;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .legend i {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+  }
+
+  .legend .local {
+    background: #5b80cf;
+  }
+
+  .legend .upstream {
+    background: #d6a447;
+  }
+
+  .legend .spare {
+    background: #7f8c91;
+  }
+
+  @media (max-width: 960px) {
+    .hero::after {
+      background: linear-gradient(0deg, rgba(27, 34, 38, 0.96) 0%, rgba(27, 34, 38, 0.85) 50%, rgba(27, 34, 38, 0.1) 75%);
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .glyph-slot {
+      order: -1;
+      width: min(100%, 26rem);
+      justify-self: center;
+    }
+  }
+
+  .duel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-block: 2rem;
+  }
+
+  .session {
+    margin: 0;
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+    background: var(--slate-deep);
+    color: #dde2de;
+    font-family: var(--font-code);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .session figcaption {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--step--1);
+    padding: 0.7rem 1.1rem;
+    background: #2f3a40;
+  }
+
+  .catalog figcaption {
+    background: var(--ai);
+  }
+
+  .screen {
+    padding: 1rem 1.1rem 1.25rem;
+  }
+
+  .screen p {
+    margin: 0 0 0.45rem;
+  }
+
+  .you {
+    color: #e2c47f;
+  }
+
+  .flag {
+    position: relative;
+    padding-left: 0.8rem;
+    border-left: 2px solid #c2604a;
+  }
+
+  .flag .note {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: #f0a796;
+  }
+
+  .seat {
+    color: #a9bfe6;
+    font-weight: 600;
+  }
+
+  .ok {
+    color: #9fd3a8;
+  }
+
+  .ask {
+    color: #1e2124;
+    background: #e2c47f;
+    padding: 0 0.35em;
+    border-radius: 2px;
+  }
+
+  .report {
+    margin-top: 0.8rem !important;
+    padding-top: 0.6rem;
+    border-top: 1px dashed #4a5860;
+    color: #e2c47f;
+  }
+
+  @media (max-width: 860px) {
+    .duel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .chart {
+    list-style: none;
+    margin: 2.25rem 0 1.5rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    border-top: 1px solid #34404a;
+    border-left: 1px solid #34404a;
+  }
+
+  .chart li {
+    padding: 1.1rem 1.15rem 1.2rem;
+    border-right: 1px solid #34404a;
+    border-bottom: 1px solid #34404a;
+    transition: background-color 160ms ease-out;
+  }
+
+  .chart li:hover {
+    background: #232c31;
+  }
+
+  .chart h3 {
+    font-size: var(--step-2);
+    font-weight: 800;
+    color: var(--grout);
+    margin-bottom: 0.4rem;
+  }
+
+  .chart h3::before {
+    content: '';
+    display: inline-block;
+    width: 0.32em;
+    height: 0.32em;
+    background: var(--ochre);
+    transform: rotate(45deg);
+    margin-right: 0.45em;
+    vertical-align: 0.2em;
+  }
+
+  .chart p {
+    margin: 0;
+    font-size: var(--step--1);
+    color: #a7b2b6;
+  }
+
+  .pm {
+    color: #c7cfcb;
+  }
+
+  .pm strong {
+    color: var(--grout);
+  }
+  .parts {
+    margin: 0 0 2rem;
+    display: grid;
+    gap: 0;
+  }
+
+  .parts > div {
+    display: grid;
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-block: 1.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .parts dt {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .parts dd {
+    margin: 0;
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 560px) {
+    .parts > div {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+  }
+
+  .more {
+    margin-top: 1.75rem;
+  }
+
+  .reasons {
+    margin: 2.5rem 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .reasons li {
+    max-width: var(--measure);
+    padding-left: 1.4rem;
+    position: relative;
+  }
+
+  .reasons li::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 0.6em;
+    width: 0.5em;
+    height: 0.5em;
+    background: var(--ochre);
+    transform: rotate(45deg);
+  }
+
+  .ledger ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .ledger li + li {
+    margin-top: 0.55rem;
+  }
+
+  .ledger {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .ledger h3 {
+    font-size: var(--step-1);
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 3px solid var(--ai);
+  }
+
+  .ledger > div + div h3 {
+    border-color: var(--ochre);
+  }
+
+  @media (max-width: 760px) {
+    .ledger {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .sources {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sources li {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .count {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-2);
+    color: var(--ochre-ink);
+    min-width: 2.2ch;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sources code {
+    background: none;
+    padding: 0;
+  }
+
+  .climb {
+    list-style: none;
+    counter-reset: climb;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .climb li {
+    counter-increment: climb;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+
+  .climb li::before {
+    content: counter(climb);
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+    color: var(--ai);
+  }
+
+  .climb h3 {
+    font-size: var(--step-1);
+    margin-bottom: 0.3rem;
+  }
+
+  .climb p {
+    margin: 0;
+  }
+</style>

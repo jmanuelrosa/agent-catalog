@@ -1,0 +1,341 @@
+---
+import { skills, sources, stats } from '../lib/catalog';
+
+const sourceIndex = new Map(sources.map(({ repo }, index) => [repo, index]));
+const tiles = skills.map((skill) => ({
+  n: skill.name,
+  k: skill.bundle ? 1 : skill.provenance === 'local' ? 0 : 2,
+  o: skill.bundle ? `${skill.bundle} bundle` : (skill.source ?? 'written here'),
+  s: skill.source ? (sourceIndex.get(skill.source) ?? 0) : 0,
+}));
+---
+
+<div class="mosaic" data-mosaic>
+  <canvas
+    role="img"
+    aria-label={`The character 蔵, storehouse, drawn with ${stats.skills} tiles. Each tile is one skill: ${stats.local} written for this catalog and ${stats.upstream} from ${stats.sources} open-source repositories.`}
+  ></canvas>
+  <script type="application/json" data-tiles set:html={JSON.stringify(tiles)} />
+</div>
+
+<script>
+  import glyphFont from '@fontsource/shippori-mincho/files/shippori-mincho-103-800-normal.woff2?url';
+
+  type Tile = { n: string; k: 0 | 1 | 2; o: string; s: number };
+  type Cell = { x: number; y: number };
+  type Placed = Cell & { tile?: Tile; color: string; fromX: number; fromY: number; delay: number };
+
+  const GLYPH = '蔵';
+  const FAMILY = '"Kura Glyph", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif';
+  const palette = {
+    grout: '#2b353a',
+    tile: '#1d2529',
+    tileLit: '#36434a',
+    local: '#5b80cf',
+    bundle: '#8aa3db',
+    upstream: ['#d6a447', '#c48f2c', '#e3bd6c'],
+    spare: '#7f8c91',
+    label: '#f7f8f4',
+    labelInk: '#1e2124',
+  };
+  const lanternRadius = 170;
+  const assembleMs = 1100;
+  const spareRatio = 1.8;
+
+  function seeded(seed: number) {
+    return () => {
+      seed |= 0;
+      seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function colorFor(tile: Tile) {
+    if (tile.k === 0) return palette.local;
+    if (tile.k === 1) return palette.bundle;
+    return palette.upstream[tile.s % palette.upstream.length]!;
+  }
+
+  async function loadGlyphFont() {
+    try {
+      const face = new FontFace('Kura Glyph', `url(${glyphFont})`, { weight: '800' });
+      document.fonts.add(await Promise.race([face.load(), new Promise<never>((_, reject) => setTimeout(reject, 2000))]));
+    } catch {
+      // The system Mincho fallback still draws the glyph.
+    }
+  }
+
+  function glyphMask(size: number) {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+    ctx.font = `800 ${size}px ${FAMILY}`;
+    const box = ctx.measureText(GLYPH);
+    const width = box.actualBoundingBoxLeft + box.actualBoundingBoxRight;
+    const height = box.actualBoundingBoxAscent + box.actualBoundingBoxDescent;
+    const scale = (size * 0.97) / Math.max(width, height, 1);
+    ctx.font = `800 ${size * scale}px ${FAMILY}`;
+    ctx.textBaseline = 'alphabetic';
+    const fitted = ctx.measureText(GLYPH);
+    const left = fitted.actualBoundingBoxLeft;
+    const x = (size - (left + fitted.actualBoundingBoxRight)) / 2 + left;
+    const y = (size + fitted.actualBoundingBoxAscent - fitted.actualBoundingBoxDescent) / 2;
+    ctx.fillText(GLYPH, x, y);
+    return ctx.getImageData(0, 0, size, size).data;
+  }
+
+  function lattice(width: number, height: number, half: number) {
+    const cells: Cell[] = [];
+    for (let j = 0; j * half <= height + half; j++) {
+      for (let i = j % 2; i * half <= width + half; i += 2) cells.push({ x: i * half, y: j * half });
+    }
+    return cells;
+  }
+
+  function init(root: HTMLElement) {
+    const canvas = root.querySelector('canvas')!;
+    const ctx = canvas.getContext('2d')!;
+    const tiles = JSON.parse(root.querySelector('[data-tiles]')!.textContent ?? '[]') as Tile[];
+    const slot = root.closest('[data-hero]')?.querySelector<HTMLElement>('[data-glyph-slot]');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wall = document.createElement('canvas');
+
+    let width = 0;
+    let height = 0;
+    let half = 12;
+    let placed: Placed[] = [];
+    let start = 0;
+    let assembled = reduced;
+    let pointer: { x: number; y: number } | null = null;
+    let frame = 0;
+
+    const diamond = (target: CanvasRenderingContext2D, x: number, y: number, r: number) => {
+      target.beginPath();
+      target.moveTo(x, y - r);
+      target.lineTo(x + r, y);
+      target.lineTo(x, y + r);
+      target.lineTo(x - r, y);
+      target.closePath();
+    };
+
+    const layout = () => {
+      const rect = root.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = wall.width = Math.round(width * dpr);
+      canvas.height = wall.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const slotRect = slot?.getBoundingClientRect();
+      const box = slotRect
+        ? { x: slotRect.left - rect.left, y: slotRect.top - rect.top, size: Math.min(slotRect.width, slotRect.height) }
+        : { x: width * 0.55, y: height * 0.1, size: Math.min(width * 0.4, height * 0.8) };
+      const maskSize = Math.max(64, Math.round(box.size));
+      const mask = glyphMask(maskSize);
+      const inside = (cell: Cell) => {
+        const mx = Math.round(cell.x - box.x);
+        const my = Math.round(cell.y - box.y);
+        if (mx < 0 || my < 0 || mx >= maskSize || my >= maskSize) return false;
+        return (mask[(my * maskSize + mx) * 4 + 3] ?? 0) > 110;
+      };
+      const target = Math.round(tiles.length * spareRatio);
+      let low = 3;
+      let high = 40;
+      for (let step = 0; step < 14; step++) {
+        const mid = (low + high) / 2;
+        const count = lattice(width, height, mid).filter(inside).length;
+        if (count >= target) low = mid;
+        else high = mid;
+      }
+      half = low;
+
+      const cells = lattice(width, height, half);
+      const glyphCells = cells.filter(inside);
+      const random = seeded(tiles.length);
+      const order = glyphCells.map((cell) => ({ cell, key: random() })).sort((a, b) => a.key - b.key);
+      const slots = order.slice(0, tiles.length).map(({ cell }) => cell);
+      const spare = new Set(order.slice(tiles.length).map(({ cell }) => cell));
+      const centerX = box.x + box.size / 2;
+      const centerY = box.y + box.size / 2;
+
+      placed = [
+        ...slots.map((cell, index) => ({ cell, tile: tiles[index] })),
+        ...[...spare].map((cell) => ({ cell, tile: undefined })),
+      ].map(({ cell, tile }) => {
+        const angle = random() * Math.PI * 2;
+        const distance = box.size * (0.35 + random() * 0.6);
+        return {
+          ...cell,
+          tile,
+          color: tile ? colorFor(tile) : palette.spare,
+          fromX: centerX + Math.cos(angle) * distance,
+          fromY: centerY + Math.sin(angle) * distance + box.size * 0.25,
+          delay: Math.hypot(cell.x - centerX, cell.y - centerY) * 0.9 + random() * 260,
+        };
+      });
+
+      const glyphSet = new Set(glyphCells);
+      const wctx = wall.getContext('2d')!;
+      wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      wctx.fillStyle = palette.grout;
+      wctx.fillRect(0, 0, width, height);
+      wctx.fillStyle = palette.tile;
+      const r = half - Math.max(1, half * 0.14);
+      for (const cell of cells) {
+        if (glyphSet.has(cell)) continue;
+        diamond(wctx, cell.x, cell.y, r);
+        wctx.fill();
+      }
+    };
+
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const nearestTile = () => {
+      if (!pointer) return null;
+      let best: Placed | null = null;
+      let bestDistance = half * 1.2;
+      for (const cell of placed) {
+        if (!cell.tile) continue;
+        const d = Math.hypot(cell.x - pointer.x, cell.y - pointer.y);
+        if (d < bestDistance) {
+          best = cell;
+          bestDistance = d;
+        }
+      }
+      return best;
+    };
+
+    const drawLabel = (cell: Placed) => {
+      const tile = cell.tile!;
+      ctx.font = '600 14px "Fragment Mono", ui-monospace, monospace';
+      const nameWidth = ctx.measureText(tile.n).width;
+      ctx.font = '500 12px "Zen Kaku Gothic New", system-ui, sans-serif';
+      const originText = tile.k === 2 ? `from ${tile.o}` : tile.o;
+      const originWidth = ctx.measureText(originText).width;
+      const w = Math.max(nameWidth, originWidth) + 24;
+      const h = 48;
+      let x = cell.x + half + 10;
+      let y = cell.y - h - half;
+      if (x + w > width - 8) x = cell.x - half - 10 - w;
+      if (y < 8) y = cell.y + half + 10;
+      ctx.fillStyle = palette.label;
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, 4);
+      ctx.fill();
+      ctx.fillStyle = cell.color;
+      ctx.fillRect(x, y, 4, h);
+      ctx.fillStyle = palette.labelInk;
+      ctx.font = '600 14px "Fragment Mono", ui-monospace, monospace';
+      ctx.fillText(tile.n, x + 14, y + 20);
+      ctx.fillStyle = '#4a5056';
+      ctx.font = '500 12px "Zen Kaku Gothic New", system-ui, sans-serif';
+      ctx.fillText(originText, x + 14, y + 38);
+    };
+
+    const draw = (now: number) => {
+      frame = 0;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(wall, 0, 0, width, height);
+      const r = half - Math.max(1, half * 0.14);
+
+      if (pointer) {
+        const glow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, lanternRadius * 1.4);
+        glow.addColorStop(0, 'rgba(255, 214, 150, 0.22)');
+        glow.addColorStop(1, 'rgba(255, 214, 150, 0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(pointer.x - lanternRadius * 1.4, pointer.y - lanternRadius * 1.4, lanternRadius * 2.8, lanternRadius * 2.8);
+      }
+
+      let animating = false;
+      for (const cell of placed) {
+        let x = cell.x;
+        let y = cell.y;
+        let alpha = 1;
+        if (!assembled) {
+          const t = Math.min(1, Math.max(0, (now - start - cell.delay) / assembleMs));
+          if (t < 1) animating = true;
+          const e = ease(t);
+          x = cell.fromX + (cell.x - cell.fromX) * e;
+          y = cell.fromY + (cell.y - cell.fromY) * e;
+          alpha = t;
+        }
+        if (alpha <= 0) continue;
+        let size = r;
+        if (pointer && assembled) {
+          const d = Math.hypot(x - pointer.x, y - pointer.y);
+          if (d < lanternRadius) size = r * (1 + 0.16 * (1 - d / lanternRadius) ** 2);
+        }
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = cell.color;
+        diamond(ctx, x, y, size);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      if (!assembled && !animating) assembled = true;
+      if (animating) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+
+      const hit = nearestTile();
+      if (hit) {
+        ctx.fillStyle = palette.label;
+        diamond(ctx, hit.x, hit.y, r * 1.35);
+        ctx.fill();
+        drawLabel(hit);
+      }
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+
+    const relayout = () => {
+      layout();
+      schedule();
+    };
+
+    const track = (event: Event) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer = { x: (event as PointerEvent).clientX - rect.left, y: (event as PointerEvent).clientY - rect.top };
+      schedule();
+    };
+    root.closest('[data-hero]')?.addEventListener('pointermove', track);
+    root.closest('[data-hero]')?.addEventListener('pointerdown', track);
+    root.closest('[data-hero]')?.addEventListener('pointerleave', () => {
+      pointer = null;
+      schedule();
+    });
+
+    let resizeFrame = 0;
+    new ResizeObserver(() => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(relayout);
+    }).observe(root);
+
+    layout();
+    start = performance.now();
+    frame = requestAnimationFrame(draw);
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-mosaic]');
+  if (root) loadGlyphFont().then(() => init(root));
+</script>
+
+<style>
+  .mosaic {
+    position: absolute;
+    inset: 0;
+    background: #2b353a;
+  }
+
+  canvas {
+    display: block;
+  }
+</style>

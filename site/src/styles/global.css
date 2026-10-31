@@ -1,0 +1,248 @@
+@import '@fontsource/shippori-mincho/latin-600.css';
+@import '@fontsource/shippori-mincho/latin-800.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-400.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-500.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-700.css';
+@import '@fontsource/fragment-mono/latin-400.css';
+
+:root {
+  --plaster: #edeee9;
+  --plaster-deep: #e1e3dc;
+  --grout: #f7f8f4;
+  --sumi: #1e2124;
+  --sumi-soft: #4a5056;
+  --slate: #2f3a40;
+  --slate-deep: #232c31;
+  --ai: #2b4c8c;
+  --ai-ink: #223d72;
+  --ai-wash: #dfe5ef;
+  --ochre: #b8862b;
+  --ochre-ink: #7d5a14;
+  --ochre-wash: #f1e7d2;
+  --rule: #c9ccc4;
+
+  --font-display: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+  --font-body: 'Zen Kaku Gothic New', 'Hiragino Sans', system-ui, sans-serif;
+  --font-code: 'Fragment Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3125rem;
+  --step-2: 1.75rem;
+  --step-3: 2.375rem;
+  --step-4: 3.25rem;
+  --step-5: clamp(2.75rem, 6vw + 0.5rem, 4.75rem);
+
+  --measure: 66ch;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --page: 78rem;
+  --radius-tile: 2px;
+  --radius-panel: 6px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--plaster);
+  color: var(--sumi);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-5);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: var(--step-4);
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: var(--step-2);
+}
+
+h4 {
+  font-size: var(--step-1);
+}
+
+p {
+  margin: 0 0 1em;
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--ai);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--ai-ink);
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ai);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-code);
+  font-size: 0.88em;
+}
+
+:not(pre) > code {
+  background: var(--plaster-deep);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+pre {
+  margin: 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.wrap {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--sumi-soft);
+}
+
+.terminal {
+  background: var(--slate-deep);
+  color: var(--grout);
+  border-radius: var(--radius-panel);
+  padding: 1.1rem 1.25rem;
+  font-size: var(--step--1);
+}
+
+.terminal .prompt {
+  color: #8fa6c9;
+  user-select: none;
+}
+
+.terminal .comment {
+  color: #9aa5ab;
+}
+
+.terminal .agent {
+  color: #e2c47f;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.15em;
+  border-radius: var(--radius-panel);
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid var(--sumi);
+  color: var(--sumi);
+  background: transparent;
+  font-size: var(--step-0);
+  line-height: 1.2;
+}
+
+.button:hover {
+  background: var(--sumi);
+  color: var(--plaster);
+  text-decoration: none;
+}
+
+.button.primary {
+  background: var(--ai);
+  border-color: var(--ai);
+  color: var(--grout);
+}
+
+.button.primary:hover {
+  background: var(--ai-ink);
+  border-color: var(--ai-ink);
+}
+
+.chip {
+  display: inline-block;
+  font-size: var(--step--1);
+  padding: 0.05em 0.55em;
+  border-radius: 3px;
+  background: var(--plaster-deep);
+  color: var(--sumi-soft);
+  font-weight: 500;
+}
+
+.chip.local {
+  background: var(--ai-wash);
+  color: var(--ai-ink);
+}
+
+.chip.upstream {
+  background: var(--ochre-wash);
+  color: var(--ochre-ink);
+}
+
+.skill-name {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  color: var(--ai-ink);
+}

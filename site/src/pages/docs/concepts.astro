@@ -1,0 +1,157 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import LoadingDiagram from '../../components/LoadingDiagram.astro';
+import { bundles, stats } from '../../lib/catalog';
+import { scope } from '../../lib/seats';
+
+---
+
+<Docs
+  title="Concepts"
+  description="What skills, agents, bundles and harnesses are, how they load, and how they fit together."
+  intro="Four words do most of the work in this catalog: skill, agent, bundle, harness. Here is each one, opened up, with real files from the catalog."
+>
+  <h2>Skills</h2>
+  <p>
+    A skill is a folder. Inside is a <code>SKILL.md</code> whose frontmatter says what the skill is for and when to use it,
+    followed by the instructions themselves. Larger skills split detail into files the agent opens only when needed.
+  </p>
+  <pre class="tree"><code>frontend-failure-modes/
+  SKILL.md                  the label and the routing table
+  references/
+    accessibility.md        opened when the change is interactive
+    forms-and-input.md      opened when the change has a form
+    performance.md
+    …</code></pre>
+  <pre class="file"><code>---
+name: frontend-failure-modes
+description: Failure-mode checklists for frontend implementation work,
+  split by domain. Use when implementing or reviewing frontend changes
+  that touch component state and rendering, data fetching, accessibility,
+  performance, forms… Read only the reference files whose triggers match.
+---
+
+# Frontend failure modes
+
+This skill is a router: match the change against the trigger table,
+read only the files that fire, and treat every checklist item in them
+as a gate.</code></pre>
+  <p>
+    The <code>description</code> is the most important line in the file. It is the only part the agent sees until the task
+    matches, so it has to say when to reach for the skill, not just what the skill is about.
+  </p>
+  <LoadingDiagram />
+
+  <h3>Global and project skills</h3>
+  <p>
+    Some skills are useful in every repository: triage, commit, ship, review, the teammate skills. Those are marked global in
+    the catalog and <code>kura sync</code> links them once for the whole machine. Everything else is per project, chosen in
+    that project's <code>kura.json</code>, so a Swift repo never sees the Terraform skills.
+  </p>
+  <h3>Dependencies</h3>
+  <p>
+    A skill can depend on others. <code>teammate</code> brings <code>how</code>, <code>why</code> and <code>teach</code>;
+    <code>to-rfc</code> brings research and grilling. kura installs the whole closure. A few skills are marked dependency-only:
+    they never install alone, because they only make sense as part of something bigger, and you never call them yourself.
+    You ask the skill that brings them: <code>/teammate</code>, not <code>/teach</code>, <code>/how</code> or <code>/why</code>.
+    The catalog marks each one with the skills it arrives through.
+  </p>
+
+  <h2>Agents</h2>
+  <p>
+    A skill changes what your current agent knows. An agent is a separate worker your agent hands a job to. It starts with an
+    empty context, gets only the tools its file allows, follows its own rules, and returns a report. That separation is the
+    point: the reviewer cannot edit what it reviews, and a seat working on the database never sees the CSS.
+  </p>
+  <pre class="file"><code>---
+name: frontend-staff-engineer
+description: Staff-level frontend implementation specialist. Use PROACTIVELY
+  when delegating frontend implementation work… returns a structured
+  completion report.
+model: opus
+effort: xhigh
+memory: project
+---</code></pre>
+  <p>Every staff seat ends its work with the same report, so whoever dispatched it can act without rereading the diff:</p>
+  <pre class="file"><code>## Completion Report: invoice CSV export (frontend slice)
+**Status:** done | blocked | needs-decision
+**Skills used:** frontend-failure-modes, react-router
+**Gaps:** kura add tanstack-router-best-practices --type skill</code></pre>
+  <p>
+    There are {stats.agents} agents. Six stand alone and are useful everywhere: <code>architect</code>,
+    <code>ux-shaper</code>, <code>code-reviewer</code>, <code>decision-judge</code>, and two reviewers for your harness
+    setup itself. The rest arrive in bundles.
+  </p>
+
+  <h2>Bundles</h2>
+  <p>
+    A bundle is a seat and the standard it is held to. Sixteen bundles pair one staff-engineer agent with one failure-modes
+    skill: a trigger table pointing at checklists, where every item ends in a <code>Check:</code> the seat must clear before
+    reporting done. The seventeenth, <code>product-team</code>, is a whole product pipeline.
+  </p>
+  <table>
+    <thead><tr><th>Bundle</th><th>What the seat owns</th><th>Ships</th></tr></thead>
+    <tbody>
+      {
+        bundles.map((bundle) => (
+          <tr>
+            <td><code>{bundle.name}</code></td>
+            <td>{scope[bundle.name] ?? bundle.description}</td>
+            <td>
+              {bundle.agents.length} {bundle.agents.length === 1 ? 'agent' : 'agents'}, {bundle.skills.length}{' '}
+              {bundle.skills.length === 1 ? 'skill' : 'skills'}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <p>
+    Every seat has three lists of things it may do: always, only after asking, and never. Adding a dependency, changing build
+    config or breaking a shared API are ask-first. Deploying, applying infrastructure or pushing to a store are never.
+  </p>
+
+  <h2>Harnesses</h2>
+  <p>
+    The harness is the program that runs the model: Claude Code, Pi, or anything else that reads the Agent Skills format.
+    Skills are plain Markdown and travel between them; any skill folder can be copied into any harness's skills directory and
+    it works. What differs is where each harness looks and what it supports. kura knows both layouts for Claude Code and Pi.
+  </p>
+  <p class="note">
+    A few features are stronger in Claude Code than in Pi today. Seats get git-worktree isolation only in Claude Code, and the
+    code-reviewer's tool allowlist is enforced there and not under Pi.
+  </p>
+
+  <h2>Decisions that wait for a person</h2>
+  <p>
+    The catalog splits choices into two kinds. Technique is the agent's to decide: how to structure a test, which hook to use.
+    Some choices are always routed to a person, whatever any skill says:
+  </p>
+  <ul>
+    <li>adding a dependency, an animation or icon library, or a hosted font,</li>
+    <li>a new step on a design scale: spacing, type, color, motion, breakpoints,</li>
+    <li>a change to the brand: palette, typefaces, logo,</li>
+    <li>a raw value where the project already has a token,</li>
+    <li>a breaking change to a shared or published API.</li>
+  </ul>
+  <p>
+    When a seat meets one, it stops with <code>needs-decision</code> and a recommendation. Being right is what the
+    recommendation is for; it is never a reason to go ahead.
+  </p>
+</Docs>
+
+<style>
+  .tree,
+  .file {
+    background: var(--grout);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-panel);
+    padding: 1rem 1.25rem;
+    margin-block: 1.25rem 1.75rem;
+    font-size: var(--step--1);
+  }
+
+  .file {
+    border-left: 4px solid var(--ai);
+  }
+</style>
