@@ -1,6 +1,5 @@
 {
   "name": "agent-catalog",
-  "account_id": "75cb0d037d4d5aee4a8741819902498c",
   "compatibility_date": "2026-10-31",
   "assets": {
     "directory": "./dist"
