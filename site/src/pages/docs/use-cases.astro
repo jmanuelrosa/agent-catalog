@@ -1,0 +1,341 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import Terminal from '../../components/Terminal.astro';
+import SizeGlyph from '../../components/SizeGlyph.astro';
+import SizeLadder from '../../components/SizeLadder.astro';
+import { caseCount, groups, ladder, type UseCase } from '../../lib/usecases';
+import { profiles } from '../../lib/profiles';
+
+type Line = { kind?: 'cmd' | 'comment' | 'agent'; text: string };
+const slug = (text: string) => text.toLowerCase().replaceAll(' ', '-');
+const sizeLabel = Object.fromEntries(ladder.map((rung) => [rung.size, rung.add]));
+
+const linesFor = (useCase: UseCase): Line[] => [
+  ...(useCase.setup === 'global'
+    ? [{ kind: 'comment' as const, text: '# nothing to add: kura sync already linked it' }]
+    : useCase.setup.map((text) => ({ text }))),
+  { kind: 'agent', text: useCase.prompt },
+];
+
+const searchText = (useCase: UseCase) =>
+  [useCase.need, useCase.why, useCase.prompt, useCase.size, ...(useCase.setup === 'global' ? [] : useCase.setup)]
+    .join(' ')
+    .toLowerCase();
+---
+
+<Docs
+  title="Use cases"
+  description="Start from what you are trying to do: what to add from the catalog, what to type, and why it is that size."
+  intro="Start from who you are and what you are trying to do. Each case says what to add, what to type, and why it needs that much of the catalog and no more."
+>
+  <div class="who" data-who-picker hidden>
+    <h2>Who are you?</h2>
+    <div class="profiles" role="group" aria-label="Show cases for">
+      <button type="button" data-for="" aria-pressed="true">Everyone</button>
+      {
+        profiles.map((profile) => (
+          <button type="button" data-for={profile.id} aria-pressed="false">
+            {profile.name}
+          </button>
+        ))
+      }
+    </div>
+    {
+      profiles.map((profile) => (
+        <div class="brief" data-brief={profile.id} hidden>
+          <p>{profile.brief}</p>
+          <Terminal
+            label={`Where ${profile.name.toLowerCase()} start`}
+            lines={[...profile.start.map((text) => ({ text })), { kind: 'agent', text: profile.prompt }]}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <h2>How big is the job?</h2>
+  <p>
+    The size of the job decides what you reach for. Most work needs a single skill; a whole pipeline is for the few changes
+    that cross layers. Pick a size to see only its cases.
+  </p>
+  <SizeLadder mode="filter" />
+
+  <div class="finder" data-finder hidden>
+    <label for="case-search">Search the cases</label>
+    <input
+      id="case-search"
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="A tool, a task or a command, such as terraform or review"
+      data-search
+    />
+    <p class="count" aria-live="polite" data-count>{caseCount} cases</p>
+  </div>
+
+  <p class="key">
+    In every example, a line starting with <code>$</code> goes in your terminal and a line starting with <code>&gt;</code> is
+    what you say to your agent.
+  </p>
+
+  <div id="cases">
+    {
+      groups.map((group) => (
+        <section class="group" data-group aria-labelledby={`group-${slug(group.name)}`}>
+          <h2 id={`group-${slug(group.name)}`}>{group.name}</h2>
+          <ul class="cases" role="list">
+            {group.cases.map((useCase) => (
+              <li
+                class="case"
+                id={useCase.id}
+                data-size={useCase.size}
+                data-for={useCase.for.join(' ')}
+                data-text={searchText(useCase)}
+              >
+                <div class="head">
+                  <h3>{useCase.need}</h3>
+                  <span class="size">
+                    <SizeGlyph size={useCase.size} />
+                    {sizeLabel[useCase.size]}
+                  </span>
+                </div>
+                <Terminal label={`Commands to ${useCase.need.toLowerCase()}`} lines={linesFor(useCase)} />
+                <p class="why">
+                  {useCase.why}
+                  {useCase.playbook && (
+                    <Fragment>
+                      {' '}
+                      <a href={`/docs/playbooks/#${useCase.playbook}`}>See every step it runs</a>.
+                    </Fragment>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <p class="note empty" data-empty hidden>
+    No case matches that. Try the name of a tool, such as <code>vite</code> or <code>terraform</code>, or run <code>kura scout</code> in
+    your repo: it reads your lockfiles and suggests skills with the evidence it found.
+  </p>
+
+  <p class="note">
+    Not on this list? Run <code>kura scout</code> in the repo for skills that match your stack, or browse all of them in the <a href="/catalog/">catalog</a>.
+  </p>
+</Docs>
+
+<script>
+  const finder = document.querySelector<HTMLElement>('[data-finder]');
+  const search = document.querySelector<HTMLInputElement>('[data-search]');
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const rungs = [...document.querySelectorAll<HTMLButtonElement>('[data-ladder] button[data-size]')];
+  const cases = [...document.querySelectorAll<HTMLElement>('.case')];
+  const sections = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+  const sizes = new Set(rungs.map((rung) => rung.dataset.size));
+  const picker = document.querySelector<HTMLElement>('[data-who-picker]');
+  const people = [...document.querySelectorAll<HTMLButtonElement>('button[data-for]')];
+  const briefs = [...document.querySelectorAll<HTMLElement>('[data-brief]')];
+  const known = new Set(people.map((person) => person.dataset.for).filter(Boolean));
+
+  const params = new URLSearchParams(location.search);
+  let size = sizes.has(params.get('size') ?? '') ? params.get('size') : null;
+  let who = known.has(params.get('for') ?? '') ? params.get('for') : null;
+
+  const apply = () => {
+    const query = (search?.value ?? '').trim().toLowerCase();
+    let shown = 0;
+    for (const item of cases) {
+      const match =
+        (!size || item.dataset.size === size) &&
+        (!who || (item.dataset.for ?? '').split(' ').includes(who)) &&
+        (!query || (item.dataset.text ?? '').includes(query));
+      item.hidden = !match;
+      if (match) shown += 1;
+    }
+    for (const section of sections) {
+      section.hidden = !section.querySelector('.case:not([hidden])');
+    }
+    for (const rung of rungs) rung.setAttribute('aria-pressed', String(rung.dataset.size === size));
+    for (const person of people) person.setAttribute('aria-pressed', String((person.dataset.for || null) === who));
+    for (const brief of briefs) brief.hidden = brief.dataset.brief !== who;
+    if (count) count.textContent = shown === cases.length ? `${cases.length} cases` : `${shown} of ${cases.length} cases`;
+    if (empty) empty.hidden = shown > 0;
+
+    const url = new URL(location.href);
+    if (size) url.searchParams.set('size', size);
+    else url.searchParams.delete('size');
+    if (who) url.searchParams.set('for', who);
+    else url.searchParams.delete('for');
+    history.replaceState(null, '', url);
+  };
+
+  for (const rung of rungs) {
+    rung.addEventListener('click', () => {
+      size = size === rung.dataset.size ? null : (rung.dataset.size ?? null);
+      apply();
+    });
+  }
+  for (const person of people) {
+    person.addEventListener('click', () => {
+      who = person.dataset.for || null;
+      apply();
+    });
+  }
+  search?.addEventListener('input', apply);
+  if (finder) finder.hidden = false;
+  if (picker) picker.hidden = false;
+  apply();
+</script>
+
+<style>
+  .who[hidden] {
+    display: none;
+  }
+
+  .profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-block: 0.25rem 1.25rem;
+  }
+
+  .profiles button {
+    font: inherit;
+    font-weight: 500;
+    font-size: var(--step--1);
+    padding: 0.45em 0.95em;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-panel);
+    background: transparent;
+    color: var(--sumi-soft);
+    cursor: pointer;
+  }
+
+  .profiles button:hover {
+    border-color: var(--sumi);
+    color: var(--sumi);
+  }
+
+  .profiles button[aria-pressed='true'] {
+    background: var(--sumi);
+    border-color: var(--sumi);
+    color: var(--grout);
+  }
+
+  .brief[hidden] {
+    display: none;
+  }
+
+  .brief :global(.terminal) {
+    margin-block: 1rem 0;
+  }
+
+  .finder {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.4rem 1rem;
+    margin-block: 0.5rem 1rem;
+  }
+
+  .finder[hidden] {
+    display: none;
+  }
+
+  .finder label {
+    grid-column: 1 / -1;
+    font-weight: 700;
+    font-size: var(--step--1);
+  }
+
+  .finder input {
+    font: inherit;
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-panel);
+    background: var(--grout);
+    color: var(--sumi);
+    min-width: 0;
+  }
+
+  .finder input:hover {
+    border-color: var(--sumi-soft);
+  }
+
+  .finder input:focus-visible {
+    border-color: var(--ai);
+  }
+
+  .count {
+    margin: 0;
+    padding-bottom: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+    white-space: nowrap;
+  }
+
+  .key {
+    font-size: var(--step--1);
+    color: var(--sumi-soft);
+  }
+
+  .group[hidden],
+  .case[hidden] {
+    display: none;
+  }
+
+  #cases .cases {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+
+  .case {
+    padding-block: 1.5rem 0.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .case + .case {
+    margin-top: 0.5rem;
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem 1.5rem;
+  }
+
+  .head h3 {
+    flex: 1 1 20rem;
+    margin: 0;
+  }
+
+  .size {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--ai-ink);
+    white-space: nowrap;
+  }
+
+  .case :global(.terminal) {
+    margin-block: 0.9rem 0.75rem;
+  }
+
+  .why {
+    color: var(--sumi-soft);
+  }
+
+  .why a {
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,166 @@
+---
+import { profiles, stages } from '../lib/profiles';
+
+const commandOrPath = /(\/[\w-]+|docs\/[\w./-]*\/|docs\/[\w./-]*\.md)/;
+const parts = (text: string) =>
+  text.split(commandOrPath).map((part, index) => ({ part, code: index % 2 === 1 }));
+const casesPage = '/docs/use-cases/';
+---
+
+<table class="lanes plain">
+  <caption class="visually-hidden">Where each profile takes part, from idea to production</caption>
+  <thead>
+    <tr>
+      <td></td>
+      {
+        profiles.map((profile) => (
+          <th scope="col" class="who">
+            <span class="name">{profile.name}</span>
+            <span class="does">{profile.does}</span>
+            <a href={`${casesPage}?for=${profile.id}`}>Their use cases</a>
+          </th>
+        ))
+      }
+    </tr>
+  </thead>
+  <tbody>
+    {
+      stages.map((stage) => (
+        <tr>
+          <th scope="row" class="stage">{stage.name}</th>
+          {profiles.map((profile) => {
+            const cell = stage.cells[profile.id];
+            return (
+              <td class:list={{ gate: cell?.gate, empty: !cell }} data-who={profile.name}>
+                {cell?.gate && <strong>{cell.gate}</strong>}
+                {cell &&
+                  parts(cell.text).map(({ part, code }) => (code ? <code>{part}</code> : part))}
+              </td>
+            );
+          })}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .lanes {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: var(--step--1);
+    line-height: 1.5;
+    margin-block: 1.5rem 1rem;
+  }
+
+  thead td {
+    width: 8.5rem;
+  }
+
+  .who {
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+    padding: 0 1rem 1.25rem 0;
+    border-bottom: 2px solid var(--sumi);
+  }
+
+  .who > * {
+    display: block;
+  }
+
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+
+  .does {
+    color: var(--sumi-soft);
+    margin-bottom: 0.6rem;
+  }
+
+  .stage {
+    text-align: left;
+    vertical-align: top;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    padding: 0.75rem 1rem 0.75rem 0;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  td {
+    vertical-align: top;
+    padding: 0.75rem 1rem 0.75rem 0;
+  }
+
+  td code {
+    white-space: normal;
+  }
+
+  td.gate {
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--ochre);
+    background: var(--ochre-wash);
+    color: var(--ochre-ink);
+  }
+
+  td.gate strong {
+    display: block;
+  }
+
+  @media (max-width: 720px) {
+    .lanes,
+    .lanes thead,
+    .lanes tbody,
+    .lanes tr,
+    .lanes th,
+    .lanes td {
+      display: block;
+    }
+
+    thead td,
+    td.empty {
+      display: none;
+    }
+
+    .who {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    thead tr {
+      border-bottom: 2px solid var(--sumi);
+    }
+
+    tbody tr {
+      padding-block: 0.75rem;
+    }
+
+    .stage {
+      padding: 0 0 0.35rem;
+    }
+
+    td {
+      padding: 0.35rem 0;
+    }
+
+    td.gate {
+      padding: 0.5rem 0.75rem;
+    }
+
+    td::before {
+      content: attr(data-who);
+      display: block;
+      font-weight: 700;
+      color: var(--sumi);
+    }
+  }
+</style>
