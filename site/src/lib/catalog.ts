@@ -26,15 +26,21 @@ export interface Agent {
   name: string;
   description: string;
   bundle?: string;
+  model?: string;
+  effort?: string;
+  tools?: string[];
 }
 
 export interface Bundle {
   name: string;
   description: string;
+  job: string;
+  notFor?: string;
   groups: string[];
   agents: string[];
   skills: string[];
   requires: string[];
+  checklists: string[];
 }
 
 export interface UpstreamSource {
@@ -120,6 +126,14 @@ interface Registry {
   local: RegistryEntry[];
 }
 
+const NOT_FOR = 'Not for:';
+
+function checklistTitles(references: string): string[] {
+  return listDir(references)
+    .filter((file) => file.endsWith('.md'))
+    .map((file) => readFileSync(join(references, file), 'utf8').match(/^# (.+)$/m)?.[1] ?? basename(file, '.md'));
+}
+
 function loadBundles(): Bundle[] {
   const registry = readJson<{ local: { name: string; groups: string[] }[] }>('bundle-registry.json');
   return registry.local.map(({ name, groups }) => {
@@ -128,13 +142,18 @@ function loadBundles(): Bundle[] {
       description?: string;
       requires?: { skills?: string[] };
     };
+    const description = manifest.description ?? '';
+    const [job, notFor] = description.split(NOT_FOR);
     return {
       name,
       groups,
-      description: manifest.description ?? '',
+      description,
+      job: job.trim(),
+      notFor: notFor?.trim(),
       agents: listDir(join(dir, 'agents')).map((file) => basename(file, '.md')),
       skills: listDir(join(dir, 'skills')),
       requires: manifest.requires?.skills ?? [],
+      checklists: listDir(join(dir, 'skills')).flatMap((skill) => checklistTitles(join(dir, 'skills', skill, 'references'))),
     };
   });
 }
@@ -204,17 +223,25 @@ function loadSkills(bundles: Bundle[]): Skill[] {
   return skills.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function readAgent(path: string, bundle?: string): Agent {
+  const fm = readFrontmatter(path);
+  return {
+    name: basename(path, '.md'),
+    description: fm.description ?? '',
+    bundle,
+    model: fm.model,
+    effort: fm.effort,
+    tools: fm.tools?.split(',').map((tool) => tool.trim()),
+  };
+}
+
 function loadAgents(bundles: Bundle[]): Agent[] {
   const agents: Agent[] = listDir(join(root, 'agents'))
     .filter((file) => file.endsWith('.md'))
-    .map((file) => ({
-      name: basename(file, '.md'),
-      description: readFrontmatter(join(root, 'agents', file)).description ?? '',
-    }));
+    .map((file) => readAgent(join(root, 'agents', file)));
   for (const bundle of bundles) {
     for (const name of bundle.agents) {
-      const fm = readFrontmatter(join(root, 'bundles', bundle.name, 'agents', `${name}.md`));
-      agents.push({ name, description: fm.description ?? '', bundle: bundle.name });
+      agents.push(readAgent(join(root, 'bundles', bundle.name, 'agents', `${name}.md`), bundle.name));
     }
   }
   return agents.sort((a, b) => a.name.localeCompare(b.name));

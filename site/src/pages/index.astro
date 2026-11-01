@@ -10,7 +10,6 @@ import SizeLadder from '../components/SizeLadder.astro';
 import ProfileLanes from '../components/ProfileLanes.astro';
 import Terminal from '../components/Terminal.astro';
 import { bundles, sources, stats } from '../lib/catalog';
-import { scope } from '../lib/seats';
 import { links } from '../lib/site';
 import { caseCount } from '../lib/usecases';
 
@@ -134,12 +133,18 @@ const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
       {
         seats.map((bundle) => (
           <li>
-            <h3>{bundle.name}</h3>
-            <p>{scope[bundle.name]}</p>
+            <h3>
+              <a href={`/team/#seat-${bundle.name}`}>{bundle.name}</a>
+            </h3>
+            <p>{bundle.job}</p>
           </li>
         ))
       }
     </ol>
+    <p class="more">
+      <a href="/team/">Meet the whole team</a>: which seat to pick for a job, which to pick instead, and the agents that route
+      work to them.
+    </p>
     {
       productTeam && (
         <p class="pm">
@@ -549,6 +554,15 @@ const productTeam = bundles.find((bundle) => bundle.name === 'product-team');
     margin: 0;
     font-size: var(--step--1);
     color: #a7b2b6;
+  }
+
+  .chart h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .chart h3 a:hover {
+    text-decoration: underline;
   }
 
   .pm {

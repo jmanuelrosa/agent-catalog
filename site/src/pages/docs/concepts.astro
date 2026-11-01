@@ -1,8 +1,7 @@
 ---
 import Docs from '../../layouts/Docs.astro';
 import LoadingDiagram from '../../components/LoadingDiagram.astro';
-import { bundles, stats } from '../../lib/catalog';
-import { scope } from '../../lib/seats';
+import { stats } from '../../lib/catalog';
 
 ---
 
@@ -89,23 +88,10 @@ memory: project
     skill: a trigger table pointing at checklists, where every item ends in a <code>Check:</code> the seat must clear before
     reporting done. The seventeenth, <code>product-team</code>, is a whole product pipeline.
   </p>
-  <table>
-    <thead><tr><th>Bundle</th><th>What the seat owns</th><th>Ships</th></tr></thead>
-    <tbody>
-      {
-        bundles.map((bundle) => (
-          <tr>
-            <td><code>{bundle.name}</code></td>
-            <td>{scope[bundle.name] ?? bundle.description}</td>
-            <td>
-              {bundle.agents.length} {bundle.agents.length === 1 ? 'agent' : 'agents'}, {bundle.skills.length}{' '}
-              {bundle.skills.length === 1 ? 'skill' : 'skills'}
-            </td>
-          </tr>
-        ))
-      }
-    </tbody>
-  </table>
+  <p>
+    <a href="/team/">The team page</a> lists every seat with the work to bring it, the seat to pick instead, and the
+    checklists it is held to.
+  </p>
   <p>
     Every seat has three lists of things it may do: always, only after asking, and never. Adding a dependency, changing build
     config or breaking a shared API are ask-first. Deploying, applying infrastructure or pushing to a store are never.
