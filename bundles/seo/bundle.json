@@ -1,6 +1,6 @@
 {
   "name": "seo",
-  "description": "SEO staff-engineer seat bundled with its seo-failure-modes checklists.",
+  "description": "Pages that search or AI engines miss or misread: robots, canonicals, sitemaps, redirects, meta and Open Graph tags, structured data, hreflang. Not for: page speed and Core Web Vitals (frontend), analytics tags (gtm).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

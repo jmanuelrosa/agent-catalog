@@ -1,6 +1,6 @@
 {
   "name": "database",
-  "description": "Database staff-engineer seat bundled with its database-failure-modes checklists.",
+  "description": "Schemas to design, migrations and indexes to write, slow queries to fix with EXPLAIN evidence. Not for: business logic (backend), warehouses and pipelines (data), metric models (analytics).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

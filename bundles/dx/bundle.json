@@ -1,6 +1,6 @@
 {
   "name": "dx",
-  "description": "DX staff-engineer seat bundled with its dx-failure-modes checklists.",
+  "description": "A slow or brittle inner loop: the monorepo build graph and its cache, codegen, shared lint and TypeScript config, workspace dependencies, internal CLIs. Not for: CI pipelines and containers (platform), test design (qa).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

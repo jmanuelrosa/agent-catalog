@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "description": "Analytics staff-engineer seat bundled with its analytics-failure-modes checklists.",
+  "description": "Metrics to define, dbt models and semantic layers to build, experiments to design or read out, BI as code. Not for: pipelines that land the raw data (data), tracking tags (gtm), app database schemas (database).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

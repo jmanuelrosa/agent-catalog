@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "description": "Backend staff-engineer seat bundled with its backend-failure-modes checklists.",
+  "description": "API endpoints, services, business rules, queue consumers and background jobs to build or fix. Not for: schema design and slow queries (database), UI (frontend), test suites (qa).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

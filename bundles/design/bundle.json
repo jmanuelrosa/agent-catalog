@@ -1,6 +1,6 @@
 {
   "name": "design",
-  "description": "Design staff-engineer seat bundled with its design-failure-modes checklists, including the craft and distinctiveness gate.",
+  "description": "A visual direction to commit to, or a design system to build: tokens, theming, shared components and their variants, type, color, motion. Not for: product features that use those components (frontend).",
   "version": "0.2.0",
   "author": {
     "name": "Jose Manuel Rosa",

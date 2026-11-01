@@ -58,6 +58,18 @@ def test_every_registered_agent_and_bundle_has_a_source():
     assert missing == []
 
 
+def test_every_seat_bundle_says_what_it_is_not_for():
+    seats = [
+        path.parent.parent.name
+        for path in (ROOT / "bundles").glob("*/agents/*-staff-engineer.md")
+    ]
+    unclear = [
+        name for name in seats
+        if json.loads((ROOT / "bundles" / name / "bundle.json").read_text())["description"].count("Not for:") != 1
+    ]
+    assert seats and unclear == []
+
+
 def test_every_upstream_source_has_a_license_entry():
     recorded = licenses()["upstream"]
     sources = {repo for repo, _ in upstream_skills()}

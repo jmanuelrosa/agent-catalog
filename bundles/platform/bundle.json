@@ -1,6 +1,6 @@
 {
   "name": "platform",
-  "description": "Platform staff-engineer seat bundled with its platform-failure-modes checklists.",
+  "description": "CI/CD pipelines to fix, speed up or secure, Dockerfiles and compose, app-level Kubernetes manifests and Helm charts, pre-commit hooks. Never deploys. Not for: provisioning the cloud underneath (cloud), alerts and SLOs (sre), the monorepo build graph and its cache (dx).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",
