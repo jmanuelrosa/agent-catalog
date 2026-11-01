@@ -1,6 +1,6 @@
 {
   "name": "data",
-  "description": "Data staff-engineer seat bundled with its data-failure-modes checklists.",
+  "description": "Pipelines to build or fix: Airflow or Dagster DAGs, Spark jobs, streaming ingestion, backfills, lakehouse tables. Never runs against production. Not for: dbt models and metrics (analytics), app database schemas (database).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

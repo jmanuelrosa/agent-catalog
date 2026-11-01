@@ -1,6 +1,6 @@
 {
   "name": "cloud",
-  "description": "Cloud staff-engineer seat bundled with its cloud-failure-modes checklists.",
+  "description": "Changes to the infrastructure itself: Terraform, Pulumi or CDK for networks, IAM, clusters and managed services. It writes and plans; a person applies. Not for: CI pipelines and containers (platform), alerts and SLOs (sre).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

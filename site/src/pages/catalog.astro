@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { agents, bundles, firstSentence, skills, stats } from '../lib/catalog';
+import { bundles, firstSentence, skills, stats } from '../lib/catalog';
 import { links, upstreamUrl } from '../lib/site';
 
 const groupCounts = new Map<string, number>();
@@ -98,18 +98,10 @@ const groups = [...groupCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].loc
 
     <section aria-labelledby="agents-h" class="block">
       <h2 id="agents-h">Agents</h2>
-      <ul class="agents">
-        {
-          agents.map((agent) => (
-            <li id={`agent-${agent.name}`}>
-              <code>{agent.name}</code>
-              <span>{firstSentence(agent.description)}</span>
-              <small>{agent.bundle ? `${agent.bundle} bundle` : 'standalone, every repo'}</small>
-            </li>
-          ))
-        }
-      </ul>
-      <p>Each entry is a Markdown file in the <a href={links.catalog}>catalog repository</a>; open it to read the full instructions.</p>
+      <p>
+        All {stats.agents} agents, grouped by the job each one takes, are on <a href="/team/">the team page</a>. Each is a
+        Markdown file in the <a href={links.catalog}>catalog repository</a>; open it to read the full instructions.
+      </p>
     </section>
   </div>
 </Base>
@@ -329,39 +321,5 @@ const groups = [...groupCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].loc
     border-bottom: 1px solid var(--rule);
     padding: 0.6rem 1rem 0.6rem 0;
     vertical-align: top;
-  }
-
-  .agents {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.5rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .agents li {
-    display: grid;
-    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 11rem);
-    gap: 0.25rem 1.5rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--rule);
-    font-size: var(--step--1);
-  }
-
-  .agents code {
-    background: none;
-    padding: 0;
-    color: var(--ai-ink);
-    font-weight: 600;
-    white-space: normal;
-  }
-
-  .agents small {
-    color: var(--sumi-soft);
-  }
-
-  @media (max-width: 760px) {
-    .agents li {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

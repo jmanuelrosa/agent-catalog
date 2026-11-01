@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "description": "Frontend staff-engineer seat bundled with its frontend-failure-modes checklists.",
+  "description": "Web features to build or fix: components, state, routing, data fetching, rendering strategy. Not for: design-system components and tokens (design), search markup (seo), APIs (backend).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

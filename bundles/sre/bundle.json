@@ -1,6 +1,6 @@
 {
   "name": "sre",
-  "description": "SRE staff-engineer seat bundled with its sre-failure-modes checklists.",
+  "description": "Knowing when production breaks: SLOs and error budgets, alert rules and routing, dashboards as code, telemetry config, runbooks, postmortems. Never mutates production. Not for: CI pipelines (platform), provisioning (cloud).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

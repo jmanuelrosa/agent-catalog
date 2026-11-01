@@ -1,6 +1,6 @@
 {
   "name": "qa",
-  "description": "QA staff-engineer seat bundled with its qa-failure-modes checklists.",
+  "description": "Tests to write or fix: unit, integration, end-to-end and load, plus flaky-test diagnosis and coverage gaps. Writes tests only. Not for: the code a failing test exposes (the seat that owns it).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",

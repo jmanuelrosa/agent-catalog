@@ -22,14 +22,17 @@ Move the authored files in with `git mv` so history follows them; never leave a 
 ```json
 {
   "name": "<discipline>",
-  "description": "<Title> staff-engineer seat bundled with its <discipline>-failure-modes checklists.",
+  "description": "<The work you would hand this seat, in the words a user would use>. <Its hard limit, if any>. Not for: <neighbouring work> (<owning seat>), <neighbouring work> (<owning seat>).",
   "version": "0.1.0",
   "author": { "name": "Jose Manuel Rosa", "email": "josemanuel.rosamoncayo@gmail.com" }
 }
 ```
 
+The description is how a person picks between seats, so it names the work rather than the seat, and its `Not for:` clause points the closest neighbours at their owners (CI pipelines go to platform, provisioning to cloud, alerts to sre).
+The site splits on `Not for:` to render the two halves, and the catalog tests require that clause once in every staff-engineer bundle.
+A new seat also needs a place in one of the areas in `site/src/lib/team.ts`; the site build fails and names it until it has one.
 Optional catalog skills the seat expects at runtime go in `requires.skills` (for example `frontend-design` on the design bundle).
-Keep catalog groups and scope out of this manifest.
+Keep catalog groups out of this manifest.
 
 ### Bundle registry entry
 

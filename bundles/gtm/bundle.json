@@ -1,6 +1,6 @@
 {
   "name": "gtm",
-  "description": "GTM staff-engineer seat bundled with its gtm-failure-modes checklists.",
+  "description": "Tracking to wire: Tag Manager containers, dataLayer contracts, Consent Mode, server-side conversion APIs. Never publishes a container. Not for: metric definitions (analytics), hosting the tagging server (cloud).",
   "version": "0.1.0",
   "author": {
     "name": "Jose Manuel Rosa",
