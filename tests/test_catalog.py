@@ -8,25 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-ROOT = Path(__file__).resolve().parent.parent
-REGISTRY_KINDS = ("skill", "agent", "bundle")
-
-
-def registry(kind):
-    return json.loads((ROOT / f"{kind}-registry.json").read_text())
-
-
-def upstream_name(entry):
-    """The directory kura installs an upstream entry under: its `name`, else the
-    basename of `upstream_path`. A repo-root skill (`upstream_path: "."`) carries a name."""
-    return entry.get("name") or entry["upstream_path"].rstrip("/").rsplit("/", 1)[-1]
-
-
-def upstream_skills():
-    for repo, source in registry("skill")["upstream"].items():
-        for entry in source["skills"]:
-            yield repo.rstrip("/"), upstream_name(entry)
+from catalog_tree import REGISTRY_KINDS, ROOT, upstream_skills
 
 
 def licenses():
@@ -37,25 +19,6 @@ def test_kuras_inputs_are_present():
     for kind in REGISTRY_KINDS:
         assert (ROOT / f"{kind}-registry.json").is_file(), kind
         assert (ROOT / f"{kind}s").is_dir(), kind
-
-
-def test_every_registered_skill_has_a_directory():
-    names = [entry["name"] for entry in registry("skill")["local"]]
-    names += [name for _, name in upstream_skills()]
-    missing = [name for name in names if not (ROOT / "skills" / name / "SKILL.md").is_file()]
-    assert missing == []
-
-
-def test_every_registered_agent_and_bundle_has_a_source():
-    missing = [
-        entry["name"] for entry in registry("agent")["local"]
-        if not (ROOT / "agents" / f"{entry['name']}.md").is_file()
-    ]
-    missing += [
-        entry["name"] for entry in registry("bundle")["local"]
-        if not (ROOT / "bundles" / entry["name"] / "bundle.json").is_file()
-    ]
-    assert missing == []
 
 
 def test_every_seat_bundle_says_what_it_is_not_for():
