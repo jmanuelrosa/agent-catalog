@@ -14,7 +14,7 @@ allowed-tools:
   - Bash(git status *)
   - Bash(gh pr checks *)
   - Bash(gh run view *)
-  - Bash(python3 *skills/pr-track/scripts/track.py add *)
+  - Bash(python3 *skills/ship/scripts/track.py add *)
   - Edit(//tmp/claude/**)
   - Edit(//private/tmp/claude/**)
   - Read
@@ -102,7 +102,7 @@ Prose that changes something (another base, another split, leave a file out) is 
    - Commits landed but a later step failed → rerun with `--from push` or `--from pr`, never from the start.
    - A pre-commit or pre-push hook failing on the code itself (lint, types, tests) → surface the full output and stop: fixing the code is a new task. Never `--no-verify`, never `--amend`.
 
-6. **Track** (only when the answer was `Track`, one call): `python3 ~/.claude/skills/pr-track/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in. A tracking failure is reported, never retried, and never fails the ship.
+6. **Track** (only when the answer was `Track`, one call): `python3 ~/.claude/skills/ship/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in. A tracking failure is reported, never retried, and never fails the ship.
 
 7. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On a failure, name the failing check, pull its log with `gh run view <run-id> --log-failed | tail -n 80`, and report the cause. Skip on GitLab or when the repo has no checks.
 

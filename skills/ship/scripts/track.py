@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""track.py - push-and-forget tracking of open PRs/MRs for the pr-track skill.
+"""track.py - push-and-forget tracking of open PRs/MRs for the ship and pr skills.
 
 Polls GitHub and GitLab with plain gh/glab calls, compares each PR with the
 last snapshot it saw, and turns only real changes into events. A model is
@@ -75,7 +75,7 @@ CLAUDE_TOOLS = (
     "Read,Edit,Write,Glob,Grep,"
     "Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),"
     "Bash(git merge:*),Bash(git add:*),Bash(gh pr view:*),Bash(gh pr diff:*),"
-    "Bash(python3 *pr-track/scripts/track.py events *)"
+    "Bash(python3 *ship/scripts/track.py events *)"
 )
 DEFAULT_AGENT_COMMANDS = {
     "claude": ["claude", "-p", "{prompt}", "--permission-mode", "acceptEdits",
@@ -535,7 +535,7 @@ def dispatch(pr, now):
     script = Path(os.path.abspath(__file__))
     values = {
         "url": pr["url"], "key": pr["key"], "head": pr["snapshot"]["head"], "base": pr["snapshot"]["base"],
-        "skill_md": script.parent.parent / "SKILL.md", "script": script,
+        "skill_md": script.parent.parent / "references" / "pr-track.md", "script": script,
         "result": directory / "result.json", "pr_dir": directory,
     }
     values["prompt"] = PROMPT.format(**values)

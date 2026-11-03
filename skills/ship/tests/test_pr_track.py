@@ -1,4 +1,4 @@
-"""The /pr-track script: change detection, dispatch gating, finalizing a run, and take.
+"""The pr-track tracker in ship: change detection, dispatch gating, finalizing a run, and take.
 
 Fetchers are replaced with in-memory snapshots and replies with a recorder, so no
 case reaches GitHub or GitLab, and no agent is ever started: dispatch is swapped

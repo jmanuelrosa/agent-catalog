@@ -1,14 +1,8 @@
----
-name: pr-track
-description: Background tracker for PRs/MRs that ship and pr open with Track; not invoked directly, use prt in the shell.
-argument-hint: "[add <url> | merge <ref> [--off] | rm <ref> | ls | ack <ref> | drafts <ref> | take <ref> | watch <ref>]"
----
-
 # PR track
 
 One script, `scripts/track.py`, does every mechanical part with plain `gh`/`glab` and `git` calls: it polls, compares with the last snapshot, records only real changes, and after a model run it commits, pushes and replies.
 A model runs only when an event is something it can act on, after a burst has settled, inside a scratch worktree.
-Global install: `~/.claude/skills/pr-track/scripts/track.py`; project install: `.claude/skills/pr-track/scripts/track.py`.
+It ships inside the `ship` skill, which `pr` depends on: global install `~/.claude/skills/ship/scripts/track.py`, project install `.claude/skills/ship/scripts/track.py`.
 The user's shell has `prt` as a shortcut for the same script.
 
 ## Commands
@@ -69,7 +63,7 @@ Teammates are never replied to and their threads never resolved, whatever the re
 
 ### In-session watch (Claude Code)
 
-When the user is actively working on a PR and wants this session to react instead, arm a Monitor on `python3 ~/.claude/skills/pr-track/scripts/track.py watch <ref>` with `timeout_ms: 1800000`.
+When the user is actively working on a PR and wants this session to react instead, arm a Monitor on `python3 ~/.claude/skills/ship/scripts/track.py watch <ref>` with `timeout_ms: 1800000`.
 The background job skips a PR while a watcher holds it.
 Handle each `event|<key>|<json>` line in the user's worktree with the judgment rules in React, then ship through `/ship` as usual.
 Re-arm on expiry; stop on `all-closed`. Pi has no Monitor, so in Pi the background job is the only path.
