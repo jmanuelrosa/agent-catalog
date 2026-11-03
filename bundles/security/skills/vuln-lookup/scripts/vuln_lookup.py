@@ -52,8 +52,8 @@ SEMVER = re.compile(r"^v?(\d+\.\d+\.\d+)$")
 LEADING_VERSION = re.compile(r"^v?(\d+(?:\.\d+)*[a-z]?)")
 
 
-def load_registry(path=REGISTRY_PATH):
-    return json.loads(Path(path).read_text())
+def load_registry():
+    return json.loads(REGISTRY_PATH.read_text())
 
 
 def version_key(version):
