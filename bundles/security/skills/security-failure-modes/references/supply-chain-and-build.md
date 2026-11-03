@@ -27,6 +27,8 @@ An item you could not verify goes in the Not assessed section; silence is never 
   Check: for dependencies on security-critical paths, read the maintenance signals already available (archived status, last release in the lockfile metadata, deprecation notices) and flag sensitive-position abandonware.
 - **Vendored code invisible to scanners.** Copied-in libraries and snippets receive no advisories and no updates.
   Check: locate vendored or copied third-party code and confirm its provenance and update story are recorded; absence is a finding.
+- **A bundled product invisible to package advisories.** Advisories are filed against the product, never against the package that ships it: a Chrome CVE does not appear under Playwright or Puppeteer, nor a Node CVE under Electron, nor an OpenSSL CVE under the wheel that statically links it. So a clean package scan says nothing about the browser, runtime or native library the package carries.
+  Check: run the bundled `vuln-lookup` script, which resolves each embedded product to its CPE and exact version and ranks the NVD matches by KEV, EPSS and CVSS; judge reachability per embedder (a test browser that only loads your own app is not a browser that renders third-party content); carry its `not_assessed` entries into Not assessed.
 
 ## Escalation triggers (report immediately)
 

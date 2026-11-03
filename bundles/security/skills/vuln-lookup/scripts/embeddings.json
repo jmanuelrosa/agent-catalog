@@ -1,0 +1,145 @@
+{
+  "sources": {
+    "nvd_cves": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "osv_querybatch": "https://api.osv.dev/v1/querybatch",
+    "osv_vuln": "https://api.osv.dev/v1/vulns/",
+    "kev": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+    "epss": "https://api.first.org/data/v1/epss",
+    "electron_releases": "https://releases.electronjs.org/releases.json",
+    "node_index": "https://nodejs.org/dist/index.json"
+  },
+  "limits": {
+    "nvd_page_size": 2000,
+    "nvd_anonymous": {"requests": 5, "window_seconds": 30},
+    "nvd_with_key": {"requests": 50, "window_seconds": 30},
+    "osv_batch": 1000,
+    "osv_workers": 8,
+    "epss_batch": 100,
+    "cache_ttl_seconds": 86400,
+    "retries": 3,
+    "retry_backoff_seconds": 10,
+    "timeout_seconds": 90,
+    "binary_scan_max_bytes": 67108864,
+    "summary_chars": 200,
+    "default_top": 20
+  },
+  "cpe": {
+    "chrome": "google:chrome",
+    "firefox": "mozilla:firefox",
+    "node": "nodejs:node.js",
+    "openssl": "openssl:openssl",
+    "zlib": "zlib:zlib",
+    "libuv": "libuv:libuv",
+    "libvips": "libvips:libvips",
+    "libpng": "libpng:libpng",
+    "libtiff": "libtiff:libtiff",
+    "libwebp": "webmproject:libwebp",
+    "libexpat": "libexpat_project:libexpat",
+    "libxml2": "xmlsoft:libxml2",
+    "libxslt": "xmlsoft:libxslt",
+    "freetype": "freetype:freetype",
+    "harfbuzz": "harfbuzz_project:harfbuzz",
+    "libheif": "struktur:libheif",
+    "cairo": "cairographics:cairo",
+    "glib": "gnome:glib",
+    "librsvg": "gnome:librsvg",
+    "lcms": "littlecms:little_cms_color_engine",
+    "pixman": "pixman:pixman",
+    "fontconfig": "fontconfig_project:fontconfig",
+    "aom": "aomedia:aomedia"
+  },
+  "embedders": [
+    {
+      "name": "playwright",
+      "resolver": "playwright_browsers",
+      "package": "playwright-core",
+      "file": "browsers.json",
+      "components": {
+        "chromium": "chrome",
+        "chromium-headless-shell": "chrome",
+        "firefox": "firefox"
+      },
+      "unmapped": {
+        "webkit": "Playwright builds WebKit from a patched trunk, and its version number maps to no NVD CPE"
+      }
+    },
+    {
+      "name": "puppeteer",
+      "resolver": "puppeteer_revisions",
+      "package": "puppeteer-core",
+      "file": "lib/**/revisions.js",
+      "components": {
+        "chrome": "chrome",
+        "chrome-headless-shell": "chrome",
+        "firefox": "firefox"
+      }
+    },
+    {
+      "name": "electron",
+      "resolver": "electron_release",
+      "package": "electron",
+      "file": "package.json",
+      "components": {
+        "chrome": "chrome",
+        "node": "node"
+      },
+      "note": "Electron links BoringSSL rather than OpenSSL, so OpenSSL CVEs do not transfer to it"
+    },
+    {
+      "name": "sharp",
+      "resolver": "versions_manifest",
+      "package": "@img/sharp-libvips-*",
+      "file": "versions.json",
+      "components": {
+        "vips": "libvips",
+        "png": "libpng",
+        "tiff": "libtiff",
+        "webp": "libwebp",
+        "expat": "libexpat",
+        "xml2": "libxml2",
+        "freetype": "freetype",
+        "harfbuzz": "harfbuzz",
+        "heif": "libheif",
+        "cairo": "cairo",
+        "glib": "glib",
+        "rsvg": "librsvg",
+        "lcms": "lcms",
+        "pixman": "pixman",
+        "fontconfig": "fontconfig",
+        "aom": "aom"
+      }
+    },
+    {
+      "name": "node-runtime",
+      "resolver": "node_runtime",
+      "components": {
+        "node": "node",
+        "openssl": "openssl",
+        "zlib": "zlib",
+        "uv": "libuv"
+      }
+    },
+    {
+      "name": "python-runtime",
+      "resolver": "python_runtime",
+      "components": {
+        "openssl": "openssl"
+      }
+    },
+    {
+      "name": "python-wheels",
+      "resolver": "binary_banners",
+      "paths": [
+        "*.libs/*",
+        "*/.dylibs/*",
+        "cryptography/hazmat/bindings/_rust*"
+      ],
+      "banners": {
+        "openssl": "OpenSSL (\\d+\\.\\d+\\.\\d+[a-z]?)\\s+\\d{1,2} [A-Z][a-z]{2} \\d{4}"
+      },
+      "components": {
+        "openssl": "openssl"
+      }
+    }
+  ]
+}
