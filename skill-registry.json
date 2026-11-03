@@ -3241,7 +3241,10 @@
         "workflow",
         "git"
       ],
-      "note": "Locally authored"
+      "note": "Locally authored",
+      "dependencies": [
+        "pr-track"
+      ]
     },
     {
       "name": "ship",
@@ -3251,7 +3254,20 @@
         "workflow",
         "git"
       ],
-      "note": "Locally authored; trial replacement for commit and pr"
+      "note": "Locally authored; trial replacement for commit and pr",
+      "dependencies": [
+        "pr-track"
+      ]
+    },
+    {
+      "name": "pr-track",
+      "global": true,
+      "groups": [
+        "productivity",
+        "workflow",
+        "git"
+      ],
+      "note": "Locally authored; zero-token PR/MR tracking, polled by a launchd job from the dotfiles ai role"
     },
     {
       "name": "coderabbit",
