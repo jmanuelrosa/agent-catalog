@@ -148,6 +148,8 @@ def parse_url(url):
 
 
 def run(cmd, cwd=None, check=True, stdin=None):
+    # Every caller passes an argv list and no shell is involved.
+    # bearer:disable python_lang_os_command_injection
     result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, input=stdin)
     if check and result.returncode != 0:
         raise RuntimeError(f"{' '.join(cmd[:3])} failed: {result.stderr.strip()[:300]}")
@@ -447,6 +449,8 @@ def refresh(state, keys, now):
 def notify(title, message):
     if sys.platform != "darwin" or os.environ.get("PR_TRACK_NOTIFY") == "0":
         return
+    # The title and message reach osascript as argv items, never as AppleScript source.
+    # bearer:disable python_lang_os_command_injection
     subprocess.run(
         ["osascript", "-e", "on run argv", "-e",
          "display notification (item 1 of argv) with title (item 2 of argv)", "-e", "end run",
@@ -539,6 +543,9 @@ def dispatch(pr, now):
         "result": directory / "result.json", "pr_dir": directory,
     }
     values["prompt"] = PROMPT.format(**values)
+    # The command is a fixed argv template (or the user's own env override) run without a shell,
+    # and pr_dir() slugs the key, so neither the argv nor the log path carries a separator.
+    # bearer:disable python_lang_os_command_injection, python_lang_path_traversal
     with open(directory / "agent.log", "a") as log:
         process = subprocess.Popen(agent_command(pr["agent"], values), cwd=prep, stdout=log,
                                    stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True)
@@ -652,6 +659,8 @@ def write_drafts(pr, drafts):
         event = draft.get("event") or {}
         lines += [f"## {event.get('author', '?')}: {event.get('url', draft.get('ref', ''))}", "",
                   draft["body"].strip(), ""]
+    # pr_dir() slugs the key to [A-Za-z0-9._-], so the path cannot leave the state directory.
+    # bearer:disable python_lang_path_traversal
     with open(path, "a") as handle:
         handle.write("\n".join(lines) + "\n")
     pr["drafts"] = pr.get("drafts", 0) + len(drafts)
