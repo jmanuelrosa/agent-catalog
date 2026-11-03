@@ -3261,7 +3261,7 @@
     },
     {
       "name": "pr-track",
-      "global": true,
+      "dependency_only": true,
       "groups": [
         "productivity",
         "workflow",

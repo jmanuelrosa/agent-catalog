@@ -1,6 +1,6 @@
 ---
 name: pr-track
-description: Push-and-forget tracking of open PRs/MRs. After a PR ships, a background job fixes bot and teammate comments, CI failures and conflicts, pushes the PR's own branch, replies to bots, merges the PR once the repo allows it, and interrupts the user only for judgment calls, stuck runs, requested changes, and a merge or close, spending no tokens while nothing happens. Use when the user asks to track, untrack, list or watch a PR, see reply drafts, or take kept work; ship and pr call it after opening a PR.
+description: Background tracker for PRs/MRs that ship and pr open with Track; not invoked directly, use prt in the shell.
 argument-hint: "[add <url> | merge <ref> [--off] | rm <ref> | ls | ack <ref> | drafts <ref> | take <ref> | watch <ref>]"
 ---
 
