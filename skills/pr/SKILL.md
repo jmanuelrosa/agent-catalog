@@ -15,6 +15,7 @@ allowed-tools:
   - Bash(git branch *)
   - Bash(gh pr checks *)
   - Bash(gh run view *)
+  - Bash(python3 *skills/ship/scripts/track.py add *)
   - Edit(//tmp/claude/**)
   - Edit(//private/tmp/claude/**)
   - Read
@@ -62,6 +63,9 @@ Everything left in this file is judgment: what the description says, whether a c
    - `header`: "PR target", `multiSelect: false`
    - `options`: `Go` (push and open the PR/MR), `Cancel` (stop, push nothing).
 
+   In the same call, a second question unless the arguments already say `track` or `no track`: `header: "Track"`, "Track the PR for comments, CI failures and conflicts?", options `Track` (fixes comments, CI failures and conflicts in the background, pushes this branch, and squash-merges it, or uses the repo's merge strategy, once the repo's checks and reviews allow; notifies only when it needs the user, and on merge or close), `Don't track`.
+   Minion mode never tracks and never asks.
+
    The structured question *is* the gate: don't accept prose like "yes" / "go" (free-form confirmations break the `git-skill-gate` hook). On `Other` (e.g. a different base), integrate it and re-confirm.
 
 4. **Push and open the PR/MR** (single call after `Go`). **Write** the filled description to `/tmp/claude/pr-body-<repo>-<suffix>.md` and the plan to `/tmp/claude/pr-plan-<repo>-<suffix>.json` (`<suffix>` random once per run; `/tmp/claude/` is shared across sessions). Never a HEREDOC for either: the harness escapes `!` and other shell-special characters, and the Write tool bypasses the shell.
@@ -78,6 +82,7 @@ Everything left in this file is judgment: what the description says, whether a c
    - A push that fails on auth or on a pre-push hook needing the network is the sandbox, not the branch: a harness that exempts only leading-token `git` from its sandbox confines the push `apply.py` spawns unless `apply.py` itself is exempt. It prints the exact standalone `git …` command for that case. Run that command verbatim as its own call, never chained, then rerun `apply.py` with `--skip-push`.
 
 5. **Print the `Created: <url>` line** that `apply.py` wrote to stdout.
+   When the user chose `Track`, run `python3 ~/.claude/skills/ship/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in, and print its one line. A tracking failure is reported, never retried, and never fails the PR.
 
 6. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On green, print nothing more. On a failure, name the failing check and pull its log with `gh run view <run-id> --log-failed | tail -n 80`, then report the cause; the work is not done until checks pass. On GitLab, or when the repo has no checks, skip this step.
 

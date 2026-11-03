@@ -14,6 +14,7 @@ allowed-tools:
   - Bash(git status *)
   - Bash(gh pr checks *)
   - Bash(gh run view *)
+  - Bash(python3 *skills/ship/scripts/track.py add *)
   - Edit(//tmp/claude/**)
   - Edit(//private/tmp/claude/**)
   - Read
@@ -80,6 +81,7 @@ Prose that changes something (another base, another split, leave a file out) is 
    - When step 2 needs a name, `header: "Branch"`: the two candidates. `Other` covers a typed name; validate it against the regex and re-ask on failure.
    - When `UNPUSHED_COMMITS` > 0, `header: "Commits"`: "`<n>` commits on this branch are not pushed yet. Ship them too?" Options: `Ship them too` (they land in the PR), `Leave them out` (a new branch off `BASE_REF` with only the working-tree changes; name it in the option description from your candidates), `Cancel`. When the working tree is clean, leaving them out means nothing to ship: say so in that option's description.
    - When `GLHOST_CANDIDATES` is set, `header: "GitLab account"`: one option per candidate, labelled `<host> (<account>)`, the one matching `GIT_EMAIL` first. `NOT_LOGGED_IN` instead means leave `repo` out.
+   - Unless the arguments already say `track` or `no track`, `header: "Track"`: "Track the PR for comments, CI failures and conflicts?" Options: `Track` (fixes comments, CI failures and conflicts in the background, pushes this branch, and squash-merges it, or uses the repo's merge strategy, once the repo's checks and reviews allow; notifies only when it needs the user, and on merge or close), `Don't track`.
 
    Read the answer as `The one confirmation` describes. `Leave them out` turns the branch action into `create-from-base`; `Go, staged only` drops every unstaged and untracked file from the commits.
 
@@ -100,9 +102,11 @@ Prose that changes something (another base, another split, leave a file out) is 
    - Commits landed but a later step failed → rerun with `--from push` or `--from pr`, never from the start.
    - A pre-commit or pre-push hook failing on the code itself (lint, types, tests) → surface the full output and stop: fixing the code is a new task. Never `--no-verify`, never `--amend`.
 
-6. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On a failure, name the failing check, pull its log with `gh run view <run-id> --log-failed | tail -n 80`, and report the cause. Skip on GitLab or when the repo has no checks.
+6. **Track** (only when the answer was `Track`, one call): `python3 ~/.claude/skills/ship/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in. A tracking failure is reported, never retried, and never fails the ship.
 
-7. **Report**: the `Created:` or `Updated:` line, the commits made, and the CI result. Nothing else.
+7. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On a failure, name the failing check, pull its log with `gh run view <run-id> --log-failed | tail -n 80`, and report the cause. Skip on GitLab or when the repo has no checks.
+
+8. **Report**: the `Created:` or `Updated:` line, the commits made, the tracking line when step 6 ran, and the CI result. Nothing else.
 
 ## Humanization (required)
 

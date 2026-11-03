@@ -3241,7 +3241,10 @@
         "workflow",
         "git"
       ],
-      "note": "Locally authored"
+      "note": "Locally authored",
+      "dependencies": [
+        "ship"
+      ]
     },
     {
       "name": "ship",
