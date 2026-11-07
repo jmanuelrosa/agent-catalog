@@ -35,7 +35,9 @@ If empty, ask for it before anything else.
 7. **Integrate the wave.** Read each completion report; a seat reporting `blocked` comes back to me, and one reporting `needs-decision` is judged first (see **Judging a decision** below); nothing depending on either runs until it is answered.
    For an isolated wave, copy each seat's work into the main checkout: from its worktree root run `git -C <wt> status --porcelain`, keep only paths inside that slice's owned set, copy modified/added files into the main checkout, and replay deletions. Copy nothing outside the owned set, so build output and `node_modules` never leak in.
    If any seat added dependencies, run one install in the main checkout afterward to produce a single coherent lockfile.
-   Then remove each worktree (`git worktree remove`, `--force` if it refuses on a dirty tree); confirm `.claude/worktrees/` is clean and the main checkout diff is the union of the owned files.
+   Then remove each worktree with `git worktree remove <wt>`, never `--force`, since the harness may deny it.
+   A seat's worktree is usually dirty because seats do not commit, so when removal refuses, list the exact `git worktree remove --force <wt>` line for each remaining worktree in the report for the user to run, after confirming its owned files were copied.
+   Confirm the main checkout diff is the union of the owned files.
 8. **Held slices.** Dispatch the held slices in dependency order, in the main checkout (not isolated), each only after its prerequisites are integrated so it reads their work from the working tree; serialize any that would run heavy verify at the same time. Their edits land directly in the main checkout, so there is no copy-back.
    Confirm every report's verification section shows real command output.
 9. **Exercise the integrated change.** Tests passing per slice does not show the slices work together, so run the feature the way a user reaches it: the CLI invoked, the endpoint called, the page driven in a browser, following the project's own launch path (a project run skill, the README, the task runner).
