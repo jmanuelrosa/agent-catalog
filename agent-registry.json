@@ -74,6 +74,18 @@
       "dependencies": [
         "review-mechanics"
       ]
+    },
+    {
+      "name": "code-review-worker",
+      "global": true,
+      "groups": [
+        "engineering",
+        "review"
+      ],
+      "note": "Locally authored; one independent sample dispatched by code-reviewer, never by a human",
+      "dependencies": [
+        "review-mechanics"
+      ]
     }
   ]
 }
