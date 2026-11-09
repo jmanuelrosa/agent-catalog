@@ -1,7 +1,7 @@
 ---
 name: ship
 description: Commit the working tree as strict conventional commits, push the branch, and open the PR (GitHub) or MR (GitLab) in one run, after a single confirmation. Use when the user asks to ship, or to commit and open a PR/MR. Trial replacement for /commit plus /pr.
-argument-hint: "[guidance: scope, how to split, branch name, or base branch]"
+argument-hint: "[guidance: scope, how to split, branch name, base branch, review | review <level> | no review, track | no track]"
 model: haiku
 effort: medium
 allowed-tools:
@@ -54,6 +54,8 @@ Prose that changes something (another base, another split, leave a file out) is 
    **Stale diagrams** (single call, skipped when the arguments say `skip diagrams`): `python3 ~/.claude/skills/diagram/scripts/diagrams.py scan --since <BASE_REF> --lint`.
    A missing script or `DIAGRAMS=0` means move on. A non-zero `STALE` or `LINT_ERRORS` count means diagrams rest on files this branch changes, or fail lint: list each as `<name> (<FILE>)` with its changed files or `lint:` lines, then one `AskUserQuestion`, `header: "Diagrams"`: "`<n>` diagrams are stale or fail lint. Refresh them first?". Options: `Refresh first` (stop the run with nothing written and say to run `/diagram refresh`, then `/ship` again), `Ship anyway` (continue; the PR description names the stale diagrams under a "Docs" line). This question comes before the gate, so a `go` at the gate still means ship.
 
+   **Review** (skipped when the arguments carry the flag `review`, `review <level>` or `no review`; a flag is the argument itself, never the word inside other guidance, and a bare `review` means `medium`): one `AskUserQuestion`, `header: "Review"`, in the same call as the Diagrams question when both apply: "Review the diff before it is pushed?". Options: `Review (medium)` (recommended, the review-mechanics level for an ordinary diff before commit), `Review (high)` (for a diff spanning several concerns or a stack you do not know), `Skip`. The review itself runs in step 3, once the plan says which files ship. Under Codex there is no review route, so record `review: unavailable (no review route under Codex)` in the printed plan and the report instead of asking.
+
 2. **Decide the branch.**
    - `BRANCH_CONVENTION=ok` and the branch matches the work → `keep`, no question.
    - `default` → `create` (ships from the default branch are never allowed). Propose two names.
@@ -70,11 +72,16 @@ Prose that changes something (another base, another split, leave a file out) is 
    - **Concerns**: cluster files by intent, not directory. Separate a fix from an unrelated config tweak, a feature from a dep bump, a refactor from a doc update; keep a feature spanning ten files, a repo-wide rename, or a fix and its test together. Don't force a split on a cohesive diff. Order so each commit leaves the build green: config and deps first, features and fixes next, cosmetic cleanup last. `apply.py` stages whole files, so a file mixing concerns goes with its dominant one.
    - **Header**: `<type>(<scope>): <subject>`, at most 100 chars, imperative, lower-case start, no trailing period. Types: `feat | fix | chore | docs | refactor | test | perf | ci | build | style | revert` (`@commitlint/config-conventional`). Scope from the touched area (monorepo package, top-level directory, role name, feature area); omit it only when the change is genuinely repo-wide.
    - **Body**: only when the *why* isn't obvious from the subject. Short `-` bullets, no prose paragraphs.
+   - **Review** (only when the answer or a flag asked for one; single call, read-only): invoke `/code-review <level>` with the level alone, never `--fix` or `--comment`, which write before the gate. Its scope is what the PR will contain: the plan's files and every unpushed commit, since the gate ships those by default and `Leave them out` re-reviews without them. Name the files left out so findings there are ignored. Under pi, run the pi-review pass in its place. The review command is the route, not the `code-reviewer` agent: that agent reviews a spec-backed diff for feature-team and its own description excludes a human's review request.
+     The command reports in its own shape, without the policy's severities. Translate each finding into the code-review policy's four from its failure scenario before applying the rules below (the definitions here are enough; the rules file, where the harness has one, says the same): `blocker` when the scenario makes the change wrong, unsafe or unshippable as written, `important` when it is a real cost the change can ship with, `nit` or `pre-existing` otherwise.
+     Any `blocker` stops the run with nothing written: print each one with its `file:line`, the failure scenario and the fix, then say to fix them and run `/ship` again. Fixing is not ship's job, and a fix changes the diff the gate would approve.
+     `important` findings do not stop the run: the description below lists them under a "Review" line, one per bullet, since the policy lets them ship when recorded. `nit` and `pre-existing` are dropped.
+     A review that cannot run (the command is missing, or the harness has no review route) is recorded in the printed plan and the report as `review: unavailable (<reason>)` and the run continues; it is never reported as clean.
    - **Description**: fill the template from `== template ==` (or a short what-and-why body when there is none). Free-text sections say what changed and why; check `[x]` only what the diff supports; pick type checkboxes from the commit prefixes, including the unpushed commits when they ship too. When `TICKET_KIND=github`, `apply.py` appends `Closes #<n>` if the body lacks it.
    - Humanize all of it (section below). Never write `Co-Authored-By: Claude …` or `🤖 Generated with …`: settings handle attribution and `apply.py` hard-blocks both.
 
 4. **Confirmation gate** (mandatory, one `AskUserQuestion` call holding every question that applies, recommended option first).
-   First print the plan: the branch (kept, created or renamed, and from where), each commit (number, header, files, body), files left out and why, the unpushed commits that would ship, and the base.
+   First print the plan: the branch (kept, created or renamed, and from where), each commit (number, header, files, body), files left out and why, the unpushed commits that would ship, the base, and the review line when one was requested (level and its `important` findings, or `unavailable` with its reason), so the confirmation rests on the review's result.
    Then ask, in this order:
 
    - Always, `header: "Ship"`: "Commit, push `<branch>` and open a PR against `<base>`?" (for GitLab name the account too). Options: `Go`; `Go, staged only` only when some changes are staged and others are not; `Cancel`.
@@ -84,6 +91,7 @@ Prose that changes something (another base, another split, leave a file out) is 
    - Unless the arguments already say `track` or `no track`, `header: "Track"`: "Track the PR for comments, CI failures and conflicts?" Options: `Track` (fixes comments, CI failures and conflicts in the background, pushes this branch, and squash-merges it, or uses the repo's merge strategy, once the repo's checks and reviews allow; notifies only when it needs the user, and on merge or close), `Don't track`.
 
    Read the answer as `The one confirmation` describes. `Leave them out` turns the branch action into `create-from-base`; `Go, staged only` drops every unstaged and untracked file from the commits.
+   When a review ran and the answer changes what ships (`Go, staged only`, `Leave them out`, or a redirect that moves files), re-run the review on the final set before step 5, apply the same blocker rule, and rewrite the description's "Review" line from the new findings: the diff that ships must be the diff that was reviewed. This is a consequence of the gate's answer, not a second question.
 
 5. **Execute** (single call, no further questions). **Write** the description to `/tmp/claude/ship-body-<repo>-<suffix>.md` and the plan to `/tmp/claude/ship-plan-<repo>-<suffix>.json` (`<suffix>` random once per run). Never a HEREDOC: the harness escapes `!` and other shell-special characters, and the Write tool bypasses the shell.
 
@@ -106,7 +114,7 @@ Prose that changes something (another base, another split, leave a file out) is 
 
 7. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On a failure, name the failing check, pull its log with `gh run view <run-id> --log-failed | tail -n 80`, and report the cause. Skip on GitLab or when the repo has no checks.
 
-8. **Report**: the `Created:` or `Updated:` line, the commits made, the tracking line when step 6 ran, and the CI result. Nothing else.
+8. **Report**: the `Created:` or `Updated:` line, the commits made, the review line when one was requested (level and the number of `important` findings, the only severity that reaches this step, or `unavailable` with its reason), the tracking line when step 6 ran, and the CI result. Nothing else.
 
 ## Humanization (required)
 
