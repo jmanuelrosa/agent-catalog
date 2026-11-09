@@ -11,6 +11,7 @@ tools: Read, Glob, Grep, Skill
 model: sonnet
 effort: medium
 thinking: medium
+dispatched-by: [code-reviewer]
 ---
 
 # Code review worker
