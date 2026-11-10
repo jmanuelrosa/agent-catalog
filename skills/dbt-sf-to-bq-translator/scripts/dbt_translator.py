@@ -14,6 +14,14 @@ import zipfile
 import yaml
 
 
+def confined_source_path(root, path):
+    root = os.path.realpath(root)
+    resolved = os.path.realpath(path)
+    if os.path.commonpath([root, resolved]) != root:
+        raise ValueError(f"Source path is outside the selected directory: {path}")
+    return resolved
+
+
 def split_by_comma_balanced(s):
     parts = []
     curr_part = []
@@ -1445,11 +1453,12 @@ def discover_dbt_resources(input_dir, output_dir=None):
             ]
         for f in files:
             if f.endswith(".sql"):
+                confined_source_path(input_dir, os.path.join(root, f))
                 model_name = f[:-4].lower()
                 known_models.add(model_name)
             elif f.endswith((".yml", ".yaml")):
                 try:
-                    with open(os.path.join(root, f), "r", encoding="utf-8") as yml_file:
+                    with open(confined_source_path(input_dir, os.path.join(root, f)), "r", encoding="utf-8") as yml_file:
                         data = yaml.safe_load(yml_file)
                         if (
                             data
@@ -1550,7 +1559,7 @@ def preprocess_metadata(metadata_path, temp_metadata_dir, known_models, known_so
         dest_file = os.path.join(temp_metadata_dir, f"{prefix_key}.csv")
 
         with (
-            open(src_file, "r", encoding="utf-8") as f_in,
+            open(confined_source_path(source_dir, src_file), "r", encoding="utf-8") as f_in,
             open(dest_file, "w", encoding="utf-8", newline="") as f_out,
         ):
             reader = csv.reader(f_in)
@@ -1661,7 +1670,7 @@ def preprocess_metadata(metadata_path, temp_metadata_dir, known_models, known_so
             src_item = os.path.join(source_dir, item)
             dest_item = os.path.join(temp_metadata_dir, item)
             if os.path.isfile(src_item):
-                shutil.copy2(src_item, dest_item)
+                shutil.copy2(confined_source_path(source_dir, src_item), dest_item)
 
     if is_zip and extract_dir:
         shutil.rmtree(extract_dir, ignore_errors=True)
@@ -1844,7 +1853,7 @@ def run_bulk_translation(
 
                 os.makedirs(os.path.dirname(dest_temp_path), exist_ok=True)
 
-                with open(src_path, "r", encoding="utf-8") as file:
+                with open(confined_source_path(input_dir, src_path), "r", encoding="utf-8") as file:
                     content = file.read()
 
                 config_header, stripped_content = extract_config_block(content)
@@ -2225,7 +2234,7 @@ tasks:
         if not os.path.exists(src_temp_output_path):
             src_orig_path = os.path.join(input_dir, rel_path)
             if os.path.exists(src_orig_path):
-                with open(src_orig_path, "r", encoding="utf-8") as orig_file:
+                with open(confined_source_path(input_dir, src_orig_path), "r", encoding="utf-8") as orig_file:
                     orig_content = orig_file.read()
                 if not orig_content.strip():
                     final_file_content = copyright_header
@@ -2445,7 +2454,7 @@ tasks:
                 rel_path = os.path.relpath(src_path, input_dir)
                 dest_path = os.path.join(output_dir, rel_path)
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-                shutil.copy2(src_path, dest_path)
+                shutil.copy2(confined_source_path(input_dir, src_path), dest_path)
                 yaml_count += 1
     print(f"Copied {yaml_count} YAML configuration files.")
 

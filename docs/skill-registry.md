@@ -12,6 +12,8 @@ Kura fetches `https://github.com/<repo>/archive/<commit>.tar.gz` when `commit` i
 To bump one, resolve the branch's current SHA with `gh api repos/<owner>/<repo>/commits/<branch> --jq .sha` (drop any trailing `/` from the registry key), replace the `commit` value, run `kura outdated --type skill`, then `kura update --type skill`, and review the diff before committing.
 `apollo-client`, `graphql-operations`, `mf`, and `monitor-ci` report as behind because their `allowed-tools` frontmatter is stripped locally; re-strip it after any update.
 Some vendored skills also differ only in em/en dash punctuation normalized to house style; preserve that normalization after updates.
+`google-cloud-filestore-nfs-browser` and `dbt-sf-to-bq-translator` carry local filesystem-confinement fixes; retain them until the pinned upstream contains equivalent protections.
+The regression tests and source hashes described in `docs/bearer.md` must pass after an update.
 
 `monitor-ci` requires Nx's `ci-monitor-subagent` and Nx MCP tools in the target project.
 The skill catalog does not install or configure those integrations.
