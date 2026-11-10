@@ -83,6 +83,31 @@ def test_jump_operations_do_not_follow_outside_file_links(jump_host, tmp_path, o
     assert result["entries" if operation == "tree" else "matches"] == []
 
 
+@pytest.mark.parametrize("path", ["", ".", "/"])
+def test_stat_accepts_share_root(bridge, path):
+    module, _ = bridge
+    assert module.stat_file(path=path)["is_dir"] is True
+
+
+def test_safe_path_accepts_filesystem_root(bridge, monkeypatch):
+    module, mount = bridge
+    monkeypatch.setattr(module, "MOUNT_ROOT", mount.anchor)
+    assert module.safe_path("/") == mount.anchor
+    assert module.safe_path(str(mount)) == str(mount)
+
+
+@pytest.mark.parametrize("endpoint", ["list_tree", "search_files", "read_file", "stat_file"])
+@pytest.mark.parametrize("path", ["../share-extra", "../share-extra/private.txt"])
+def test_endpoints_reject_sibling_prefix_paths(bridge, tmp_path, endpoint, path):
+    module, mount = bridge
+    sibling = tmp_path / f"{mount.name}-extra"
+    sibling.mkdir()
+    (sibling / "private.txt").write_text("outside marker\n")
+    with pytest.raises(BridgeError) as error:
+        getattr(module, endpoint)(path=path)
+    assert error.value.status_code == 403
+
+
 def test_search_reads_regular_share_files(bridge):
     module, mount = bridge
     (mount / "inside.txt").write_text("inside marker\n")

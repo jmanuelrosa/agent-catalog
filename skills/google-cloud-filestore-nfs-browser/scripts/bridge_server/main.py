@@ -50,7 +50,9 @@ def safe_path(rel_path: str) -> str:
   resolved = os.path.realpath(
       os.path.join(mount_root_real, rel_path.lstrip("/"))
   )
-  if os.path.commonpath([mount_root_real, resolved]) != mount_root_real:
+  if resolved == mount_root_real:
+    return mount_root_real
+  if not resolved.startswith(os.path.join(mount_root_real, "")):
     raise HTTPException(
         status_code=http_status.HTTP_403_FORBIDDEN,
         detail="Access denied: path traversal",
