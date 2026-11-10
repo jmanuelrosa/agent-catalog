@@ -13,7 +13,7 @@
             "frontend",
             "architecture"
           ],
-          "updated_at": "2026-10-31T09:56:31Z"
+          "updated_at": "2026-11-03T09:35:13Z"
         }
       ]
     },
@@ -133,7 +133,7 @@
             "ci",
             "workflow"
           ],
-          "updated_at": "2026-10-31T09:56:33Z"
+          "updated_at": "2026-11-03T09:35:14Z"
         },
         {
           "upstream_path": "skills/nx-cloud-api",
@@ -603,7 +603,7 @@
             "frontend",
             "graphql"
           ],
-          "updated_at": "2026-10-31T09:55:56Z"
+          "updated_at": "2026-11-03T09:34:36Z"
         },
         {
           "upstream_path": "skills/graphql-operations",
@@ -612,7 +612,7 @@
             "backend",
             "graphql"
           ],
-          "updated_at": "2026-10-31T09:55:56Z"
+          "updated_at": "2026-11-03T09:34:36Z"
         }
       ]
     },
@@ -1313,7 +1313,7 @@
             "gcp",
             "ai"
           ],
-          "updated_at": "2026-10-29T16:30:29Z"
+          "updated_at": "2026-11-03T09:35:06Z"
         },
         {
           "upstream_path": "skills/cloud/agent-platform-tuning-management",
@@ -1735,7 +1735,7 @@
             "gcp",
             "observability"
           ],
-          "updated_at": "2026-10-29T16:30:29Z"
+          "updated_at": "2026-11-03T09:35:06Z"
         },
         {
           "upstream_path": "skills/cloud/datalineage-bigquery-asset-impact-analysis",
