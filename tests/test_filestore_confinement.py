@@ -83,6 +83,41 @@ def test_jump_operations_do_not_follow_outside_file_links(jump_host, tmp_path, o
     assert result["entries" if operation == "tree" else "matches"] == []
 
 
+def test_safe_path_rejects_sibling_prefix_escape(bridge, tmp_path):
+    module, mount = bridge
+    sibling = tmp_path / f"{mount.name}-other"
+    sibling.mkdir()
+    with pytest.raises(BridgeError) as error:
+        module.safe_path(f"../{sibling.name}/private.txt")
+    assert error.value.status_code == 403
+
+
+def test_safe_path_normalizes_parent_components_inside_share(bridge):
+    module, mount = bridge
+    (mount / "nested").mkdir()
+    assert module.safe_path("/nested/../inside.txt") == str(mount / "inside.txt")
+
+
+def test_safe_path_preserves_inside_symlinks(bridge):
+    module, mount = bridge
+    target = mount / "inside.txt"
+    target.write_text("inside marker\n")
+    (mount / "alias.txt").symlink_to(target)
+    assert module.safe_path("/alias.txt") == str(target)
+
+
+def test_stat_accepts_share_root(bridge):
+    module, _ = bridge
+    assert module.stat_file(path="/")["is_dir"] is True
+
+
+def test_safe_path_accepts_filesystem_root(bridge, monkeypatch):
+    module, mount = bridge
+    monkeypatch.setattr(module, "MOUNT_ROOT", mount.anchor)
+    target = mount / "inside.txt"
+    assert module.safe_path(str(target)) == str(target)
+
+
 def test_search_reads_regular_share_files(bridge):
     module, mount = bridge
     (mount / "inside.txt").write_text("inside marker\n")

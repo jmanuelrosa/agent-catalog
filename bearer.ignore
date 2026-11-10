@@ -26,7 +26,7 @@
   },
   "0f196906dfe04a86790aeb7de66b0236_0": {
     "false_positive": true,
-    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:51 (python_lang_path_traversal): The joined root is immediately realpath/commonpath-confined. File opens and metadata now use descriptor-relative no-follow traversal; regression tests cover outside symlinks and deterministic path swaps.",
+    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:51 (python_lang_path_traversal): The canonicalized path must equal the mount root or begin with its separator-terminated prefix. File opens and metadata now use descriptor-relative no-follow traversal; regression tests cover outside symlinks and deterministic path swaps.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "0f865c6fd6cacc032de718ed9c9eed63_0": {
