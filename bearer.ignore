@@ -1,0 +1,1122 @@
+{
+  "0405d58b1e8851fa56ee7a11ad007384_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/verify_claim.py:303 (python_lang_path_traversal): The summary filename comes from the operator --summary argument; summary records affect verification, not the input path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0647b435c23593f7b22311538c7d0c45_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/inspect_results.py:157 (python_lang_path_traversal): The operator selects the result input and optional HTML destination; evaluation records supply content, not filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0647b435c23593f7b22311538c7d0c45_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/inspect_results.py:211 (python_lang_path_traversal): The operator selects the result input and optional HTML destination; evaluation records supply content, not filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0a1f0e871a643e6b54ad1531dd1665ba_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_setup.py:33 (python_lang_os_command_injection): The virtualenv/pip helper runs fixed executable argument vectors against the operator-selected script requirements; this is intentional dependency setup, not command-string interpretation.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0a1f0e871a643e6b54ad1531dd1665ba_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_setup.py:54 (python_lang_os_command_injection): The virtualenv/pip helper runs fixed executable argument vectors against the operator-selected script requirements; this is intentional dependency setup, not command-string interpretation.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0f196906dfe04a86790aeb7de66b0236_0": {
+    "false_positive": true,
+    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:51 (python_lang_path_traversal): The joined root is immediately realpath/commonpath-confined. File opens and metadata now use descriptor-relative no-follow traversal; regression tests cover outside symlinks and deterministic path swaps.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "0f865c6fd6cacc032de718ed9c9eed63_0": {
+    "false_positive": true,
+    "comment": "skills/pr/scripts/apply.py:213 (python_lang_path_traversal): The approved JSON plan is an intentional operator-selected input. Fixed git/gh/glab argument vectors carry titles and descriptions as data arguments or body files, not shell syntax.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "102300526b69bfa14084d7c2b1531928_0": {
+    "false_positive": true,
+    "comment": "skills/pr/scripts/apply.py:72 (python_lang_os_command_injection): The approved JSON plan is an intentional operator-selected input. Fixed git/gh/glab argument vectors carry titles and descriptions as data arguments or body files, not shell syntax.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "14a075d84bbf597279c0168e6562066a_0": {
+    "false_positive": true,
+    "comment": "skills/google-cloud-filestore-auditing/scripts/filestore_audit.py:32 (python_lang_os_command_injection): The auditing helper constructs fixed cloud CLI argument vectors for operator-selected resource identifiers; input is not shell program text.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "157ca22e67f45277279e077794a716f8_0": {
+    "false_positive": true,
+    "comment": "skills/gke-app-onboarding/assets/index.js:28 (javascript_lang_logger_leak): Illustrative HTTP backend serves constant health/demo responses behind an internal ClusterIP service; its startup log contains only a constant message and operator-selected port.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1b475da30c7018ee875d777e4bf57874_0": {
+    "false_positive": true,
+    "comment": "skills/k6-perf-test-website/assets/recordings/scripts/recorder.template.js:117 (javascript_lang_logger_leak): The operator-requested recording tool reports its local HAR destination and diagnostic failures to the same operator. Private target/evidence handling is an explicit workflow responsibility, not public application logging.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1b475da30c7018ee875d777e4bf57874_1": {
+    "false_positive": true,
+    "comment": "skills/k6-perf-test-website/assets/recordings/scripts/recorder.template.js:120 (javascript_lang_logger_leak): The operator-requested recording tool reports its local HAR destination and diagnostic failures to the same operator. Private target/evidence handling is an explicit workflow responsibility, not public application logging.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1b739326036f5ef787a547c9907ba171_0": {
+    "false_positive": true,
+    "comment": "skills/aws-ai-ml/references/model-selection/scripts/get_deployable_models.py:471 (python_lang_path_traversal): The catalog snapshot filename comes from the explicit --snapshot-file option; generated snapshots use temporary files or an explicit operator output.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1cd2d2d0ece8f00e3f2021666d8d9de3_0": {
+    "false_positive": true,
+    "comment": "skills/k6-browser-test/scripts/explore.template.js:162 (javascript_lang_logger_leak): Operator-requested browser discovery returns URL/title/selector evidence to the same operator; HTML is explicitly opt-in. This diagnostic workflow is retained by owner decision and requires authorized test data and private evidence handling.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1cd2d2d0ece8f00e3f2021666d8d9de3_1": {
+    "false_positive": true,
+    "comment": "skills/k6-browser-test/scripts/explore.template.js:163 (javascript_lang_logger_leak): Operator-requested browser discovery returns URL/title/selector evidence to the same operator; HTML is explicitly opt-in. This diagnostic workflow is retained by owner decision and requires authorized test data and private evidence handling.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1cd2d2d0ece8f00e3f2021666d8d9de3_2": {
+    "false_positive": true,
+    "comment": "skills/k6-browser-test/scripts/explore.template.js:164 (javascript_lang_logger_leak): Operator-requested browser discovery returns URL/title/selector evidence to the same operator; HTML is explicitly opt-in. This diagnostic workflow is retained by owner decision and requires authorized test data and private evidence handling.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1cd2d2d0ece8f00e3f2021666d8d9de3_3": {
+    "false_positive": true,
+    "comment": "skills/k6-browser-test/scripts/explore.template.js:171 (javascript_lang_logger_leak): Operator-requested browser discovery returns URL/title/selector evidence to the same operator; HTML is explicitly opt-in. This diagnostic workflow is retained by owner decision and requires authorized test data and private evidence handling.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "1cd2d2d0ece8f00e3f2021666d8d9de3_4": {
+    "false_positive": true,
+    "comment": "skills/k6-browser-test/scripts/explore.template.js:172 (javascript_lang_logger_leak): Operator-requested browser discovery returns URL/title/selector evidence to the same operator; HTML is explicitly opt-in. This diagnostic workflow is retained by owner decision and requires authorized test data and private evidence handling.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "23c2f59081571e1874d0539e30da8ed7_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/fetch_related_logs/src/main.py:72 (python_lang_path_traversal): The operator --output option selects the local destination; remote log entries do not select the filesystem path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "31e34d28bc7258a1635dfaee3904501b_0": {
+    "false_positive": true,
+    "comment": "skills/node/rules/assets/graceful-server.ts:65 (javascript_lang_logger_leak): This standalone shutdown example serves constant health/demo responses and reports lifecycle errors/signals to its invoking operator; no credential or user-record source is present in the example.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "31e34d28bc7258a1635dfaee3904501b_1": {
+    "false_positive": true,
+    "comment": "skills/node/rules/assets/graceful-server.ts:68 (javascript_lang_logger_leak): This standalone shutdown example serves constant health/demo responses and reports lifecycle errors/signals to its invoking operator; no credential or user-record source is present in the example.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "31f8d548d4ae0d31637371569dfcf58b_0": {
+    "false_positive": true,
+    "comment": "skills/monitor-ci/scripts/ci-poll-decide.mjs:68 (javascript_lang_logger_leak): The CLI returns selected status/action/task metadata to its invoking orchestrator; parse-failure output is fixed text/counters and does not echo malformed input.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "31f8d548d4ae0d31637371569dfcf58b_1": {
+    "false_positive": true,
+    "comment": "skills/monitor-ci/scripts/ci-poll-decide.mjs:434 (javascript_lang_logger_leak): The CLI returns selected status/action/task metadata to its invoking orchestrator; parse-failure output is fixed text/counters and does not echo malformed input.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "325a43bed0610030e6c9570de8779b8e_0": {
+    "false_positive": true,
+    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/jump_host_engine.py:215 (python_lang_os_command_injection): The fixed SSH command carries base64-encoded generated Python; data values enter through repr or integer conversion. It is intentional remote read-only execution, not interpolation of caller data into shell syntax.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "381aee7d56ffc6d84177db6a7f9000e3_0": {
+    "false_positive": true,
+    "comment": "skills/aws-ai-ml/references/model-selection/scripts/filter_deployable_models.py:262 (python_lang_path_using_user_input): The models filename is an explicit positional operator input; filter values select records rather than filesystem paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3bafaaf0e9e5e237b42dea0c0423f896_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/validate_chart.py:144 (python_lang_path_traversal): The operator selects an input file relative to the configured working directory; chart text is parsed after path selection.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3bafaaf0e9e5e237b42dea0c0423f896_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/validate_chart.py:145 (python_lang_path_traversal): The operator selects an input file relative to the configured working directory; chart text is parsed after path selection.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3bafaaf0e9e5e237b42dea0c0423f896_2": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/validate_chart.py:146 (python_lang_path_traversal): The operator selects an input file relative to the configured working directory; chart text is parsed after path selection.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3bafaaf0e9e5e237b42dea0c0423f896_3": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/validate_chart.py:147 (python_lang_path_traversal): The operator selects an input file relative to the configured working directory; chart text is parsed after path selection.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3ec1154e3aa1fd4d20596a620f46195f_0": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:304 (python_lang_path_traversal): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3ec1154e3aa1fd4d20596a620f46195f_1": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:313 (python_lang_path_traversal): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3ec1154e3aa1fd4d20596a620f46195f_2": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:314 (python_lang_path_traversal): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3ec1154e3aa1fd4d20596a620f46195f_3": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:360 (python_lang_path_traversal): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "3ec1154e3aa1fd4d20596a620f46195f_4": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:361 (python_lang_path_traversal): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "429d09cc2c7d4659437694b3b36d8d9e_0": {
+    "false_positive": true,
+    "comment": "skills/gke-alert-configuration/scripts/validate_config.py:237 (python_lang_path_traversal): The operator selects plan/directory/file lint targets; JSON and Terraform contents do not choose the input filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "429d09cc2c7d4659437694b3b36d8d9e_1": {
+    "false_positive": true,
+    "comment": "skills/gke-alert-configuration/scripts/validate_config.py:318 (python_lang_path_traversal): The operator selects plan/directory/file lint targets; JSON and Terraform contents do not choose the input filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "429d09cc2c7d4659437694b3b36d8d9e_2": {
+    "false_positive": true,
+    "comment": "skills/gke-alert-configuration/scripts/validate_config.py:327 (python_lang_path_traversal): The operator selects plan/directory/file lint targets; JSON and Terraform contents do not choose the input filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "429d09cc2c7d4659437694b3b36d8d9e_3": {
+    "false_positive": true,
+    "comment": "skills/gke-alert-configuration/scripts/validate_config.py:423 (python_lang_path_traversal): The operator selects plan/directory/file lint targets; JSON and Terraform contents do not choose the input filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "43471d12ea34285e7e53ec3249b8bd18_0": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/validate_workload_payload.py:312 (python_lang_path_traversal): The operator explicitly selects a payload file or raw JSON plus a frameworks input; parsed payload fields do not choose these filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "43471d12ea34285e7e53ec3249b8bd18_1": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/validate_workload_payload.py:315 (python_lang_path_traversal): The operator explicitly selects a payload file or raw JSON plus a frameworks input; parsed payload fields do not choose these filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "44207d1f267edee56c3e4931f8dd44aa_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/fetch_trace_span/src/main.py:77 (python_lang_path_traversal): The operator --output option selects the local destination; remote span fields supply JSON content only.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "4751702dd04d39ca3dc3983a82f2d5fd_0": {
+    "false_positive": true,
+    "comment": "skills/api-gateway-backend-security-and-rate-limiting/scripts/check_quota_metrics.py:73 (python_lang_path_traversal): The operator chooses local specification files and cloud resource identifiers. Fixed executable argument vectors do not interpret shell syntax or use specification contents as filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "4cae50c60aef2b1ac994b844d721b906_0": {
+    "false_positive": true,
+    "comment": "skills/iam-helper-for-troubleshooting/scripts/least_privileged_role.py:50 (python_lang_os_command_injection): Role identifiers come from gcloud role-list results and fixed project/organization option slots; subprocess execution uses argument vectors without a shell.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "4ed8810abb9790d2d18787fe392e90d5_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/compare_results.py:177 (python_lang_path_traversal): The baseline and candidate JSON filenames are explicit operator-selected local inputs.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "4ed8810abb9790d2d18787fe392e90d5_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/compare_results.py:179 (python_lang_path_traversal): The baseline and candidate JSON filenames are explicit operator-selected local inputs.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "502c3f68d708ac2ffbc7c172e8532079_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/render_html_report.py:87 (python_lang_path_traversal): The CLI explicitly selects input/output paths; report JSON supplies rendered content, not a filesystem destination.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "502c3f68d708ac2ffbc7c172e8532079_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/render_html_report.py:113 (python_lang_path_traversal): The CLI explicitly selects input/output paths; report JSON supplies rendered content, not a filesystem destination.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "50b99cef33d35beca1cbab1d3bf04d7e_0": {
+    "false_positive": true,
+    "comment": "skills/launch-with-aws/scripts/auth_callback_server.py:69 (python_lang_code_injection): setattr assigns OAuth state to a fixed attribute name on a loopback server; it does not evaluate or execute the state value.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "5103b4dbce032e25accbb8dda8230a74_0": {
+    "false_positive": true,
+    "comment": "skills/ship/scripts/apply.py:306 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "5103b4dbce032e25accbb8dda8230a74_1": {
+    "false_positive": true,
+    "comment": "skills/ship/scripts/apply.py:352 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_0": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1461 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_1": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1549 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_10": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1673 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_11": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1852 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_12": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1854 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_13": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1856 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_14": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2105 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_15": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2232 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_16": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2235 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_17": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2236 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_18": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2237 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_19": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2241 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_2": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1558 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_20": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2242 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_21": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2426 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_22": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2427 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_23": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2455 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_24": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2456 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_25": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2457 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_3": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1559 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_4": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1562 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_5": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1563 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_6": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1662 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_7": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1670 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_8": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1671 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "517d2e1cf035a7c3167b22269702f948_9": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1672 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "52ea477767e802fbd6ba761b719b7be1_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/fetch_entire_trace/src/main.py:55 (python_lang_path_traversal): The operator --output option selects the local destination; remote trace values supply JSON content only.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "54dffe49e1a3b4f195d8b86b673f2766_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/type-check.js:44 (javascript_lang_path_traversal): The operator selects the project root; tsconfig, types directory and diagnostic filenames are fixed beneath it. Remote/browser input does not choose these paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "54dffe49e1a3b4f195d8b86b673f2766_1": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/type-check.js:81 (javascript_lang_path_traversal): The operator selects the project root; tsconfig, types directory and diagnostic filenames are fixed beneath it. Remote/browser input does not choose these paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "54dffe49e1a3b4f195d8b86b673f2766_2": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/type-check.js:85 (javascript_lang_path_traversal): The operator selects the project root; tsconfig, types directory and diagnostic filenames are fixed beneath it. Remote/browser input does not choose these paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "56b09dcdd773b17e51564c7893e1cb14_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/search_traces/src/trace_searcher.py:322 (python_lang_weak_hash_md5): MD5 produces a displayed cluster identifier from service/span counts, not a password hash, authentication token or security-integrity check.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "56fe9570a01041278fdad883127d9dd2_0": {
+    "false_positive": true,
+    "comment": "skills/api-gateway-backend-security-and-rate-limiting/scripts/check_quota_metrics.py:214 (python_lang_os_command_injection): The operator chooses local specification files and cloud resource identifiers. Fixed executable argument vectors do not interpret shell syntax or use specification contents as filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "56fe9570a01041278fdad883127d9dd2_1": {
+    "false_positive": true,
+    "comment": "skills/api-gateway-backend-security-and-rate-limiting/scripts/check_quota_metrics.py:249 (python_lang_os_command_injection): The operator chooses local specification files and cloud resource identifiers. Fixed executable argument vectors do not interpret shell syntax or use specification contents as filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "584354aba3d8b6004d7deec046626b4d_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/build_report.py:21 (python_lang_path_traversal): Summary, template, insights and output roots are explicit operator arguments; report data does not choose the output filename or the fixed executive-summary basename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "584354aba3d8b6004d7deec046626b4d_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/build_report.py:52 (python_lang_path_traversal): Summary, template, insights and output roots are explicit operator arguments; report data does not choose the output filename or the fixed executive-summary basename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "584354aba3d8b6004d7deec046626b4d_2": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/build_report.py:53 (python_lang_path_traversal): Summary, template, insights and output roots are explicit operator arguments; report data does not choose the output filename or the fixed executive-summary basename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "584354aba3d8b6004d7deec046626b4d_3": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/build_report.py:55 (python_lang_path_traversal): Summary, template, insights and output roots are explicit operator arguments; report data does not choose the output filename or the fixed executive-summary basename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "584354aba3d8b6004d7deec046626b4d_4": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/build_report.py:368 (python_lang_path_traversal): Summary, template, insights and output roots are explicit operator arguments; report data does not choose the output filename or the fixed executive-summary basename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "5e56f769b535542bd6313862337f792c_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/config-exposes-check.js:170 (javascript_lang_path_traversal): The operator chooses a trusted local project/configuration; configured imports can intentionally refer to sibling monorepo packages. This checker is not a confined file-serving API.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "63659a9f1d0dac737ebb7cf82e51cde6_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-tuning/scripts/calculate_cost.py:256 (python_lang_path_traversal): The local JSONL dataset is selected by the operator --input option; record contents do not redirect the file read.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "6523a4429e3e3916f312724f34c0bf33_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-databases-onboarding/scripts/database_onboarding_skill.py:19 (python_lang_path_traversal): Prompt/context helpers pass fixed bundled reference filenames; CLI selection chooses a helper, not arbitrary remote-supplied file paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "6523a4429e3e3916f312724f34c0bf33_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-databases-onboarding/scripts/database_onboarding_skill.py:22 (python_lang_path_traversal): Prompt/context helpers pass fixed bundled reference filenames; CLI selection chooses a helper, not arbitrary remote-supplied file paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "6523a4429e3e3916f312724f34c0bf33_2": {
+    "false_positive": true,
+    "comment": "skills/cloud-databases-onboarding/scripts/database_onboarding_skill.py:26 (python_lang_path_traversal): Prompt/context helpers pass fixed bundled reference filenames; CLI selection chooses a helper, not arbitrary remote-supplied file paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "6523a4429e3e3916f312724f34c0bf33_3": {
+    "false_positive": true,
+    "comment": "skills/cloud-databases-onboarding/scripts/database_onboarding_skill.py:34 (python_lang_path_traversal): Prompt/context helpers pass fixed bundled reference filenames; CLI selection chooses a helper, not arbitrary remote-supplied file paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "65d9a63379c774237f2341aaa45a78e2_0": {
+    "false_positive": true,
+    "comment": "skills/aws-observability/scripts/cloudwatch/di_snapshots.py:215 (python_lang_path_traversal): The CLI --json-file selects the local snapshot payload before parsing; snapshot records do not select its filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "69cc4b06bb2a7758e4eb73d8822d74c6_0": {
+    "false_positive": true,
+    "comment": "skills/coderabbit/scripts/context.py:106 (python_lang_os_command_injection): Git and gh commands are fixed executable argument vectors; remote values and GraphQL input are data arguments or stdin, not shell source.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "77df0a17655f0be31eeff076317c0338_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/analyze_traffic.py:382 (python_lang_path_traversal): The metrics input filename comes directly from the operator --metrics-file option; metric records do not select filesystem paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "78150b9def7c7c4c277e46a231e20bad_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/search_traces/src/main.py:68 (python_lang_path_traversal): The operator --output option selects the local JSON destination; fetched traces do not choose a filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:263 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:265 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_10": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:341 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_11": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:344 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_2": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:268 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_3": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:278 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_4": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:316 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_5": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:320 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_6": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:321 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_7": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:325 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_8": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:336 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "7bb23d3ed724c36b89ad0e21812b086e_9": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:340 (python_lang_path_traversal): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "82032e23f4e5a01b9a78e3bd31ac4243_0": {
+    "false_positive": true,
+    "comment": "skills/pr/scripts/context.py:111 (python_lang_os_command_injection): Fixed git/gh/glab argument vectors query the selected repository; remote names and branch values are not shell commands.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8214cd7b7fc1ca7c3a931a83263868d5_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py:172 (python_lang_path_traversal): The output root is operator BUILD_WORKING_DIRECTORY or cwd, and the filename is UUID-generated; model/chart contents do not select the path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8214cd7b7fc1ca7c3a931a83263868d5_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py:173 (python_lang_path_traversal): The output root is operator BUILD_WORKING_DIRECTORY or cwd, and the filename is UUID-generated; model/chart contents do not select the path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8214cd7b7fc1ca7c3a931a83263868d5_2": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py:177 (python_lang_path_traversal): The output root is operator BUILD_WORKING_DIRECTORY or cwd, and the filename is UUID-generated; model/chart contents do not select the path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8214cd7b7fc1ca7c3a931a83263868d5_3": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py:178 (python_lang_path_traversal): The output root is operator BUILD_WORKING_DIRECTORY or cwd, and the filename is UUID-generated; model/chart contents do not select the path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8214cd7b7fc1ca7c3a931a83263868d5_4": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py:179 (python_lang_path_traversal): The output root is operator BUILD_WORKING_DIRECTORY or cwd, and the filename is UUID-generated; model/chart contents do not select the path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "83d37f8a192e135dd4d51f67d7f08f5e_0": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:28 (python_lang_os_command_injection): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_0": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:803 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_1": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:830 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_10": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:948 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_11": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:949 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_12": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:953 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_13": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:954 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_14": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:990 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_15": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:991 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_16": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:1071 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_17": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:1076 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_2": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:840 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_3": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:875 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_4": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:876 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_5": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:887 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_6": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:901 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_7": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:932 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_8": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:941 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "86a1da8d61432d3df6a34ee1a8535544_9": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:946 (python_lang_path_traversal): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8b0852b3caf457dec551bef8b03e7ba1_0": {
+    "false_positive": true,
+    "comment": "skills/coderabbit/scripts/apply.py:77 (python_lang_os_command_injection): Approved local plan paths are intentional file inputs. GitHub operations use fixed gh argument vectors and JSON stdin; review bodies are not shell source.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8b1be758ca4613c570f4d60e416d5f68_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-monitoring-promql-query/scripts/validate_promql.py:207 (python_lang_path_traversal): The operator --file option selects the query input; PromQL text does not choose its filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8e56f83e69926dac38aeb877a7858eff_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:50 (javascript_lang_non_literal_fs_filename): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8e56f83e69926dac38aeb877a7858eff_1": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:74 (javascript_lang_non_literal_fs_filename): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_0": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2116 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_1": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2121 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_2": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2132 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_3": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2145 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_4": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2159 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_5": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2198 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8ec54bcbb1d9eb00564bc19a4f10d2c8_6": {
+    "false_positive": true,
+    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2214 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8f640c7c64559ae7d0b55b50e8671f3d_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-skill-registry/scripts/skill_registry_ops.py:42 (python_lang_path_traversal): Upload/update receive an operator-selected --zip-file path; registry responses do not choose the local input filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "8f640c7c64559ae7d0b55b50e8671f3d_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-skill-registry/scripts/skill_registry_ops.py:179 (python_lang_path_traversal): Upload/update receive an operator-selected --zip-file path; registry responses do not choose the local input filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "914b47a8acd091a427990822d4334ee4_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:64 (javascript_express_insecure_allow_origin): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "998bd6d36c4c7f267147d300c0f78f55_0": {
+    "false_positive": true,
+    "comment": "skills/aws-ai-ml/references/dataset-transformation/scripts/transformation_tools.py:92 (python_lang_path_traversal): The operator explicitly selects the dataset URI and transformation script. basename values are passed as structured job arguments beneath fixed processing directories, not opened as arbitrary host paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "998bd6d36c4c7f267147d300c0f78f55_1": {
+    "false_positive": true,
+    "comment": "skills/aws-ai-ml/references/dataset-transformation/scripts/transformation_tools.py:94 (python_lang_path_traversal): The operator explicitly selects the dataset URI and transformation script. basename values are passed as structured job arguments beneath fixed processing directories, not opened as arbitrary host paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "9c7f5be9099cac3c6d36267e132bffd7_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/lint_syntax.py:34 (python_lang_path_traversal): The positional filename is the operator-selected lint target, not a filename accepted by a privileged service.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "9d85e434198899dfb5f6ea5097cb0086_0": {
+    "false_positive": true,
+    "comment": "skills/gke-app-onboarding/assets/index.js:8 (javascript_express_https_protocol_missing): Illustrative HTTP backend serves constant health/demo responses behind an internal ClusterIP service; its startup log contains only a constant message and operator-selected port.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "9f290b44df3567744934b0a72020e33b_0": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py:185 (python_lang_os_command_injection): Cloud queries use fixed argv. Cache/output roots are operator-selected; organization is normalized to digits and location is allowlisted before constructing cache filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a215199a967efa57675ba5e7002507a4_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/config-exposes-check.js:171 (javascript_lang_non_literal_fs_filename): The operator chooses a trusted local project/configuration; configured imports can intentionally refer to sibling monorepo packages. This checker is not a confined file-serving API.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a4c812c8f8f796e526768767b023f139_0": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_output_match_analyzer.py:712 (python_lang_path_traversal): Intent, match and resources JSON filenames are explicit operator-selected inputs; matched record values do not redirect the reads.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a4c812c8f8f796e526768767b023f139_1": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_output_match_analyzer.py:715 (python_lang_path_traversal): Intent, match and resources JSON filenames are explicit operator-selected inputs; matched record values do not redirect the reads.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a4c812c8f8f796e526768767b023f139_2": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-frameworks-navigator/scripts/db_output_match_analyzer.py:718 (python_lang_path_traversal): Intent, match and resources JSON filenames are explicit operator-selected inputs; matched record values do not redirect the reads.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a4e7f5742289f36fdc7bad49eb9442e2_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:99 (javascript_express_https_protocol_missing): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a5a0a0dcca22742105e3863fe575662d_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/actions.py:294 (python_lang_weak_hash_sha1): Truncated SHA1 supplies a report action identifier; deduplication compares the full filter text rather than trusting the hash for integrity or authentication.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a5fb97cd777cf8dc80b888885779188d_0": {
+    "false_positive": true,
+    "comment": "skills/aws-ai-ml/references/model-evaluation/scripts/validate_custom_metrics.py:103 (python_lang_path_using_user_input): The CLI explicitly accepts operator-selected JSON text or a local JSON filename; this is not a request-derived path.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "a9b0c2b2ff3e2e9968209426f1bc1d8f_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/validate_dataset.py:354 (python_lang_path_traversal): The dataset filename is the explicit operator --dataset input, not a filename derived from dataset records.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ad3e7a391921efe0f40c758d4750e5b3_0": {
+    "false_positive": true,
+    "comment": "skills/api-gateway-mcp-server/scripts/validate_mcp_openapi.py:58 (python_lang_path_traversal): The operator --spec argument selects the local OpenAPI file; this loader is not an HTTP file-serving endpoint.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ade13812af0efdbcc5d5fc28d4a7bfce_0": {
+    "false_positive": true,
+    "comment": "skills/coderabbit/scripts/apply.py:186 (python_lang_path_using_user_input): Approved local plan paths are intentional file inputs. GitHub operations use fixed gh argument vectors and JSON stdin; review bodies are not shell source.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "b10e09f21d70c15003f6004f752a0ed6_0": {
+    "false_positive": true,
+    "comment": "skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py:106 (python_lang_os_command_injection): Fixed xctrace export receives trace paths and XPath selections as individual arguments. Selecting trace data is intentional and does not execute a shell.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "b1bc22adfa0442d68d86efd03b2caf60_0": {
+    "false_positive": true,
+    "comment": "skills/ship/scripts/context.py:89 (python_lang_os_command_injection): Repository inspection uses fixed executable argument vectors with shell interpretation disabled by the subprocess API default.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "b9104c67ba21b886c7507631962e3607_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py:47 (python_lang_os_command_injection): Shipped callers use argument vectors with shell=False. Helper paths select fixed sibling scripts or the explicit operator skill path; fetched telemetry does not choose executable filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "b95c28703d0c86d555b6c6194b55a473_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_executor.py:32 (python_lang_code_injection): The wrapper deliberately execs the operator-selected Python script and arguments. This is an execution tool, not a sandbox or evaluation of fetched data.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_0": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:73 (javascript_lang_path_traversal): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_1": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:78 (javascript_lang_path_traversal): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_2": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:79 (javascript_lang_path_traversal): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_3": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:80 (javascript_lang_path_traversal): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_4": {
+    "false_positive": true,
+    "comment": "skills/mf/scripts/observability-collector.js:81 (javascript_lang_path_traversal): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_0": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:251 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_1": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:252 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_2": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:253 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_3": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:254 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_4": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:255 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_5": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:256 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_6": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:264 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_7": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:265 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_8": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:266 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bcd057505f774d43f74a4ef2619e908c_9": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py:268 (python_lang_path_traversal): Operator/catalog resource identifiers are arguments to fixed gcloud subcommands, not shell source. Generated artifacts download into a private TemporaryDirectory; immediate directory entry names select copies to the operator output directory.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bdac0bb3417e462d2bd6dc6a6d7388ee_0": {
+    "false_positive": true,
+    "comment": "skills/iam-helper-for-troubleshooting/scripts/troubleshooting_error_id.py:63 (python_lang_os_command_injection): Service-enable calls use fixed argv. The HTTP destination is constant policytroubleshooter.googleapis.com; the error identifier is JSON request data, not a destination URL.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "be774e7e8c8f119b489b57cb0f872e4b_0": {
+    "false_positive": true,
+    "comment": "skills/swiftui-expert-skill/scripts/record_trace.py:132 (python_lang_os_command_injection): Recording and operator-selected app launch are intentional execution through fixed xctrace argv. The launch command uses -- to separate the app from options; displayed text is not run as shell source.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bedb6e97d8b03a71de8578d1eb0b29d9_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/output.py:32 (python_lang_path_traversal): Billing dates are produced by datetime formatting; service keys are resource types, not raw log messages. Slash replacement and the JSON suffix prevent POSIX parent/separator traversal.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "bedb6e97d8b03a71de8578d1eb0b29d9_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/output.py:61 (python_lang_path_traversal): Billing dates are produced by datetime formatting; service keys are resource types, not raw log messages. Slash replacement and the JSON suffix prevent POSIX parent/separator traversal.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "c03b01ce7ae114d1f8ce765d228ac94a_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_cleaner.py:22 (python_lang_os_command_injection): A fixed Python cleanup helper is invoked with an argument vector for the documented local virtualenv cache, not shell-interpreted data.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "c62fe42e05a37b9ca4de2cad585f825c_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/cleanup_env.py:28 (python_lang_path_traversal): Cleanup intentionally walks the fixed local virtualenv cache root, including sibling workspace caches; arbitrary direct invocation is operator-controlled. The separate lock-lifetime correctness issue is not an input-path traversal mechanism.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "c62fe42e05a37b9ca4de2cad585f825c_1": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/cleanup_env.py:50 (python_lang_path_traversal): Cleanup intentionally walks the fixed local virtualenv cache root, including sibling workspace caches; arbitrary direct invocation is operator-controlled. The separate lock-lifetime correctness issue is not an input-path traversal mechanism.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "c667f31aa0c42305c09e455d5e9e3a96_0": {
+    "false_positive": true,
+    "comment": "skills/ship/scripts/apply.py:82 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cb62edae573b9365087ad51880e2621d_0": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/evaluate_control_rules.py:492 (python_lang_path_traversal): Framework, telemetry and deep-telemetry filenames are explicit operator arguments; file contents do not select further input paths at these sinks.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cb62edae573b9365087ad51880e2621d_1": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/evaluate_control_rules.py:498 (python_lang_path_traversal): Framework, telemetry and deep-telemetry filenames are explicit operator arguments; file contents do not select further input paths at these sinks.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cb62edae573b9365087ad51880e2621d_2": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/evaluate_control_rules.py:513 (python_lang_path_traversal): Framework, telemetry and deep-telemetry filenames are explicit operator arguments; file contents do not select further input paths at these sinks.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cb62edae573b9365087ad51880e2621d_3": {
+    "false_positive": true,
+    "comment": "skills/assuredworkloads-environment-assessor/scripts/evaluate_control_rules.py:519 (python_lang_path_traversal): Framework, telemetry and deep-telemetry filenames are explicit operator arguments; file contents do not select further input paths at these sinks.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ce8adde118fd4d34277561eb7ac832f7_0": {
+    "false_positive": true,
+    "comment": "skills/diagram/scripts/diagrams.py:92 (python_lang_os_command_injection): The helper invokes fixed git with the operator repository as one -C argument and separate command arguments; no shell interprets the repository name.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cf0deffefe50bdba3a40f3f01cbf0ff2_0": {
+    "false_positive": true,
+    "comment": "skills/google-cloud-filestore-log-troubleshooting/scripts/quick_diagnose.py:43 (python_lang_os_command_injection): Troubleshooting queries use fixed executable argument vectors with operator-selected cloud identifiers; no shell or dynamically selected executable is involved.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "cf6d0ec1e9e4adb0c369f1fad4ab64f2_0": {
+    "false_positive": true,
+    "comment": "skills/iam-helper-for-troubleshooting/scripts/troubleshooting_error_id.py:149 (python_lang_http_url_using_user_input): Service-enable calls use fixed argv. The HTTP destination is constant policytroubleshooter.googleapis.com; the error identifier is JSON request data, not a destination URL.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "d700a08630c43fed11db80a20d077d3a_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-tuning/scripts/prepare_dataset.py:65 (python_lang_path_traversal): Validation reads the explicitly selected operator input dataset; JSONL values do not choose its filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "d933ec7c028f2e55fb98469150c53056_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-logging-finops/scripts/constants.py:248 (python_lang_path_traversal): Traced callers select the main output explicitly or use normalized partition paths: formatted dates and slash-normalized resource-type names, not arbitrary log payload filenames.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "d93b5238c1867c39b8a3616cecf514a1_0": {
+    "false_positive": true,
+    "comment": "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py:904 (python_lang_os_command_injection): Inputs and output roots are explicit operator arguments. Staging is recreated, query identifiers are normalized, and generated stub names have a fixed prefix. Returned manifest paths are lookup keys, not arbitrary write destinations; cloud commands use argv.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "da2ba6d32e52f81765d77b606462c8b8_0": {
+    "false_positive": true,
+    "comment": "skills/commit/scripts/apply.py:106 (python_lang_path_using_user_input): The operator explicitly supplies the approved JSON plan path. All shipped subprocess callers use fixed git argument vectors and never enable shell interpretation.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "df19f65f650b571b2b45170b114e72dd_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/endpoint_evaluation.py:117 (python_lang_os_command_injection): The documented operator-selected GCS dataset is one gsutil cat argument. Dataset records cannot alter the command or executable, and no shell is used.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "e6e5ee0805d1a81cbf5768b9bdfbfb0b_0": {
+    "false_positive": true,
+    "comment": "skills/monitor-ci/scripts/ci-state-update.mjs:30 (javascript_lang_logger_leak): The CLI returns selected caller state/URL/SHA through its documented JSON interface to the same caller; it does not dump credentials, environment or an authentication object.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "e706a80fe3a4764fcbe441649305d529_0": {
+    "false_positive": true,
+    "comment": "skills/aws-observability/scripts/cloudwatch/di_instrumentation.py:187 (python_lang_path_traversal): The CLI --json-file selects the local instrumentation payload before parsing; payload values do not select its filename.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "ecc0d694b736ae526a1253278c7aead4_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-armor-crs-rule-upgrader/scripts/upgrade_policy.py:602 (python_lang_eval_using_user_input): ast.literal_eval parses literal policy data, not executable expressions. The local policy input filename is explicitly selected by the invoking operator.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "efb6c2f9cee8bd0b9dbe27aa8b530595_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/path_resolver.py:37 (python_lang_path_traversal): The requirements filename derives from the operator-selected script location and fixed sibling alternatives, not telemetry or an HTTP request.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f0c9d840093f856df006585eb5cd7f00_0": {
+    "false_positive": true,
+    "comment": "skills/cloud-armor-crs-rule-upgrader/scripts/upgrade_policy.py:1178 (python_lang_path_traversal): ast.literal_eval parses literal policy data, not executable expressions. The local policy input filename is explicitly selected by the invoking operator.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f239ecafd7e63ced73a4489e598a4254_0": {
+    "false_positive": true,
+    "comment": "skills/amazon-bedrock/scripts/fetch_bedrock_agent.py:322 (python_lang_path_traversal): The output filename is the unchanged required operator --out argument, not a value supplied by the fetched agent manifest.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f302042340d254c2291fcc9814e8cbd8_0": {
+    "false_positive": true,
+    "comment": "skills/application-design-center-design-deploy/scripts/list_terraform_templates.py:48 (python_lang_os_command_injection): Fixed gcloud list commands receive operator-selected project, space and catalog values as individual arguments; no shell interprets them.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f40ded704115eaca3e693a269fe79335_0": {
+    "false_positive": true,
+    "comment": "skills/commit/scripts/apply.py:45 (python_lang_os_command_injection): The operator explicitly supplies the approved JSON plan path. All shipped subprocess callers use fixed git argument vectors and never enable shell interpretation.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f8a10380ef4bd5139fa3c1d397db0a70_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py:180 (python_lang_path_traversal): The operator selects the input file/directory and output path. Directory entries are immediate local filenames; session identifiers do not select paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f8a10380ef4bd5139fa3c1d397db0a70_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py:247 (python_lang_path_traversal): The operator selects the input file/directory and output path. Directory entries are immediate local filenames; session identifiers do not select paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f8a10380ef4bd5139fa3c1d397db0a70_2": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py:253 (python_lang_path_traversal): The operator selects the input file/directory and output path. Directory entries are immediate local filenames; session identifiers do not select paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f8a10380ef4bd5139fa3c1d397db0a70_3": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py:254 (python_lang_path_traversal): The operator selects the input file/directory and output path. Directory entries are immediate local filenames; session identifiers do not select paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "f8a10380ef4bd5139fa3c1d397db0a70_4": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py:264 (python_lang_path_traversal): The operator selects the input file/directory and output path. Directory entries are immediate local filenames; session identifiers do not select paths.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_0": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:81 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_1": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:85 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_2": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:116 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_3": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:157 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_4": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:163 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fa39ab6dbf1f15955620773a0452cf4a_5": {
+    "false_positive": true,
+    "comment": "skills/apigee-agent-gateway-governance/scripts/compile_check.py:166 (python_lang_path_traversal): This offline authoring workflow intentionally reads operator-selected AFT templates and their feature include manifests, including documented subdirectories. Constructed remedy text is printed, not executed as filesystem operations.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fcbbccd27e8d5b7820c2f5fca425d897_0": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/scan_duplicates.py:28 (python_lang_path_traversal): The operator selects a directory to inspect; immediate Terraform filenames come from a local glob, not HCL values or remote input.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  },
+  "fcbbccd27e8d5b7820c2f5fca425d897_1": {
+    "false_positive": true,
+    "comment": "skills/agent-platform-alert-configuration/scripts/scan_duplicates.py:38 (python_lang_path_traversal): The operator selects a directory to inspect; immediate Terraform filenames come from a local glob, not HCL values or remote input.",
+    "ignored_at": "2026-11-10T12:23:45.044Z"
+  }
+}

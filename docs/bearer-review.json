@@ -1,0 +1,619 @@
+{
+  "bearer_version": "v2.1.3",
+  "files": {
+    "skills/agent-platform-alert-configuration/scripts/analyze_traffic.py": {
+      "sha256": "7cd29fdbc4f1004ab433ced3355ac494a4734364a3378709e3031e77d09aa77f",
+      "fingerprints": [
+        "77df0a17655f0be31eeff076317c0338_0"
+      ]
+    },
+    "skills/agent-platform-alert-configuration/scripts/gather_agent_info.py": {
+      "sha256": "fb8bb7e6d504cea22bd4e0d991dc6475a99fceb4c9252e3531d867c74f3ade1a",
+      "fingerprints": [
+        "7bb23d3ed724c36b89ad0e21812b086e_0",
+        "7bb23d3ed724c36b89ad0e21812b086e_1",
+        "7bb23d3ed724c36b89ad0e21812b086e_10",
+        "7bb23d3ed724c36b89ad0e21812b086e_11",
+        "7bb23d3ed724c36b89ad0e21812b086e_2",
+        "7bb23d3ed724c36b89ad0e21812b086e_3",
+        "7bb23d3ed724c36b89ad0e21812b086e_4",
+        "7bb23d3ed724c36b89ad0e21812b086e_5",
+        "7bb23d3ed724c36b89ad0e21812b086e_6",
+        "7bb23d3ed724c36b89ad0e21812b086e_7",
+        "7bb23d3ed724c36b89ad0e21812b086e_8",
+        "7bb23d3ed724c36b89ad0e21812b086e_9",
+        "b9104c67ba21b886c7507631962e3607_0"
+      ]
+    },
+    "skills/agent-platform-alert-configuration/scripts/lint_syntax.py": {
+      "sha256": "ba5144c5e71e1a6daafcf348ca943075a45d11a232af8cf67e699d41665420b1",
+      "fingerprints": [
+        "9c7f5be9099cac3c6d36267e132bffd7_0"
+      ]
+    },
+    "skills/agent-platform-alert-configuration/scripts/scan_duplicates.py": {
+      "sha256": "26d152e84af609b57d473aa09334da3e28b185afc13d59e8b5c23d0b51d4d0b4",
+      "fingerprints": [
+        "fcbbccd27e8d5b7820c2f5fca425d897_0",
+        "fcbbccd27e8d5b7820c2f5fca425d897_1"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/compare_results.py": {
+      "sha256": "27100ae990acb95c3c73f38627b6fc55e4fa0450b6a9f3415ed5f64c85d18ece",
+      "fingerprints": [
+        "4ed8810abb9790d2d18787fe392e90d5_0",
+        "4ed8810abb9790d2d18787fe392e90d5_1"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/endpoint_evaluation.py": {
+      "sha256": "61d268dd4e6f6635758926a59a14ddedec5baf2da55fec80618092c51cfb17e4",
+      "fingerprints": [
+        "df19f65f650b571b2b45170b114e72dd_0"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/inspect_results.py": {
+      "sha256": "155d9c03a92ee3c202dd283e536400e8dea63687141888ea8ec86179d8937efe",
+      "fingerprints": [
+        "0647b435c23593f7b22311538c7d0c45_0",
+        "0647b435c23593f7b22311538c7d0c45_1"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/parse_adk_traces.py": {
+      "sha256": "4ccdc48d55719c6b3bdc003d0792e3ba5c872830dd623db5c17aa0d8cd5279d1",
+      "fingerprints": [
+        "f8a10380ef4bd5139fa3c1d397db0a70_0",
+        "f8a10380ef4bd5139fa3c1d397db0a70_1",
+        "f8a10380ef4bd5139fa3c1d397db0a70_2",
+        "f8a10380ef4bd5139fa3c1d397db0a70_3",
+        "f8a10380ef4bd5139fa3c1d397db0a70_4"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/render_html_report.py": {
+      "sha256": "bb38e29b7d5be05ec8058d3e0e6af4ee0e39eb4b3c323f3c6cb3636dca66cbe2",
+      "fingerprints": [
+        "502c3f68d708ac2ffbc7c172e8532079_0",
+        "502c3f68d708ac2ffbc7c172e8532079_1"
+      ]
+    },
+    "skills/agent-platform-eval-flywheel/scripts/validate_dataset.py": {
+      "sha256": "8afccfbca6e26c76c452ef7fa4e7ab0def43f3aa03b553e8991f99e42c02a669",
+      "fingerprints": [
+        "a9b0c2b2ff3e2e9968209426f1bc1d8f_0"
+      ]
+    },
+    "skills/agent-platform-skill-registry/scripts/skill_registry_ops.py": {
+      "sha256": "4d75b273faabfe368e08cab49dbbd9bd968ea7a9f09d380c4b1c051c2c8030df",
+      "fingerprints": [
+        "8f640c7c64559ae7d0b55b50e8671f3d_0",
+        "8f640c7c64559ae7d0b55b50e8671f3d_1"
+      ]
+    },
+    "skills/agent-platform-tuning/scripts/calculate_cost.py": {
+      "sha256": "c34af72f92336d36366fd9f730e45be4763f0829959a2fb7fd6bc55fd97a4908",
+      "fingerprints": [
+        "63659a9f1d0dac737ebb7cf82e51cde6_0"
+      ]
+    },
+    "skills/agent-platform-tuning/scripts/prepare_dataset.py": {
+      "sha256": "ec2ec45480cd4d005f09277712b9359b9b165bb6acb8d5ff1acc14a4dbdf508a",
+      "fingerprints": [
+        "d700a08630c43fed11db80a20d077d3a_0"
+      ]
+    },
+    "skills/amazon-bedrock/scripts/fetch_bedrock_agent.py": {
+      "sha256": "0c0066a623551395dfaa9d9092ffa75659452a3d833792275c68310887049c10",
+      "fingerprints": [
+        "f239ecafd7e63ced73a4489e598a4254_0"
+      ]
+    },
+    "skills/api-gateway-backend-security-and-rate-limiting/scripts/check_quota_metrics.py": {
+      "sha256": "7cf94143bdc661e85a686dc7ba6276829b671aecdf83783127aec87e660d4073",
+      "fingerprints": [
+        "4751702dd04d39ca3dc3983a82f2d5fd_0",
+        "56fe9570a01041278fdad883127d9dd2_0",
+        "56fe9570a01041278fdad883127d9dd2_1"
+      ]
+    },
+    "skills/api-gateway-mcp-server/scripts/validate_mcp_openapi.py": {
+      "sha256": "35b7029a122a7fc7fbe7d828372ffbe9dcf4b55c9073b101ea9c24d89f7b2c36",
+      "fingerprints": [
+        "ad3e7a391921efe0f40c758d4750e5b3_0"
+      ]
+    },
+    "skills/apigee-agent-gateway-governance/scripts/compile_check.py": {
+      "sha256": "2f642c4a2be2745581b0093d21da98ef09e0ad6d5ce28bfba7e1d0133139fe8e",
+      "fingerprints": [
+        "fa39ab6dbf1f15955620773a0452cf4a_0",
+        "fa39ab6dbf1f15955620773a0452cf4a_1",
+        "fa39ab6dbf1f15955620773a0452cf4a_2",
+        "fa39ab6dbf1f15955620773a0452cf4a_3",
+        "fa39ab6dbf1f15955620773a0452cf4a_4",
+        "fa39ab6dbf1f15955620773a0452cf4a_5"
+      ]
+    },
+    "skills/application-design-center-design-deploy/scripts/fetch_terraform_template.py": {
+      "sha256": "1510b2014d53692d8b41d50502c96d801a59445268d8c8581a79053b283d9d7f",
+      "fingerprints": [
+        "83d37f8a192e135dd4d51f67d7f08f5e_0",
+        "bcd057505f774d43f74a4ef2619e908c_0",
+        "bcd057505f774d43f74a4ef2619e908c_1",
+        "bcd057505f774d43f74a4ef2619e908c_2",
+        "bcd057505f774d43f74a4ef2619e908c_3",
+        "bcd057505f774d43f74a4ef2619e908c_4",
+        "bcd057505f774d43f74a4ef2619e908c_5",
+        "bcd057505f774d43f74a4ef2619e908c_6",
+        "bcd057505f774d43f74a4ef2619e908c_7",
+        "bcd057505f774d43f74a4ef2619e908c_8",
+        "bcd057505f774d43f74a4ef2619e908c_9"
+      ]
+    },
+    "skills/application-design-center-design-deploy/scripts/list_terraform_templates.py": {
+      "sha256": "2b0e20ef2e69e38d9d9813c1a1c5ce23887833be9f24c7856ce9d335ff390732",
+      "fingerprints": [
+        "f302042340d254c2291fcc9814e8cbd8_0"
+      ]
+    },
+    "skills/assuredworkloads-environment-assessor/scripts/evaluate_control_rules.py": {
+      "sha256": "dfe929381ccca2c99c59f192ed17328e52d5317bddf43df0e11902266abff2cd",
+      "fingerprints": [
+        "cb62edae573b9365087ad51880e2621d_0",
+        "cb62edae573b9365087ad51880e2621d_1",
+        "cb62edae573b9365087ad51880e2621d_2",
+        "cb62edae573b9365087ad51880e2621d_3"
+      ]
+    },
+    "skills/assuredworkloads-environment-assessor/scripts/validate_workload_payload.py": {
+      "sha256": "ba229bf803892255e90cee68492283fee2ff24d55ac92b6a11999637a7730957",
+      "fingerprints": [
+        "43471d12ea34285e7e53ec3249b8bd18_0",
+        "43471d12ea34285e7e53ec3249b8bd18_1"
+      ]
+    },
+    "skills/assuredworkloads-frameworks-navigator/scripts/db_output_match_analyzer.py": {
+      "sha256": "578cda7ee63a7bdd1d023774583a5112bd336e1d71a811d570ec70ff7efe6275",
+      "fingerprints": [
+        "a4c812c8f8f796e526768767b023f139_0",
+        "a4c812c8f8f796e526768767b023f139_1",
+        "a4c812c8f8f796e526768767b023f139_2"
+      ]
+    },
+    "skills/assuredworkloads-frameworks-navigator/scripts/db_resources_loader.py": {
+      "sha256": "0f005cee0560ca577651799621fa92909004bb321f86f1fd44f3ad44f3a60437",
+      "fingerprints": [
+        "3ec1154e3aa1fd4d20596a620f46195f_0",
+        "3ec1154e3aa1fd4d20596a620f46195f_1",
+        "3ec1154e3aa1fd4d20596a620f46195f_2",
+        "3ec1154e3aa1fd4d20596a620f46195f_3",
+        "3ec1154e3aa1fd4d20596a620f46195f_4",
+        "9f290b44df3567744934b0a72020e33b_0"
+      ]
+    },
+    "skills/aws-ai-ml/references/dataset-transformation/scripts/transformation_tools.py": {
+      "sha256": "2df5f02ebb5972a970ec0d3ba1867018902e7bdb408b43237db11053645848e3",
+      "fingerprints": [
+        "998bd6d36c4c7f267147d300c0f78f55_0",
+        "998bd6d36c4c7f267147d300c0f78f55_1"
+      ]
+    },
+    "skills/aws-ai-ml/references/model-evaluation/scripts/validate_custom_metrics.py": {
+      "sha256": "d659e0b418d284fa9f3cd1081b0584c09e4585da6c4f9c8db67eb57f3866aff8",
+      "fingerprints": [
+        "a5fb97cd777cf8dc80b888885779188d_0"
+      ]
+    },
+    "skills/aws-ai-ml/references/model-selection/scripts/filter_deployable_models.py": {
+      "sha256": "1e7d66f7c5b1c5eb350021e1236fc991a924bc122d66d408ecd8f9a55d56411f",
+      "fingerprints": [
+        "381aee7d56ffc6d84177db6a7f9000e3_0"
+      ]
+    },
+    "skills/aws-ai-ml/references/model-selection/scripts/get_deployable_models.py": {
+      "sha256": "f2bc8ccab88e7458989d604c2038aa8923b8e94944e7d6d6194dfa715fc2a190",
+      "fingerprints": [
+        "1b739326036f5ef787a547c9907ba171_0"
+      ]
+    },
+    "skills/aws-observability/scripts/cloudwatch/di_instrumentation.py": {
+      "sha256": "05dd4de7bd08650955a29d3686094bce73d63f9de4c42d21e031dcfb02bcafd1",
+      "fingerprints": [
+        "e706a80fe3a4764fcbe441649305d529_0"
+      ]
+    },
+    "skills/aws-observability/scripts/cloudwatch/di_snapshots.py": {
+      "sha256": "a4aaa1aa457d7f2e003fbc14098fffc6021a911a2255f36b52e841b0294658fe",
+      "fingerprints": [
+        "65d9a63379c774237f2341aaa45a78e2_0"
+      ]
+    },
+    "skills/bigquery-migration-sql-translator/assets/python_embedded_sql_migrator_template.py": {
+      "sha256": "fbdce9c5b22badc04f3476bc855e5da32e7366be9cc0fe4c07e10654bed32ba1",
+      "fingerprints": [
+        "86a1da8d61432d3df6a34ee1a8535544_0",
+        "86a1da8d61432d3df6a34ee1a8535544_1",
+        "86a1da8d61432d3df6a34ee1a8535544_10",
+        "86a1da8d61432d3df6a34ee1a8535544_11",
+        "86a1da8d61432d3df6a34ee1a8535544_12",
+        "86a1da8d61432d3df6a34ee1a8535544_13",
+        "86a1da8d61432d3df6a34ee1a8535544_14",
+        "86a1da8d61432d3df6a34ee1a8535544_15",
+        "86a1da8d61432d3df6a34ee1a8535544_16",
+        "86a1da8d61432d3df6a34ee1a8535544_17",
+        "86a1da8d61432d3df6a34ee1a8535544_2",
+        "86a1da8d61432d3df6a34ee1a8535544_3",
+        "86a1da8d61432d3df6a34ee1a8535544_4",
+        "86a1da8d61432d3df6a34ee1a8535544_5",
+        "86a1da8d61432d3df6a34ee1a8535544_6",
+        "86a1da8d61432d3df6a34ee1a8535544_7",
+        "86a1da8d61432d3df6a34ee1a8535544_8",
+        "86a1da8d61432d3df6a34ee1a8535544_9",
+        "d93b5238c1867c39b8a3616cecf514a1_0"
+      ]
+    },
+    "skills/cloud-armor-crs-rule-upgrader/scripts/upgrade_policy.py": {
+      "sha256": "c7f056ad6c0a1c27e3db9022787fc11dd0e031d9190fca82b7d388b3bdbc445d",
+      "fingerprints": [
+        "ecc0d694b736ae526a1253278c7aead4_0",
+        "f0c9d840093f856df006585eb5cd7f00_0"
+      ]
+    },
+    "skills/cloud-databases-onboarding/scripts/database_onboarding_skill.py": {
+      "sha256": "ecf9bdf09b1b84485c75bc7f3a7d0cea3f2ce3631190c8362a453357b4cb26c3",
+      "fingerprints": [
+        "6523a4429e3e3916f312724f34c0bf33_0",
+        "6523a4429e3e3916f312724f34c0bf33_1",
+        "6523a4429e3e3916f312724f34c0bf33_2",
+        "6523a4429e3e3916f312724f34c0bf33_3"
+      ]
+    },
+    "skills/cloud-logging-finops/scripts/actions.py": {
+      "sha256": "fee64790c5dc848195d640834f555e68b21b0e9675a1009e85cac8cc57814280",
+      "fingerprints": [
+        "a5a0a0dcca22742105e3863fe575662d_0"
+      ]
+    },
+    "skills/cloud-logging-finops/scripts/build_report.py": {
+      "sha256": "ec485ee03fce824efd803de634053697ff8397a37059d07c78421d543284776d",
+      "fingerprints": [
+        "584354aba3d8b6004d7deec046626b4d_0",
+        "584354aba3d8b6004d7deec046626b4d_1",
+        "584354aba3d8b6004d7deec046626b4d_2",
+        "584354aba3d8b6004d7deec046626b4d_3",
+        "584354aba3d8b6004d7deec046626b4d_4"
+      ]
+    },
+    "skills/cloud-logging-finops/scripts/constants.py": {
+      "sha256": "b584666a10c44cbcb19a5c4af5b4d28e16b6f2a395d3545dcf08b2d2f0e398b0",
+      "fingerprints": [
+        "d933ec7c028f2e55fb98469150c53056_0"
+      ]
+    },
+    "skills/cloud-logging-finops/scripts/output.py": {
+      "sha256": "b23977b53d861f28cdccd1ac41f6eed8d9b36ac053b54d6234a8b407ebd9be72",
+      "fingerprints": [
+        "bedb6e97d8b03a71de8578d1eb0b29d9_0",
+        "bedb6e97d8b03a71de8578d1eb0b29d9_1"
+      ]
+    },
+    "skills/cloud-logging-finops/scripts/verify_claim.py": {
+      "sha256": "6febedafc18b78c273ba9385f67b3556277bf477ce289057524ad2e1ab892166",
+      "fingerprints": [
+        "0405d58b1e8851fa56ee7a11ad007384_0"
+      ]
+    },
+    "skills/cloud-monitoring-chart-generation/scripts/assemble_widget_proto.py": {
+      "sha256": "58073b8d58f34715943168d155a8209172def1b94a47b05a3438afd90583ad13",
+      "fingerprints": [
+        "8214cd7b7fc1ca7c3a931a83263868d5_0",
+        "8214cd7b7fc1ca7c3a931a83263868d5_1",
+        "8214cd7b7fc1ca7c3a931a83263868d5_2",
+        "8214cd7b7fc1ca7c3a931a83263868d5_3",
+        "8214cd7b7fc1ca7c3a931a83263868d5_4"
+      ]
+    },
+    "skills/cloud-monitoring-chart-generation/scripts/validate_chart.py": {
+      "sha256": "b83c0e87882158e63cea2b8c52f91fa1e494221cd59b3fd061ad980b4cad633b",
+      "fingerprints": [
+        "3bafaaf0e9e5e237b42dea0c0423f896_0",
+        "3bafaaf0e9e5e237b42dea0c0423f896_1",
+        "3bafaaf0e9e5e237b42dea0c0423f896_2",
+        "3bafaaf0e9e5e237b42dea0c0423f896_3"
+      ]
+    },
+    "skills/cloud-monitoring-promql-query/scripts/validate_promql.py": {
+      "sha256": "6dcc3e9225188ce79fecdaa792d1b978d2238882f3bbd08834414961e0cdcdf1",
+      "fingerprints": [
+        "8b1be758ca4613c570f4d60e416d5f68_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/fetch_entire_trace/src/main.py": {
+      "sha256": "311d362470738e86028ee23808bbc76ab79165519533186d33985067e5feacaa",
+      "fingerprints": [
+        "52ea477767e802fbd6ba761b719b7be1_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/fetch_related_logs/src/main.py": {
+      "sha256": "6c7fa0f3228c9aad13296dc01f1aa1a9acca9f4729c6ac5d8d63724d5d4a5bdc",
+      "fingerprints": [
+        "23c2f59081571e1874d0539e30da8ed7_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/fetch_trace_span/src/main.py": {
+      "sha256": "edd72634102627f5c59d3f6cb33b86b3d17a5b6de62b0dcfe52c561c019ac7a0",
+      "fingerprints": [
+        "44207d1f267edee56c3e4931f8dd44aa_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/run_python_with_deps/src/cleanup_env.py": {
+      "sha256": "8b2edb0f736fd9b69c83a3b0384ecded00a68e8b4ca12131a194831ff591702d",
+      "fingerprints": [
+        "c62fe42e05a37b9ca4de2cad585f825c_0",
+        "c62fe42e05a37b9ca4de2cad585f825c_1"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/run_python_with_deps/src/path_resolver.py": {
+      "sha256": "c0de9f84b4970858f3d2e1621e137eb883501cbdf177f57f995eccdcf25ca229",
+      "fingerprints": [
+        "efb6c2f9cee8bd0b9dbe27aa8b530595_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_cleaner.py": {
+      "sha256": "8f05200cc92e1eb60fcde59e30396624ebb62b3e4688639a799959bbb36030ab",
+      "fingerprints": [
+        "c03b01ce7ae114d1f8ce765d228ac94a_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_executor.py": {
+      "sha256": "47328b614896d446ec428ac33051e7d249dabef3c34bb72a31d0a24b99806c58",
+      "fingerprints": [
+        "b95c28703d0c86d555b6c6194b55a473_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_setup.py": {
+      "sha256": "ab1407b7067b72bb0cb4fcde492d50df3343043cae94be74ab56ce2607630dfd",
+      "fingerprints": [
+        "0a1f0e871a643e6b54ad1531dd1665ba_0",
+        "0a1f0e871a643e6b54ad1531dd1665ba_1"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/search_traces/src/main.py": {
+      "sha256": "1822266582c1d51680728872ef5eb76afc2f1b8cd147f1d5dcecd10f59a6cb75",
+      "fingerprints": [
+        "78150b9def7c7c4c277e46a231e20bad_0"
+      ]
+    },
+    "skills/cloud-trace-querying/scripts/search_traces/src/trace_searcher.py": {
+      "sha256": "3b31398923aece6f2ae4ab539dd0c9c3ee64fccfe27c89d7731f3ba4813d533e",
+      "fingerprints": [
+        "56b09dcdd773b17e51564c7893e1cb14_0"
+      ]
+    },
+    "skills/coderabbit/scripts/apply.py": {
+      "sha256": "bcbcca66d7f053a4057e8a2e1bacc6a46047ec771f9609aeef4ea376f24962e0",
+      "fingerprints": [
+        "8b0852b3caf457dec551bef8b03e7ba1_0",
+        "ade13812af0efdbcc5d5fc28d4a7bfce_0"
+      ]
+    },
+    "skills/coderabbit/scripts/context.py": {
+      "sha256": "aedae8b8dbee9f6f9bf035ca541160112f112b6ed11622a8f1da59c12d825ce5",
+      "fingerprints": [
+        "69cc4b06bb2a7758e4eb73d8822d74c6_0"
+      ]
+    },
+    "skills/commit/scripts/apply.py": {
+      "sha256": "0b25df65b7b6774fd75b913ff153e0d4d8232e03572a7d3a48a218d886934f54",
+      "fingerprints": [
+        "da2ba6d32e52f81765d77b606462c8b8_0",
+        "f40ded704115eaca3e693a269fe79335_0"
+      ]
+    },
+    "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py": {
+      "sha256": "adde94becd3057cf25e93a8e7f597044bad3fa1593bc5fc680300ddae930de61",
+      "fingerprints": [
+        "517d2e1cf035a7c3167b22269702f948_0",
+        "517d2e1cf035a7c3167b22269702f948_1",
+        "517d2e1cf035a7c3167b22269702f948_10",
+        "517d2e1cf035a7c3167b22269702f948_11",
+        "517d2e1cf035a7c3167b22269702f948_12",
+        "517d2e1cf035a7c3167b22269702f948_13",
+        "517d2e1cf035a7c3167b22269702f948_14",
+        "517d2e1cf035a7c3167b22269702f948_15",
+        "517d2e1cf035a7c3167b22269702f948_16",
+        "517d2e1cf035a7c3167b22269702f948_17",
+        "517d2e1cf035a7c3167b22269702f948_18",
+        "517d2e1cf035a7c3167b22269702f948_19",
+        "517d2e1cf035a7c3167b22269702f948_2",
+        "517d2e1cf035a7c3167b22269702f948_20",
+        "517d2e1cf035a7c3167b22269702f948_21",
+        "517d2e1cf035a7c3167b22269702f948_22",
+        "517d2e1cf035a7c3167b22269702f948_23",
+        "517d2e1cf035a7c3167b22269702f948_24",
+        "517d2e1cf035a7c3167b22269702f948_25",
+        "517d2e1cf035a7c3167b22269702f948_3",
+        "517d2e1cf035a7c3167b22269702f948_4",
+        "517d2e1cf035a7c3167b22269702f948_5",
+        "517d2e1cf035a7c3167b22269702f948_6",
+        "517d2e1cf035a7c3167b22269702f948_7",
+        "517d2e1cf035a7c3167b22269702f948_8",
+        "517d2e1cf035a7c3167b22269702f948_9",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_0",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_1",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_2",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_3",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_4",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_5",
+        "8ec54bcbb1d9eb00564bc19a4f10d2c8_6"
+      ]
+    },
+    "skills/diagram/scripts/diagrams.py": {
+      "sha256": "30e38bfe093b42f2fe82f89ad94ccae60bead5a0f23f3d3db5265e6b419b948f",
+      "fingerprints": [
+        "ce8adde118fd4d34277561eb7ac832f7_0"
+      ]
+    },
+    "skills/gke-alert-configuration/scripts/validate_config.py": {
+      "sha256": "31d7ec77b8a48e635a533717b12f1de56c2451957ad33e80bc9c58ceefa90dea",
+      "fingerprints": [
+        "429d09cc2c7d4659437694b3b36d8d9e_0",
+        "429d09cc2c7d4659437694b3b36d8d9e_1",
+        "429d09cc2c7d4659437694b3b36d8d9e_2",
+        "429d09cc2c7d4659437694b3b36d8d9e_3"
+      ]
+    },
+    "skills/gke-app-onboarding/assets/index.js": {
+      "sha256": "d3f59a756819b64779dc7b651b9bfb9acf8f47b880cb1b14f997140bce972200",
+      "fingerprints": [
+        "157ca22e67f45277279e077794a716f8_0",
+        "9d85e434198899dfb5f6ea5097cb0086_0"
+      ]
+    },
+    "skills/google-cloud-filestore-auditing/scripts/filestore_audit.py": {
+      "sha256": "bf64dc699d140f597bea3162cb32a49ffc31fe564764d961952200488c4ec6ab",
+      "fingerprints": [
+        "14a075d84bbf597279c0168e6562066a_0"
+      ]
+    },
+    "skills/google-cloud-filestore-log-troubleshooting/scripts/quick_diagnose.py": {
+      "sha256": "76eadda43955f655c4dce56513dc775bae8c13fb46b28ea03b439e91067e5968",
+      "fingerprints": [
+        "cf0deffefe50bdba3a40f3f01cbf0ff2_0"
+      ]
+    },
+    "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py": {
+      "sha256": "5692586c19d662c72f279f395d5d816982569773e54903bb6a28557f71faaaf3",
+      "fingerprints": [
+        "0f196906dfe04a86790aeb7de66b0236_0"
+      ]
+    },
+    "skills/google-cloud-filestore-nfs-browser/scripts/jump_host_engine.py": {
+      "sha256": "07133f21072c1a4ded866eea96deb76601b4c8bf2f147fc15147d239773112dc",
+      "fingerprints": [
+        "325a43bed0610030e6c9570de8779b8e_0"
+      ]
+    },
+    "skills/iam-helper-for-troubleshooting/scripts/least_privileged_role.py": {
+      "sha256": "db8d1e97d2e113ecad28f4c8875b0641bdcab6a924bce1934cc3ba7814e8fc2d",
+      "fingerprints": [
+        "4cae50c60aef2b1ac994b844d721b906_0"
+      ]
+    },
+    "skills/iam-helper-for-troubleshooting/scripts/troubleshooting_error_id.py": {
+      "sha256": "0845ad33a60d1c13db3a056faec9f0b7585442881b001d825b0234e82af2d618",
+      "fingerprints": [
+        "bdac0bb3417e462d2bd6dc6a6d7388ee_0",
+        "cf6d0ec1e9e4adb0c369f1fad4ab64f2_0"
+      ]
+    },
+    "skills/k6-browser-test/scripts/explore.template.js": {
+      "sha256": "11a39709279fd87a98298dbd7487c801a0c64a63cfa0de9fa194ec16c7e28443",
+      "fingerprints": [
+        "1cd2d2d0ece8f00e3f2021666d8d9de3_0",
+        "1cd2d2d0ece8f00e3f2021666d8d9de3_1",
+        "1cd2d2d0ece8f00e3f2021666d8d9de3_2",
+        "1cd2d2d0ece8f00e3f2021666d8d9de3_3",
+        "1cd2d2d0ece8f00e3f2021666d8d9de3_4"
+      ]
+    },
+    "skills/k6-perf-test-website/assets/recordings/scripts/recorder.template.js": {
+      "sha256": "ba704f01164696f48f5e0ea476fd0f8679747c278b37d5d6724bd7dc2a23e652",
+      "fingerprints": [
+        "1b475da30c7018ee875d777e4bf57874_0",
+        "1b475da30c7018ee875d777e4bf57874_1"
+      ]
+    },
+    "skills/launch-with-aws/scripts/auth_callback_server.py": {
+      "sha256": "731ce039143753a5ca8a573ccbeb2c8c2090ac0263a377bfa92bb6e1cb642cc8",
+      "fingerprints": [
+        "50b99cef33d35beca1cbab1d3bf04d7e_0"
+      ]
+    },
+    "skills/mf/scripts/config-exposes-check.js": {
+      "sha256": "101e7f1ca3a344c33eb658d1fcfd3c1de22d57ddc29f7fce6377c7c7bf9165f4",
+      "fingerprints": [
+        "5e56f769b535542bd6313862337f792c_0",
+        "a215199a967efa57675ba5e7002507a4_0"
+      ]
+    },
+    "skills/mf/scripts/observability-collector.js": {
+      "sha256": "47b69b88c5bec9f6ee8e54d367eb62a99fea81b214b3de936e1cff47a48b5c17",
+      "fingerprints": [
+        "8e56f83e69926dac38aeb877a7858eff_0",
+        "8e56f83e69926dac38aeb877a7858eff_1",
+        "914b47a8acd091a427990822d4334ee4_0",
+        "a4e7f5742289f36fdc7bad49eb9442e2_0",
+        "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_0",
+        "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_1",
+        "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_2",
+        "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_3",
+        "ba1ba568b1a35ec1d6a7f9e1b9fb09fa_4"
+      ]
+    },
+    "skills/mf/scripts/type-check.js": {
+      "sha256": "d7c1d3fc3594fce8e0e107d6303386800bef7106256d3648e0f3a2d8e6f6d17e",
+      "fingerprints": [
+        "54dffe49e1a3b4f195d8b86b673f2766_0",
+        "54dffe49e1a3b4f195d8b86b673f2766_1",
+        "54dffe49e1a3b4f195d8b86b673f2766_2"
+      ]
+    },
+    "skills/monitor-ci/scripts/ci-poll-decide.mjs": {
+      "sha256": "90a6a84b9c2fcf61471e12a5f92884b0314b6c36e9ff3b271586b708b2938ed9",
+      "fingerprints": [
+        "31f8d548d4ae0d31637371569dfcf58b_0",
+        "31f8d548d4ae0d31637371569dfcf58b_1"
+      ]
+    },
+    "skills/monitor-ci/scripts/ci-state-update.mjs": {
+      "sha256": "7eef00b17548fd681a29cdffb1c5113cb84f7da4c20737a311bbf1114c6c771e",
+      "fingerprints": [
+        "e6e5ee0805d1a81cbf5768b9bdfbfb0b_0"
+      ]
+    },
+    "skills/node/rules/assets/graceful-server.ts": {
+      "sha256": "1a5777071880d1e500d7b632a6725dd3486fb2da41610ba4e6317035d4b8b0a8",
+      "fingerprints": [
+        "31e34d28bc7258a1635dfaee3904501b_0",
+        "31e34d28bc7258a1635dfaee3904501b_1"
+      ]
+    },
+    "skills/pr/scripts/apply.py": {
+      "sha256": "cfeed928cfb42809e36af51c843c2d461176b76e7fb00679493ebe102d7acaf6",
+      "fingerprints": [
+        "0f865c6fd6cacc032de718ed9c9eed63_0",
+        "102300526b69bfa14084d7c2b1531928_0"
+      ]
+    },
+    "skills/pr/scripts/context.py": {
+      "sha256": "0cb9b862b4555e9a957c27f94e725641241bb3c3dad5e42414789c23515447ad",
+      "fingerprints": [
+        "82032e23f4e5a01b9a78e3bd31ac4243_0"
+      ]
+    },
+    "skills/ship/scripts/apply.py": {
+      "sha256": "7ebbc74aed994bc33819918cf48bd2a5eb05b997b1d74632b87df0637ad6f57f",
+      "fingerprints": [
+        "5103b4dbce032e25accbb8dda8230a74_0",
+        "5103b4dbce032e25accbb8dda8230a74_1",
+        "c667f31aa0c42305c09e455d5e9e3a96_0"
+      ]
+    },
+    "skills/ship/scripts/context.py": {
+      "sha256": "1738f2b11727b77da50a0b22a2fbd3a2b537c59bd64cb7b3bb721fefadb088b7",
+      "fingerprints": [
+        "b1bc22adfa0442d68d86efd03b2caf60_0"
+      ]
+    },
+    "skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py": {
+      "sha256": "b680bddb80d7f63ff97b7ba69b1c9ddda57d4080d601e9a1a47f09e81c2870ce",
+      "fingerprints": [
+        "b10e09f21d70c15003f6004f752a0ed6_0"
+      ]
+    },
+    "skills/swiftui-expert-skill/scripts/record_trace.py": {
+      "sha256": "7d9c33de1146a274f6ca45790a25f4421ea697893e18a0a6b2ccfb401e245891",
+      "fingerprints": [
+        "be774e7e8c8f119b489b57cb0f872e4b_0"
+      ]
+    }
+  }
+}
