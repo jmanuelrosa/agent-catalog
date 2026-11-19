@@ -1,7 +1,7 @@
 ---
 name: ship
 description: Commit the working tree as strict conventional commits, push the branch, and open the PR (GitHub) or MR (GitLab) in one run, after a single confirmation. Use when the user asks to ship, or to commit and open a PR/MR. Trial replacement for /commit plus /pr.
-argument-hint: "[guidance: scope, how to split, branch name, base branch, review | review <level> | no review, track | no track]"
+argument-hint: "[guidance: scope, how to split, branch name, base branch, stack | stack on <branch> | independent, review | review <level> | no review, track | no track]"
 model: haiku
 effort: medium
 allowed-tools:
@@ -45,7 +45,9 @@ Prose that changes something (another base, another split, leave a file out) is 
 
 1. **Gather context** (single call): `python3 ~/.claude/skills/ship/scripts/context.py [<base>]`. Forward a bare base-branch argument when one was given.
 
-   `== target ==` carries `HOST`, `BASE`, `BASE_REF`, `BRANCH`, `BRANCH_CONVENTION` (`ok`, `default` or `nonstandard`), `UPSTREAM`, `WORKTREE`, `UNPUSHED_COMMITS`, `PUSHED_COMMITS`, `TITLE`, `TICKET`, `TICKET_KIND`, and for GitLab `NS`, `GLHOST`, `REPO`, `GLHOST_CANDIDATES` or `NOT_LOGGED_IN`.
+   `== target ==` carries `HOST`, `BASE`, `BASE_REF`, `BASE_FRESH`, `DEFAULT_BRANCH`, `BRANCH`, `BRANCH_CONVENTION` (`ok`, `default` or `nonstandard`), `UPSTREAM`, `WORKTREE`, `UNPUSHED_COMMITS`, `PUSHED_COMMITS`, `BRANCH_PR`, `BRANCH_PR_STATE` (`open`, `merged`, `closed` or `none`), `BRANCH_PR_BASE`, `STACK_CANDIDATE`, `TITLE`, `TICKET`, `TICKET_KIND`, and for GitLab `NS`, `GLHOST`, `REPO`, `GLHOST_CANDIDATES` or `NOT_LOGGED_IN`.
+   The script fetches the base (and the branch's upstream) before comparing. `BASE_FRESH=stale (<reason>)` means the fetch failed and the comparison may be behind the remote: carry that line into the printed plan.
+   On a branch whose open PR targets another feature branch (a stacked child), `BASE` already follows that PR's base unless a base argument overrides it.
    Then the unpushed and pushed commit lists, the porcelain status, staged and unstaged stats and diffs (noisy paths excluded, capped per file), untracked previews, recent subjects, and the PR/MR template.
    Excluded or capped files still show in the stats: ship them with the concern they belong to, and only run `git diff -- <path>` when one genuinely matters.
 
@@ -56,11 +58,19 @@ Prose that changes something (another base, another split, leave a file out) is 
 
    **Review** (skipped when the arguments carry the flag `review`, `review <level>` or `no review`; a flag is the argument itself, never the word inside other guidance, and a bare `review` means `medium`): one `AskUserQuestion`, `header: "Review"`, in the same call as the Diagrams question when both apply: "Review the diff before it is pushed?". Options: `Review (medium)` (recommended, the review-mechanics level for an ordinary diff before commit), `Review (high)` (for a diff spanning several concerns or a stack you do not know), `Skip`. The review itself runs in step 3, once the plan says which files ship. Under Codex there is no review route, so record `review: unavailable (no review route under Codex)` in the printed plan and the report instead of asking.
 
-2. **Decide the branch.**
-   - `BRANCH_CONVENTION=ok` and the branch matches the work → `keep`, no question.
-   - `default` → `create` (ships from the default branch are never allowed). Propose two names.
+2. **Decide the branch and the base.**
+   A PR's base is the branch it forks from. `create` forks from HEAD, so its base is always the current branch; `apply.py` refuses a `create` whose `pr.base` is anything else, because a PR carrying another branch's commits conflicts as soon as that branch is squash-merged.
+   - `BRANCH_CONVENTION=default` → `create` with base = the default branch (ships from the default branch are never allowed). Propose two names.
    - `nonstandard` → `rename`. Propose two names.
-   - `ok` but plainly unrelated to the diff (a `chore/bump-*`, a release branch, someone else's feature) → propose two names for `create-from-base` and ask (see the gate).
+   - `STACK_CANDIDATE` set (the branch already has an open or merged PR, or pushed commits) and the working tree is dirty → the work may not belong here. Decide where it goes (the Stack question in the gate):
+     - `Same PR`: `keep`, base unchanged. Recommend it when the diff continues the PR's own change.
+     - `Independent PR off <DEFAULT_BRANCH>`: `create-from-base`, base = `DEFAULT_BRANCH`. Recommend it when the diff does not need the branch's commits to build or make sense.
+     - `Stacked on <branch>`: `create`, base = the current branch. Recommend it when the diff builds on the branch's unmerged changes. The description gets a `Depends on <BRANCH_PR>` line, and `Track` becomes the recommended Track option since tracking handles the parent's merge.
+     - `BRANCH_PR_STATE=merged` removes `Same PR` and `Stacked`: the branch's commits already reached the base, so only `create-from-base` remains and the plan says why (`apply.py` refuses `keep` there).
+     - The argument `stack` or `stack on <branch>` pre-answers `Stacked` (the branch must be the current one), and `independent` pre-answers `Independent`.
+   - Otherwise `ok` → `keep`, no question.
+
+   Never plan `create` with a base other than the current branch, and never ship new work from a branch whose PR is merged.
 
    Names match `^(feature|fix|chore|docs|refactor|test|perf|ci|build|style|revert)\/([A-Z]+-[0-9]+-|gh-[0-9]+-)?[a-z0-9][a-z0-9-]*$`.
    The first candidate follows the dominant concern, the second a different framing (broader or narrower slug, or the other type when the diff is arguably either).
@@ -85,12 +95,14 @@ Prose that changes something (another base, another split, leave a file out) is 
    Then ask, in this order:
 
    - Always, `header: "Ship"`: "Commit, push `<branch>` and open a PR against `<base>`?" (for GitLab name the account too). Options: `Go`; `Go, staged only` only when some changes are staged and others are not; `Cancel`.
+   - When step 2 left the destination open, `header: "Stack"`: "New work on `<branch>` (`<BRANCH_PR>`, `<BRANCH_PR_STATE>`). Where does it go?" The step 2 options, recommended first. Skip it when an argument already answered it or only one option survives.
    - When step 2 needs a name, `header: "Branch"`: the two candidates. `Other` covers a typed name; validate it against the regex and re-ask on failure.
    - When `UNPUSHED_COMMITS` > 0, `header: "Commits"`: "`<n>` commits on this branch are not pushed yet. Ship them too?" Options: `Ship them too` (they land in the PR), `Leave them out` (a new branch off `BASE_REF` with only the working-tree changes; name it in the option description from your candidates), `Cancel`. When the working tree is clean, leaving them out means nothing to ship: say so in that option's description.
    - When `GLHOST_CANDIDATES` is set, `header: "GitLab account"`: one option per candidate, labelled `<host> (<account>)`, the one matching `GIT_EMAIL` first. `NOT_LOGGED_IN` instead means leave `repo` out.
    - Unless the arguments already say `track` or `no track`, `header: "Track"`: "Track the PR for comments, CI failures and conflicts?" Options: `Track` (fixes comments, CI failures and conflicts in the background, pushes this branch, and squash-merges it, or uses the repo's merge strategy, once the repo's checks and reviews allow; notifies only when it needs the user, and on merge or close), `Don't track`.
 
    Read the answer as `The one confirmation` describes. `Leave them out` turns the branch action into `create-from-base`; `Go, staged only` drops every unstaged and untracked file from the commits.
+   `Independent` sets the base to `DEFAULT_BRANCH` and `Stacked` to the current branch, so the Ship question names the base the recommended Stack option implies; a plain `go` takes that option.
    When a review ran and the answer changes what ships (`Go, staged only`, `Leave them out`, or a redirect that moves files), re-run the review on the final set before step 5, apply the same blocker rule, and rewrite the description's "Review" line from the new findings: the diff that ships must be the diff that was reviewed. This is a consequence of the gate's answer, not a second question.
 
 5. **Execute** (single call, no further questions). **Write** the description to `/tmp/claude/ship-body-<repo>-<suffix>.md` and the plan to `/tmp/claude/ship-plan-<repo>-<suffix>.json` (`<suffix>` random once per run). Never a HEREDOC: the harness escapes `!` and other shell-special characters, and the Write tool bypasses the shell.
@@ -109,6 +121,8 @@ Prose that changes something (another base, another split, leave a file out) is 
    - A push failing on auth or a pre-push hook that needs the network → it prints the standalone `git …` push. Run it verbatim as its own call, never chained, then rerun `apply.py <plan> --from pr`.
    - Commits landed but a later step failed → rerun with `--from push` or `--from pr`, never from the start.
    - A pre-commit or pre-push hook failing on the code itself (lint, types, tests) → surface the full output and stop: fixing the code is a new task. Never `--no-verify`, never `--amend`.
+   - A conflict with the base: `apply.py` merges the branch against the base with `git merge-tree` before pushing, and on a conflict stops with the commits kept and the conflicting paths listed. Surface them and stop, since resolving is a new task; once resolved, `--from push` resumes.
+   - `create-from-base` refused because the uncommitted changes differ on the base → nothing was committed: report it and stop. Re-asking with `Stacked` is a new gate, not a recovery.
 
 6. **Track** (only when the answer was `Track`, one call): `python3 ~/.claude/skills/ship/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in. A tracking failure is reported, never retried, and never fails the ship.
 
