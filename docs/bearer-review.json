@@ -590,7 +590,7 @@
       ]
     },
     "skills/ship/scripts/apply.py": {
-      "sha256": "7ebbc74aed994bc33819918cf48bd2a5eb05b997b1d74632b87df0637ad6f57f",
+      "sha256": "94bdb5ea2790645bf609c0e5f0275f71f20097072aa4ab7e27df24b74241717f",
       "fingerprints": [
         "5103b4dbce032e25accbb8dda8230a74_0",
         "5103b4dbce032e25accbb8dda8230a74_1",
@@ -598,7 +598,7 @@
       ]
     },
     "skills/ship/scripts/context.py": {
-      "sha256": "1738f2b11727b77da50a0b22a2fbd3a2b537c59bd64cb7b3bb721fefadb088b7",
+      "sha256": "7a48509731c25d961b54d9738994126310b0f2c9c187748d531c15a4fb4c56bb",
       "fingerprints": [
         "b1bc22adfa0442d68d86efd03b2caf60_0"
       ]

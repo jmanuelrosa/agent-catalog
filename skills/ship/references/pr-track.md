@@ -51,6 +51,8 @@ A tracked PR is merged by the script, never by a model, once every one of these 
 - no event is pending, no run is in progress, no work is kept, and nothing is waiting on the user
 - nothing changed for `PR_TRACK_SETTLE` seconds, so a fresh push gets its checks registered first
 
+A stacked child shipped by `/ship` targets its parent's branch, never the default, which is what makes `parent-merged` fire when the parent lands.
+
 GitHub merges with `--match-head-commit`, so a push that lands in between makes the merge fail instead of merging unreviewed code.
 The method is squash when the repo allows it, otherwise whichever of merge or rebase it allows. GitLab squashes unless the project forbids squashing, and otherwise follows the project's merge method.
 The branch is never deleted by the script; the repo's own auto-delete setting decides.
