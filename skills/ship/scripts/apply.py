@@ -12,7 +12,9 @@ round-trip, so nothing after the confirmation gate waits on a human:
 `branch.action` is `keep` (ship from the current branch), `create` (new branch
 at HEAD, carrying any commits already on it), `create-from-base` (new branch off
 the remote base, carrying only the working tree and leaving the existing
-commits behind) or `rename` (a nonstandard current branch). `commits` may be
+commits behind) or `rename` (a nonstandard current branch). A PR's base is the
+branch it forks from: `create` needs `pr.base` to be the current branch, which
+on a feature branch makes the new PR a stack on it. `commits` may be
 empty when the branch already holds the work. `pr.repo` is GitLab only and pins
 the account when one server backs several. File paths are relative to the
 repository root.
@@ -133,13 +135,21 @@ def branch_exists(name):
     return git("rev-parse", "--verify", "--quiet", f"refs/heads/{name}").returncode == 0
 
 
-def validate_branch_plan(branch, base):
+def validate_branch_plan(branch, base, pull_request=None):
     action, name = branch.get("action"), branch.get("name") or ""
     if action not in BRANCH_ACTIONS:
         fail(f"branch.action must be one of {', '.join(BRANCH_ACTIONS)}", EXIT_USAGE)
     current = git("branch", "--show-current").stdout.strip()
     if not current:
         fail("detached HEAD, no branch to ship from", EXIT_BLOCKED)
+    if action == "create" and base != current:
+        # HEAD carries every commit of the current branch, so a PR against any other
+        # base repeats them and conflicts once the current branch is squash-merged.
+        fail(
+            f"create forks from {current!r}, so the PR stacks on it: set pr.base to {current!r}, "
+            "or use create-from-base for work independent of it",
+            EXIT_BLOCKED,
+        )
     if action == "keep":
         if name and name != current:
             fail(f"plan keeps branch {name!r} but the current branch is {current!r}", EXIT_BLOCKED)
@@ -154,6 +164,14 @@ def validate_branch_plan(branch, base):
             "with the Conventional Branch types",
             EXIT_BLOCKED,
         )
+    if action == "keep" and pull_request:
+        merged = pull_request(name)
+        if merged and merged["state"] == "merged":
+            fail(
+                f"the PR for {name!r} is already merged ({merged['url']}); its commits sit on the "
+                "base, so reshipping them conflicts: use create-from-base",
+                EXIT_BLOCKED,
+            )
     return action, name
 
 
@@ -168,8 +186,24 @@ def switch_branch(action, name, base_ref):
         argv = ["branch", "-m", name]
     result = git(*argv)
     if result.returncode != 0:
-        fail(f"git {' '.join(argv)} failed, nothing was committed:\n{result.stderr}", EXIT_BLOCKED)
+        hint = ""
+        if action == "create-from-base":
+            hint = (
+                f"\n  The uncommitted changes touch files that differ on {base_ref}. Ship them as a stack"
+                "\n  on the current branch instead, or move them onto the base yourself first."
+            )
+        fail(f"git {' '.join(argv)} failed, nothing was committed:\n{result.stderr}{hint}", EXIT_BLOCKED)
     print(f"Branch: {name}")
+
+
+def conflicts_with(base_ref):
+    """Paths HEAD conflicts on when merged into `base_ref`, or None when git cannot tell."""
+    proc = git("merge-tree", "--write-tree", "--name-only", "--no-messages", base_ref, "HEAD")
+    if proc.returncode == 0:
+        return []
+    if proc.returncode != 1:
+        return None
+    return sorted({line for line in proc.stdout.splitlines()[1:] if line.strip()})
 
 
 def unplanned(staged, files):
@@ -219,30 +253,12 @@ def changed_files(base_ref, *flags):
     return [path for path in proc.stdout.split("\0") if path] if proc.returncode == 0 else []
 
 
-def remote_host():
-    url = git("remote", "get-url", "origin").stdout.strip()
-    if "://" in url:
-        return url.split("://", 1)[1].partition("/")[0].rpartition("@")[2].partition(":")[0]
-    return url.partition(":")[0].rpartition("@")[2]
-
-
 def push_argv(host, branch):
-    """The push, with GitHub forced onto HTTPS and the gh credential helper.
-
-    This machine rewrites GitHub remotes to SSH globally and no session here can
-    read ~/.ssh, so the rewrite is flipped back for the push only, and the helper
-    chain is reset first so nothing is left in .git/config or ~/.gitconfig.
-    """
+    """The push, with GitHub forced onto HTTPS and the gh credential helper."""
     if host != "gh":
         return ["git", "push", "-u", "origin", branch]
-    name = remote_host()
-    return [
-        "git",
-        "-c", f"url.https://{name}/.pushInsteadOf=git@{name}:",
-        "-c", "credential.helper=",
-        "-c", "credential.helper=!gh auth git-credential",
-        "push", "-u", "origin", branch,
-    ]
+    remote = git("remote", "get-url", "origin").stdout.strip()
+    return ["git", *CONTEXT.github_https(remote, "pushInsteadOf"), "push", "-u", "origin", branch]
 
 
 def existing_pr(host, branch, repo):
@@ -359,7 +375,8 @@ def main():
     commits = plan.get("commits") or []
     if args.stage == "commit":
         validate_commits(commits)
-        action, branch = validate_branch_plan(plan["branch"], base)
+        action, branch = validate_branch_plan(
+            plan["branch"], base, lambda name: CONTEXT.branch_pr(host, name, repo))
         switch_branch(action, branch, base_ref)
         commit_all(commits)
     else:
@@ -377,6 +394,17 @@ def main():
     body = with_closes(body, derived["closes"])
 
     if args.stage != "pr":
+        conflicts = conflicts_with(base_ref)
+        if conflicts is None:
+            print(f"Conflict check skipped: git merge-tree could not compare with {base_ref}")
+        elif conflicts:
+            fail(
+                f"{branch} conflicts with {base_ref} in:\n"
+                + "".join(f"    {path}\n" for path in conflicts)
+                + f"  The commits are kept. Bring {base_ref} into the branch and resolve them,\n"
+                "  then rerun with --from push.",
+                EXIT_BLOCKED,
+            )
         push = push_argv(host, branch)
         pushed = run(push)
         if pushed.returncode != 0:

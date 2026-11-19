@@ -43,6 +43,10 @@ GIT_STUB = '''#!{interpreter}
 import json, os, sys
 
 argv = sys.argv[1:]
+if "fetch" in argv:
+    with open(os.environ["SHIP_STUB_LOG"], "a") as log:
+        log.write(json.dumps(["git"] + argv) + "\\n")
+    sys.exit(int(os.environ.get("SHIP_STUB_FETCH_CODE", "0")))
 if "push" in argv:
     with open(os.environ["SHIP_STUB_LOG"], "a") as log:
         log.write(json.dumps(["git"] + argv) + "\\n")
@@ -175,7 +179,11 @@ def created(stubs):
 
 
 def pushes(stubs):
-    return [call for call in stubs.calls() if call[0] == "git"]
+    return [call for call in stubs.calls() if call[0] == "git" and "push" in call]
+
+
+def fetches(stubs):
+    return [call for call in stubs.calls() if call[0] == "git" and "fetch" in call]
 
 
 # context.py
@@ -422,7 +430,7 @@ def test_a_branch_with_nothing_to_ship_is_refused(stubs, repo, tmp_path):
     plan = plan_file(tmp_path, {"action": "keep"}, [])
 
     assert execute(stubs, repo, plan).returncode == apply_ship.EXIT_BLOCKED
-    assert stubs.calls() == []
+    assert pushes(stubs) == [] and created(stubs) == []
 
 
 # apply.py: failure and resume
@@ -466,3 +474,154 @@ def test_a_stray_staged_path_stops_the_commit_loop(stubs, repo, tmp_path):
 
     assert execute(stubs, repo, plan).returncode == apply_ship.EXIT_COMMIT_FAILED
     assert head(repo) == before
+
+
+# Fork point and base: a second PR from the same session must not repeat the first one's commits
+
+
+def pr_list(state, base="main"):
+    return json.dumps([{"url": EXISTING_URL, "state": state, "baseRefName": base}])
+
+
+def feature_branch_with_a_commit(project, name="feature/a"):
+    git_out(project, "switch", "-q", "-c", name)
+    slug = name.rpartition("/")[2]
+    write(project, f"{slug}.ts")
+    commit(project, f"feat: {slug}")
+    git_out(project, "update-ref", f"refs/remotes/origin/{name}", "HEAD")
+    git_out(project, "branch", "-q", f"--set-upstream-to=origin/{name}")
+
+
+def test_context_fetches_the_base_and_the_upstream_first(stubs, repo):
+    feature_branch_with_a_commit(repo)
+
+    found = target(gather(stubs, repo).stdout)
+
+    assert found["BASE_FRESH"] == "yes"
+    assert [call[-2:] for call in fetches(stubs)] == [["main", "feature/a"]]
+
+
+def test_context_keeps_going_on_a_stale_base_when_the_fetch_fails(stubs, repo):
+    write(repo, "a.ts")
+
+    result = stubs(str(SCRIPTS / "context.py"), cwd=repo, extra_env={"SHIP_STUB_FETCH_CODE": "128"})
+
+    assert result.returncode == 0
+    assert target(result.stdout)["BASE_FRESH"].startswith("stale")
+
+
+def test_context_marks_a_branch_with_an_open_pr_as_a_stack_candidate(stubs, repo):
+    feature_branch_with_a_commit(repo)
+    write(repo, "b.ts")
+
+    result = stubs(str(SCRIPTS / "context.py"), cwd=repo, extra_env={"SHIP_STUB_LIST": pr_list("OPEN")})
+    found = target(result.stdout)
+
+    assert (found["BRANCH_PR"], found["BRANCH_PR_STATE"], found["BRANCH_PR_BASE"]) == (EXISTING_URL, "open", "main")
+    assert found["STACK_CANDIDATE"] == "feature/a"
+    assert found["BASE"] == "main"
+
+
+def test_context_reports_a_merged_pr_for_the_branch(stubs, repo):
+    feature_branch_with_a_commit(repo)
+
+    result = stubs(str(SCRIPTS / "context.py"), cwd=repo, extra_env={"SHIP_STUB_LIST": pr_list("MERGED")})
+
+    assert target(result.stdout)["BRANCH_PR_STATE"] == "merged"
+
+
+def test_context_keeps_a_stacked_branch_on_its_parent_base(stubs, repo):
+    feature_branch_with_a_commit(repo)
+    feature_branch_with_a_commit(repo, "feature/b")
+
+    result = stubs(str(SCRIPTS / "context.py"), cwd=repo, extra_env={"SHIP_STUB_LIST": pr_list("OPEN", "feature/a")})
+    found = target(result.stdout)
+
+    assert (found["BASE"], found["BASE_REF"]) == ("feature/a", "origin/feature/a")
+    assert found["UNPUSHED_COMMITS"] == "0"
+
+
+def test_context_never_offers_a_stack_from_the_default_branch(stubs, repo):
+    write(repo, "a.ts")
+    assert target(gather(stubs, repo).stdout)["STACK_CANDIDATE"] == "<none>"
+
+
+def test_a_new_branch_off_a_feature_branch_against_the_default_is_refused(stubs, repo, tmp_path):
+    feature_branch_with_a_commit(repo)
+    write(repo, "b.ts")
+    before = head(repo)
+    plan = plan_file(tmp_path, {"action": "create", "name": "feature/b"}, [{"files": ["b.ts"], "message": "feat: b"}])
+
+    assert execute(stubs, repo, plan).returncode == apply_ship.EXIT_BLOCKED
+    assert head(repo) == before
+    assert git_out(repo, "branch", "--show-current") == "feature/a"
+
+
+def test_a_new_branch_off_a_feature_branch_stacks_on_it(stubs, repo, tmp_path):
+    feature_branch_with_a_commit(repo)
+    write(repo, "b.ts")
+    plan = plan_file(
+        tmp_path, {"action": "create", "name": "feature/b"}, [{"files": ["b.ts"], "message": "feat: b"}],
+        base="feature/a",
+    )
+
+    result = execute(stubs, repo, plan)
+
+    assert result.returncode == apply_ship.EXIT_OK, result.stderr
+    create = created(stubs)[0]
+    assert create[create.index("--base") + 1] == "feature/a"
+    assert git_out(repo, "log", "--pretty=%s", "origin/feature/a..HEAD") == "feat: b"
+
+
+def test_independent_work_on_a_shipped_branch_leaves_its_commits_behind(stubs, repo, tmp_path):
+    feature_branch_with_a_commit(repo)
+    write(repo, "b.ts")
+    plan = plan_file(
+        tmp_path, {"action": "create-from-base", "name": "feature/b"}, [{"files": ["b.ts"], "message": "feat: b"}],
+    )
+
+    result = execute(stubs, repo, plan)
+
+    assert result.returncode == apply_ship.EXIT_OK, result.stderr
+    assert git_out(repo, "log", "--pretty=%s", "origin/main..HEAD") == "feat: b"
+
+
+def test_keeping_a_branch_whose_pr_is_merged_is_refused(stubs, repo, tmp_path):
+    feature_branch_with_a_commit(repo)
+    write(repo, "b.ts")
+    before = head(repo)
+    plan = plan_file(tmp_path, {"action": "keep"}, [{"files": ["b.ts"], "message": "feat: b"}])
+
+    result = execute(stubs, repo, plan, env={"SHIP_STUB_LIST": pr_list("MERGED")})
+
+    assert result.returncode == apply_ship.EXIT_BLOCKED
+    assert head(repo) == before and pushes(stubs) == []
+
+
+def test_a_branch_that_conflicts_with_the_base_stops_before_the_push(stubs, repo, tmp_path):
+    git_out(repo, "switch", "-q", "-c", "fix/readme")
+    write(repo, "README.md", "# ours\n")
+    git_out(repo, "switch", "-q", "main")
+    write(repo, "README.md", "# theirs\n")
+    commit(repo, "docs: theirs")
+    git_out(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    git_out(repo, "reset", "-q", "--hard", "HEAD~1")
+    git_out(repo, "switch", "-q", "fix/readme")
+    write(repo, "README.md", "# ours\n")
+    plan = plan_file(tmp_path, {"action": "keep"}, [{"files": ["README.md"], "message": "docs: ours"}])
+
+    result = execute(stubs, repo, plan)
+
+    assert result.returncode == apply_ship.EXIT_BLOCKED
+    assert subjects(repo, 1) == ["docs: ours"] and pushes(stubs) == []
+    assert "README.md" in result.stderr
+
+    subprocess.run([REAL_GIT, "merge", "-q", "origin/main"], cwd=repo, capture_output=True)
+    write(repo, "README.md", "# ours and theirs\n")
+    git_out(repo, "add", "README.md")
+    git_out(repo, "commit", "-q", "--no-edit")
+
+    resumed = execute(stubs, repo, plan, "--from", "push")
+
+    assert resumed.returncode == apply_ship.EXIT_OK, resumed.stderr
+    assert [call[-1] for call in pushes(stubs)] == ["fix/readme"]
