@@ -1,4 +1,4 @@
-.PHONY: lint test attribution
+.PHONY: lint test attribution prepush hooks
 
 # Test deps are resolved per-run by uv, so there is no venv to create or refresh.
 PYTEST = uv run --with pytest --with pyyaml pytest
@@ -18,6 +18,13 @@ lint:
 # inside a skill directory, which is symlinked whole into each harness.
 test:
 	PYTHONDONTWRITEBYTECODE=1 $(PYTEST) -q
+
+# Run the same test and lint gates as CI before pushing.
+prepush: test lint
+
+# Activate the tracked hooks for this clone (safe to rerun).
+hooks:
+	git config core.hooksPath .githooks
 
 # Rewrite the README's third-party table from skill-registry.json and licenses.json.
 attribution:
