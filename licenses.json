@@ -42,11 +42,6 @@
       "license": "MIT",
       "file": "LICENSES/blader-humanizer.txt"
     },
-    "brianlovin/agent-config": {
-      "license": null,
-      "file": null,
-      "note": "No license upstream; all rights reserved. Included with attribution."
-    },
     "coreyhaines31/marketingskills": {
       "license": "MIT",
       "file": "LICENSES/coreyhaines31-marketingskills.txt"
@@ -137,7 +132,7 @@
       "license": "MIT",
       "file": "LICENSES/rstackjs-agent-skills.txt"
     },
-    "sickn33/antigravity-awesome-skills": {
+    "sickn33/agentic-awesome-skills": {
       "license": "MIT",
       "file": "LICENSES/sickn33-antigravity-awesome-skills.txt",
       "note": "MIT collection; the skill is marked `source: community`, original author unknown."
