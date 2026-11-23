@@ -9,6 +9,7 @@ description: >-
   it reviewed is the diff that ships. Not for a human's own review request (that is the review
   command) and not for harness setup review.
 tools: Read, Glob, Grep, Skill, Agent
+allowed_subagents: code-review-worker
 model: opus
 effort: high
 thinking: high
