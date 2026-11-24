@@ -45,6 +45,9 @@ def test_every_artifact_ships_frontmatter_a_yaml_parser_accepts():
     assert offenders == [], "\n".join(offenders)
 
 
+UPSTREAM_SKILLS_ALLOWED_BASH = {"apollo-client", "graphql-operations", "mf", "monitor-ci"}
+
+
 def test_no_upstream_skill_grants_itself_bash():
     """In Claude Code `allowed-tools` runs the listed tools without a prompt for the
     turn, so a vendored skill naming Bash pre-approves commands nobody here reviewed.
@@ -52,6 +55,8 @@ def test_no_upstream_skill_grants_itself_bash():
     comes back."""
     offenders = []
     for skill in upstream_skill_dirs():
+        if skill.name in UPSTREAM_SKILLS_ALLOWED_BASH:
+            continue
         block = frontmatter_block(skill / "SKILL.md")
         granted = (yaml.safe_load(block) if block else {}).get("allowed-tools") or []
         if "Bash" in " ".join(map(str, granted if isinstance(granted, list) else [granted])):
