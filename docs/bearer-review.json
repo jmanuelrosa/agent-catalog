@@ -548,15 +548,15 @@
     "skills/deliver/scripts/apply.py": {
       "sha256": "ccffdb03a989a47b4ae865c9677f1e6ac8f6c919735408fc9cc288324ce4fca5",
       "fingerprints": [
-        "5103b4dbce032e25accbb8dda8230a74_0",
-        "5103b4dbce032e25accbb8dda8230a74_1",
-        "c667f31aa0c42305c09e455d5e9e3a96_0"
+        "1ddfdb4db580d35706ebe216c5fdd304_0",
+        "95840599cda725fe8569668bbe9534ec_0",
+        "95840599cda725fe8569668bbe9534ec_1"
       ]
     },
     "skills/deliver/scripts/context.py": {
       "sha256": "fa7f64e1675706448c33364cd410e0741b1216d44dc1daf3ce6b9694f1fdeb7d",
       "fingerprints": [
-        "b1bc22adfa0442d68d86efd03b2caf60_0"
+        "38e081ddef162c752b601a7feeec9703_0"
       ]
     },
     "skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py": {

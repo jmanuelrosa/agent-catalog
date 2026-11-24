@@ -234,12 +234,12 @@
     "comment": "skills/launch-with-aws/scripts/auth_callback_server.py:69 (python_lang_code_injection): setattr assigns OAuth state to a fixed attribute name on a loopback server; it does not evaluate or execute the state value.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
-  "5103b4dbce032e25accbb8dda8230a74_0": {
+  "95840599cda725fe8569668bbe9534ec_0": {
     "false_positive": true,
     "comment": "skills/deliver/scripts/apply.py:322 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
-  "5103b4dbce032e25accbb8dda8230a74_1": {
+  "95840599cda725fe8569668bbe9534ec_1": {
     "false_positive": true,
     "comment": "skills/deliver/scripts/apply.py:368 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
@@ -654,7 +654,7 @@
     "comment": "skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py:106 (python_lang_os_command_injection): Fixed xctrace export receives trace paths and XPath selections as individual arguments. Selecting trace data is intentional and does not execute a shell.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
-  "b1bc22adfa0442d68d86efd03b2caf60_0": {
+  "38e081ddef162c752b601a7feeec9703_0": {
     "false_positive": true,
     "comment": "skills/deliver/scripts/context.py:90 (python_lang_os_command_injection): Repository inspection uses fixed executable argument vectors with shell interpretation disabled by the subprocess API default.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
@@ -779,7 +779,7 @@
     "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/cleanup_env.py:50 (python_lang_path_traversal): Cleanup intentionally walks the fixed local virtualenv cache root, including sibling workspace caches; arbitrary direct invocation is operator-controlled. The separate lock-lifetime correctness issue is not an input-path traversal mechanism.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
-  "c667f31aa0c42305c09e455d5e9e3a96_0": {
+  "1ddfdb4db580d35706ebe216c5fdd304_0": {
     "false_positive": true,
     "comment": "skills/deliver/scripts/apply.py:84 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
