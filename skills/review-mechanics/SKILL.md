@@ -5,7 +5,7 @@ description: Machinery for producing a code review report, covering the verifica
 
 # Producing a review
 
-The severities, the eight axes and the reviewer's boundaries live in `~/.claude/rules/code-review.md` and are already loaded.
+The severities, the eight axes and the reviewer's boundaries live in `~/.claude/rules/code-review.md`; read it if it is not already in context.
 This skill is the machinery for turning a read diff into a report.
 
 ## The verification bar
