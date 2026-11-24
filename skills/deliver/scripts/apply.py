@@ -217,9 +217,25 @@ def unplanned(staged, files):
     ]
 
 
+def stage(files):
+    """git add cannot name a path that is gone from the worktree, so a deletion goes through git rm --cached."""
+    present = [f for f in files if os.path.lexists(f)]
+    gone = [f for f in files if not os.path.lexists(f)]
+    added = git("add", "--", *present) if present else None
+    if added is not None and added.returncode != 0:
+        return added
+    for path in gone:
+        if git("cat-file", "-e", f"HEAD:{path}").returncode != 0:
+            return git("add", "--", path)
+        removed = git("rm", "--cached", "-q", "--ignore-unmatch", "--", path)
+        if removed.returncode != 0:
+            return removed
+    return added or git("status", "--porcelain")
+
+
 def commit_all(commits):
     for i, commit in enumerate(commits, 1):
-        added = git("add", "--", *commit["files"])
+        added = stage(commit["files"])
         if added.returncode != 0:
             fail(f"commit {i}: git add failed:\n{added.stderr}", EXIT_COMMIT_FAILED)
         staged = git("diff", "--cached", "--name-only").stdout.split("\n")
