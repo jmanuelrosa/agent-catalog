@@ -13,7 +13,7 @@
             "frontend",
             "architecture"
           ],
-          "updated_at": "2026-11-22T12:07:50Z"
+          "updated_at": "2026-11-24T10:12:34Z"
         }
       ]
     },
@@ -133,7 +133,7 @@
             "ci",
             "workflow"
           ],
-          "updated_at": "2026-11-22T12:07:53Z"
+          "updated_at": "2026-11-24T10:12:36Z"
         },
         {
           "upstream_path": "skills/nx-cloud-api",
@@ -603,7 +603,7 @@
             "frontend",
             "graphql"
           ],
-          "updated_at": "2026-11-22T12:04:57Z"
+          "updated_at": "2026-11-24T10:12:00Z"
         },
         {
           "upstream_path": "skills/graphql-operations",
@@ -612,7 +612,7 @@
             "backend",
             "graphql"
           ],
-          "updated_at": "2026-11-22T12:04:57Z"
+          "updated_at": "2026-11-24T10:12:00Z"
         }
       ]
     },
@@ -1752,7 +1752,7 @@
             "gcp",
             "data"
           ],
-          "updated_at": "2026-11-22T12:07:42Z"
+          "updated_at": "2026-11-24T10:12:28Z"
         },
         {
           "upstream_path": "skills/cloud/detection-engineering-coverage-evaluation",
@@ -2415,7 +2415,7 @@
             "infrastructure",
             "gcp"
           ],
-          "updated_at": "2026-11-22T12:07:42Z"
+          "updated_at": "2026-11-24T10:12:28Z"
         },
         {
           "upstream_path": "skills/cloud/google-cloud-global-frontend-configuration",
@@ -3227,11 +3227,11 @@
       ],
       "note": "Locally authored",
       "dependencies": [
-        "ship"
+        "deliver"
       ]
     },
     {
-      "name": "ship",
+      "name": "deliver",
       "global": true,
       "groups": [
         "productivity",

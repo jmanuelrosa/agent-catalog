@@ -241,12 +241,12 @@
   },
   "5103b4dbce032e25accbb8dda8230a74_0": {
     "false_positive": true,
-    "comment": "skills/ship/scripts/apply.py:322 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:322 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "5103b4dbce032e25accbb8dda8230a74_1": {
     "false_positive": true,
-    "comment": "skills/ship/scripts/apply.py:368 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:368 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "517d2e1cf035a7c3167b22269702f948_0": {
@@ -826,7 +826,7 @@
   },
   "b1bc22adfa0442d68d86efd03b2caf60_0": {
     "false_positive": true,
-    "comment": "skills/ship/scripts/context.py:90 (python_lang_os_command_injection): Repository inspection uses fixed executable argument vectors with shell interpretation disabled by the subprocess API default.",
+    "comment": "skills/deliver/scripts/context.py:90 (python_lang_os_command_injection): Repository inspection uses fixed executable argument vectors with shell interpretation disabled by the subprocess API default.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "b9104c67ba21b886c7507631962e3607_0": {
@@ -951,7 +951,7 @@
   },
   "c667f31aa0c42305c09e455d5e9e3a96_0": {
     "false_positive": true,
-    "comment": "skills/ship/scripts/apply.py:84 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:84 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "cb62edae573b9365087ad51880e2621d_0": {

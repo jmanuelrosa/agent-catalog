@@ -589,7 +589,7 @@
         "82032e23f4e5a01b9a78e3bd31ac4243_0"
       ]
     },
-    "skills/ship/scripts/apply.py": {
+    "skills/deliver/scripts/apply.py": {
       "sha256": "94bdb5ea2790645bf609c0e5f0275f71f20097072aa4ab7e27df24b74241717f",
       "fingerprints": [
         "5103b4dbce032e25accbb8dda8230a74_0",
@@ -597,7 +597,7 @@
         "c667f31aa0c42305c09e455d5e9e3a96_0"
       ]
     },
-    "skills/ship/scripts/context.py": {
+    "skills/deliver/scripts/context.py": {
       "sha256": "7a48509731c25d961b54d9738994126310b0f2c9c187748d531c15a4fb4c56bb",
       "fingerprints": [
         "b1bc22adfa0442d68d86efd03b2caf60_0"

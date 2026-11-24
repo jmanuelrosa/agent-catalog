@@ -147,7 +147,7 @@ def test_the_global_set_holds_exactly_the_documented_membership():
         "agent-writer",
         "setup-review",
         "setup-review-mechanics",
-        "ship",
+        "deliver",
         "cc-fewer-permission-prompts",
         "cloudflare",
         "coderabbit",

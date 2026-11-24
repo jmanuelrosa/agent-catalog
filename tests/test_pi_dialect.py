@@ -193,7 +193,7 @@ SKILL_KEYS_PI_IGNORES = ("allowed-tools", "effort", "hooks")
 
 CLAUDE_ONLY_SKILL_FRONTMATTER = {
     "ac", "agent-writer", "cloudflare", "coderabbit", "commit", "jira",
-    "pr", "product-lead", "research", "sentry", "setup-review", "ship", "teammate",
+    "pr", "product-lead", "research", "sentry", "setup-review", "deliver", "teammate",
     "0-refine-idea", "1-research", "2-write-prd", "3-red-team", "4-tech-shape",
     "5-decompose", "6-verify", "7-push-to-board", "8-living-spec", "setup-strategy",
     "agent-platform-alert-configuration", "cloud-run-alert-configuration", "aws-containers",

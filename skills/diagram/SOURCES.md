@@ -10,7 +10,7 @@
 | Sibling `teammate/references/knowledge.md` | Local precedent, high | Anchoring a stored claim to a sha plus paths and checking staleness with `git log <sha>..HEAD -- <paths>`; the marker reuses that model |
 | Sibling `teach/SKILL.md` (PStack, MIT) | Upstream contract as installed, high | A tutorial is a series of diagrams that each add one part |
 | Sibling `how/references/explainer-prompt.md` (PStack, MIT) | Upstream contract as installed, medium | Draw only when parts interact or data changes shape; a diagram clarifies, never decorates |
-| Sibling `ship/SKILL.md` and `pr/SKILL.md` | Local precedent, high | One context script per call, `KEY=value` sections for the model, allowed-tools shape, the pre-gate question |
+| Sibling `deliver/SKILL.md` and `pr/SKILL.md` | Local precedent, high | One context script per call, `KEY=value` sections for the model, allowed-tools shape, the pre-gate question |
 | draw.io file format (`mxfile`, `mxGraphModel`) | Public format, medium | The uncompressed XML skeleton and the `.drawio.svg` export path |
 | `jgraph/drawio-mcp` README (official) | Vendor docs, high | Hosted MCP at `mcp.draw.io/mcp` with `get_drawio_reference`, `search_shapes`, `create_diagram`; `create_diagram` returns a link in a terminal |
 | `drawio --help` from draw.io Desktop 32.6.1, and an export trial in the authoring session | Installed CLI plus measurement, high | `--export`, `--embed-diagram`, `--border`; format from the output extension; export works inside the Claude sandbox with a harmless `sandbox_extension_issue_file` warning; the PNG opens in the file-read tool for a visual check |
@@ -29,7 +29,7 @@
 | Where diagrams live | In the doc page they illustrate, inside a marker, not in a separate diagrams store: a block in a page is what renders, and the marker is what the scan needs |
 | Anchors | `sha` plus `paths` per diagram, same model as the `teammate` store; `stamp` writes the sha so it is never hand-typed |
 | Investigation | Standalone read-only investigation with `Explore` in Claude Code, reusing any `how`, `why`, `teammate` answer or clean `.teammate/` page already in the session; no declared dependency on `how`, whose Cursor subagent mechanics need the teammate bridge |
-| Refresh trigger | `ship` and `pr` run `scan --since <base> --lint` before their gate and ask once when a diagram is anchored to files the branch changed or fails lint; the redraw itself stays in `/diagram refresh` because both skills run on haiku and are unattended after the gate |
+| Refresh trigger | `deliver` and `pr` run `scan --since <base> --lint` before their gate and ask once when a diagram is anchored to files the branch changed or fails lint; the redraw itself stays in `/diagram refresh` because both skills run on haiku and are unattended after the gate |
 | Invocation | User-only (`disable-model-invocation: true`): it writes docs |
 | Portability | Script path differs per harness and is spelled out; the `Explore` fan-out is Claude-only and named as such |
 | Retrieval stop | Diátaxis, Mermaid's renderable subset and the local anchoring precedent cover the five kinds; further sources would add diagram taxonomy, not behavior |

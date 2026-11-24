@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""apply.py - branch, commit, push and open the PR/MR for the /ship skill.
+"""apply.py - branch, commit, push and open the PR/MR for the /deliver skill.
 
 Reads the approved plan and runs the whole outward sequence in one Bash
 round-trip, so nothing after the confirmation gate waits on a human:
 
     {"branch": {"action": "keep", "name": "fix/gh-4-banner"},
      "commits": [{"files": ["src/a.ts"], "message": "fix(x): subject\\n\\n- why"}],
-     "pr": {"base": "main", "body_file": "/tmp/claude/ship-body-x.md",
+     "pr": {"base": "main", "body_file": "/tmp/claude/deliver-body-x.md",
             "repo": "gitlab.com-work/group/project"}}
 
 `branch.action` is `keep` (ship from the current branch), `create` (new branch
@@ -66,7 +66,7 @@ SECRET_EXEMPT_SUFFIXES = (".example", ".sample", ".template", ".dist", ".env.tes
 
 def load_context():
     path = Path(__file__).with_name("context.py")
-    spec = importlib.util.spec_from_file_location("ship_context_for_apply", path)
+    spec = importlib.util.spec_from_file_location("deliver_context_for_apply", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
