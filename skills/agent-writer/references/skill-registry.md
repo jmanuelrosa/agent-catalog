@@ -1,6 +1,6 @@
 # Skill registry & dependencies
 
-Skills are tracked in [skill-registry.json](../skill-registry.json): `upstream`, keyed by GitHub `owner/repo`, whose entries each carry a `branch`, a pinned `commit` on it, and the `skills` synced from it by `upstream_path`, and `local`, the skills authored here. A skill entry may declare `dependencies: [<name>, ...]`: other skills it invokes at runtime (e.g. the dispatcher `grill-me` runs `/grilling`, so it depends on `grilling`). Each named dependency must itself be a registered or on-disk skill.
+Skills are tracked in [skill-registry.json](../../../skill-registry.json): `upstream`, keyed by GitHub `owner/repo`, whose entries each carry a `branch`, a pinned `commit` on it, and the `skills` synced from it by `upstream_path`, and `local`, the skills authored here. A skill entry may declare `dependencies: [<name>, ...]`: other skills it invokes at runtime (e.g. the dispatcher `grill-me` runs `/grilling`, so it depends on `grilling`). Each named dependency must itself be a registered or on-disk skill.
 
 `kura add` resolves a skill's transitive dependency closure, downloading and symlinking each into the project, and `kura list` annotates it `(needs: …)`. `kura sync` links the skills with `global: true` plus their declared dependencies, recursively, into `~/.claude/skills/` and `~/.agents/skills/`, so a global dispatcher skill never ships without the skills it calls. Declare dependencies in the registry, not in `SKILL.md` prose; the latter is overwritten on every `kura update --type skill`.
 
@@ -13,14 +13,14 @@ To bump one, resolve the branch's current SHA with `gh api repos/<owner>/<repo>/
 `apollo-client`, `graphql-operations`, `mf`, and `monitor-ci` report as behind because their `allowed-tools` frontmatter is stripped locally; re-strip it after any update.
 Some vendored skills also differ only in em/en dash punctuation normalized to house style; preserve that normalization after updates.
 `google-cloud-filestore-nfs-browser` and `dbt-sf-to-bq-translator` carry local filesystem-confinement fixes; retain them until the pinned upstream contains equivalent protections.
-The regression tests and source hashes described in `docs/bearer.md` must pass after an update.
+The regression tests and source hashes described in `SECURITY.md` must pass after an update.
 
 `monitor-ci` requires Nx's `ci-monitor-subagent` and Nx MCP tools in the target project.
 The skill catalog does not install or configure those integrations.
 
-Agent entries in [agent-registry.json](../agent-registry.json) use `upstream` and `local` like the skill registry. Kura projects standalone agents with `global: true` and their declared skill dependencies into both harnesses with bare `kura sync`; `kura sync --type skill` leaves agent views unchanged. The dotfiles repo's [AI role](https://github.com/jmanuelrosa/dotfiles/blob/main/roles/ai/README.md) removes its old agent links, but never runs sync automatically.
+Agent entries in [agent-registry.json](../../../agent-registry.json) use `upstream` and `local` like the skill registry. Kura projects standalone agents with `global: true` and their declared skill dependencies into both harnesses with bare `kura sync`; `kura sync --type skill` leaves agent views unchanged. The dotfiles repo's [AI role](https://github.com/jmanuelrosa/dotfiles/blob/main/roles/ai/README.md) removes its old agent links, but never runs sync automatically.
 
-Bundle entries in [bundle-registry.json](../bundle-registry.json) register each bundle by `name` and carry descriptive `groups` for filtering, grouping, and project selection.
+Bundle entries in [bundle-registry.json](../../../bundle-registry.json) register each bundle by `name` and carry descriptive `groups` for filtering, grouping, and project selection.
 Kura v0.9.0 reads groups from local and upstream registry rows; they are not inherited by bundle-owned agents or skills.
 Kura still rejects `global`, `dependencies`, and `dependency_only` on bundle rows, including `global: false`, and refuses the retired `global` group tag.
 Bundle manifests keep `name`, `description`, `version`, `author`, and optional `requires`; groups and scope stay out of the manifest.

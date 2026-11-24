@@ -13,10 +13,9 @@ It is the catalog [kura](https://github.com/jmanuelrosa/kura) projects into each
 | `skill-registry.json`, `agent-registry.json`, `bundle-registry.json` | What each artifact is, where it comes from, its groups and dependencies |
 | `lib/python/dotkit/` | The output module the catalog's own scripts print through, vendored from [dotkit](https://github.com/jmanuelrosa/dotkit) and pinned in `dotkit.json` |
 | `licenses.json`, `LICENSES/` | The license of every third-party source, and its text |
-| `docs/` | How the registries, seat bundles and the product-team pipeline work |
 
 The registries' `upstream` entries are skills copied from other repositories at a pinned commit, and `local` entries are written here.
-The layout is the contract kura reads, described in [docs/skill-registry.md](docs/skill-registry.md).
+The layout is the contract kura reads, described in [skills/agent-writer/references/skill-registry.md](skills/agent-writer/references/skill-registry.md).
 
 ## Using it
 
