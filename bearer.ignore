@@ -24,11 +24,6 @@
     "comment": "skills/cloud-trace-querying/scripts/run_python_with_deps/src/venv_setup.py:54 (python_lang_os_command_injection): The virtualenv/pip helper runs fixed executable argument vectors against the operator-selected script requirements; this is intentional dependency setup, not command-string interpretation.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
-  "0f196906dfe04a86790aeb7de66b0236_0": {
-    "false_positive": true,
-    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:51 (python_lang_path_traversal): The canonicalized path must equal the mount root or begin with its separator-terminated prefix. File opens and metadata now use descriptor-relative no-follow traversal; regression tests cover outside symlinks and deterministic path swaps.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
   "0f865c6fd6cacc032de718ed9c9eed63_0": {
     "false_positive": true,
     "comment": "skills/pr/scripts/apply.py:213 (python_lang_path_traversal): The approved JSON plan is an intentional operator-selected input. Fixed git/gh/glab argument vectors carry titles and descriptions as data arguments or body files, not shell syntax.",
@@ -247,136 +242,6 @@
   "5103b4dbce032e25accbb8dda8230a74_1": {
     "false_positive": true,
     "comment": "skills/deliver/scripts/apply.py:368 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_0": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1461 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_1": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1549 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_10": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1673 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_11": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1852 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_12": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1854 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_13": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1856 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_14": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2105 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_15": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2232 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_16": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2235 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_17": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2236 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_18": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2237 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_19": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2241 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_2": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1558 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_20": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2242 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_21": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2426 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_22": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2427 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_23": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2455 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_24": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2456 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_25": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2457 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_3": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1559 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_4": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1562 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_5": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1563 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_6": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1662 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_7": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1670 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_8": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1671 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "517d2e1cf035a7c3167b22269702f948_9": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:1672 (python_lang_path_traversal): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "52ea477767e802fbd6ba761b719b7be1_0": {
@@ -692,41 +557,6 @@
   "8e56f83e69926dac38aeb877a7858eff_1": {
     "false_positive": true,
     "comment": "skills/mf/scripts/observability-collector.js:74 (javascript_lang_non_literal_fs_filename): Opt-in collector binds loopback; startup-selected paths are not supplied by HTTP payloads. Origin reflection is restricted to parsed local hostnames without credentials. TLS is not required for this local-only transport.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_0": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2116 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_1": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2121 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_2": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2132 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_3": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2145 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_4": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2159 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_5": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2198 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
-    "ignored_at": "2026-11-10T12:23:45.044Z"
-  },
-  "8ec54bcbb1d9eb00564bc19a4f10d2c8_6": {
-    "false_positive": true,
-    "comment": "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py:2214 (python_lang_os_command_injection): Source SQL/YAML/metadata reads and copies now enforce canonical containment in the selected input root, with regression tests for outside symlinks. Staging/output paths derive from operator roots and discovered relative names; cloud-returned filenames do not select final destinations. Commands use argv.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "8f640c7c64559ae7d0b55b50e8671f3d_0": {
