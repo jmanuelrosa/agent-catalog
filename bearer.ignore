@@ -958,5 +958,10 @@
     "false_positive": true,
     "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:222 (python_lang_path_traversal): Every path reaching this open passes within_mount, which resolves symlinks with realpath and returns None unless the result is the mount root or starts with its separator-terminated prefix; walked entries that resolve outside the share are skipped. tests/test_filestore_bridge_confinement.py covers sibling-prefix, parent and outside-symlink escapes.",
     "ignored_at": "2026-11-24T17:29:10.000Z"
+  },
+  "0f196906dfe04a86790aeb7de66b0236_0": {
+    "false_positive": true,
+    "comment": "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py:59 (python_lang_path_traversal): This join builds the candidate path that within_mount checks on the next line; within_mount resolves symlinks with realpath and returns None unless the result is the mount root or starts with its separator-terminated prefix, and safe_path raises 403 on None. tests/test_filestore_bridge_confinement.py covers sibling-prefix and parent escapes.",
+    "ignored_at": "2026-11-24T17:48:19.000Z"
   }
 }
