@@ -43,13 +43,22 @@ MIN_TAIL_LINES = 1
 MAX_TAIL_LINES = 500
 
 
+def within_mount(path: str) -> Optional[str]:
+  mount_root_real = os.path.realpath(MOUNT_ROOT)
+  resolved = os.path.realpath(path)
+  if resolved == mount_root_real or resolved.startswith(
+      os.path.join(mount_root_real, "")
+  ):
+    return resolved
+  return None
+
+
 def safe_path(rel_path: str) -> str:
   """Ensures path does not traverse outside the mount root, resolving symlinks."""
-  mount_root_real = os.path.realpath(MOUNT_ROOT)
-  resolved = os.path.realpath(
-      os.path.join(mount_root_real, rel_path.lstrip("/"))
+  resolved = within_mount(
+      os.path.join(os.path.realpath(MOUNT_ROOT), rel_path.lstrip("/"))
   )
-  if os.path.commonpath([mount_root_real, resolved]) != mount_root_real:
+  if resolved is None:
     raise HTTPException(
         status_code=http_status.HTTP_403_FORBIDDEN,
         detail="Access denied: path traversal",
@@ -110,7 +119,10 @@ def list_tree(
       break
     if d < depth:
       for name in sorted(files):
-        st = os.stat(os.path.join(r, name))
+        resolved = within_mount(os.path.join(r, name))
+        if resolved is None:
+          continue
+        st = os.stat(resolved)
         entries.append({
             "name": name,
             "type": "file",
@@ -154,8 +166,10 @@ def search_files(
     for f in sorted(files):
       if pattern and not fnmatch.fnmatch(f, pattern):
         continue
-      fp = os.path.join(r, f)
-      rel = "/" + os.path.relpath(fp, MOUNT_ROOT)
+      fp = within_mount(os.path.join(r, f))
+      if fp is None:
+        continue
+      rel = "/" + os.path.relpath(os.path.join(r, f), MOUNT_ROOT)
       if rgx:
         try:
           if os.path.getsize(fp) > MAX_SEARCH_FILE_SIZE_BYTES:
