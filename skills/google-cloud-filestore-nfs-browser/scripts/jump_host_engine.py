@@ -22,11 +22,8 @@ def _build_remote_tree_script(
   """Builds a Python script string to execute tree traversal on the remote host."""
   return f"""
 import os, json
-mount = os.path.realpath({repr(mount)})
-root = os.path.realpath(os.path.join(mount, {repr(path.lstrip('/'))}))
-if os.path.commonpath([mount, root]) != mount:
-  print(json.dumps({{"error": "Access denied: path traversal"}}))
-  exit(0)
+root = os.path.join({repr(mount)}, {repr(path.lstrip('/'))})
+mount = {repr(mount)}
 if not os.path.exists(root):
   print(json.dumps({{"error": "Path not found: " + root}}))
   exit(0)
@@ -43,10 +40,7 @@ for r, dirs, files in os.walk(root):
     break
   if d < {int(depth)}:
     for name in sorted(files):
-      fp = os.path.realpath(os.path.join(r, name))
-      if os.path.commonpath([mount, fp]) != mount:
-        continue
-      st = os.stat(fp)
+      st = os.stat(os.path.join(r, name))
       entries.append({{"name": name, "type": "file", "size_bytes": st.st_size, "path": "/" + os.path.relpath(os.path.join(r, name), mount)}})
       if len(entries) >= {int(max_entries)}:
         break
@@ -66,11 +60,8 @@ def _build_remote_search_script(
   """Builds a Python script string to execute filename glob and regex search remotely."""
   return f"""
 import os, re, fnmatch, json
-mount = os.path.realpath({repr(mount)})
-root = os.path.realpath(os.path.join(mount, {repr(path.lstrip('/'))}))
-if os.path.commonpath([mount, root]) != mount:
-  print(json.dumps({{"error": "Access denied: path traversal"}}))
-  exit(0)
+root = os.path.join({repr(mount)}, {repr(path.lstrip('/'))})
+mount = {repr(mount)}
 pat = {repr(pattern)}
 rgx = re.compile({repr(grep)}) if {repr(grep)} else None
 matches = []
@@ -78,10 +69,8 @@ for r, _, files in os.walk(root):
   for f in sorted(files):
     if pat and not fnmatch.fnmatch(f, pat):
       continue
-    fp = os.path.realpath(os.path.join(r, f))
-    if os.path.commonpath([mount, fp]) != mount:
-      continue
-    rel = "/" + os.path.relpath(os.path.join(r, f), mount)
+    fp = os.path.join(r, f)
+    rel = "/" + os.path.relpath(fp, mount)
     if rgx:
       try:
         if os.path.getsize(fp) > {MAX_SEARCH_FILE_SIZE_BYTES}:

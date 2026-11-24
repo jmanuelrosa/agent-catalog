@@ -88,7 +88,7 @@ export const stages: Stage[] = [
   {
     name: 'Review and ship',
     cells: {
-      engineer: { text: '/code-review, then /ship' },
+      engineer: { text: '/code-review, then /deliver' },
     },
   },
   {

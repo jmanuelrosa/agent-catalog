@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""context.py - one-shot repository context for the /ship skill.
+"""context.py - one-shot repository context for the /deliver skill.
 
 Prints everything the drafting steps need in a single Bash round-trip: host,
 base (fetched first) and current branch, the PR/MR the branch already has, the
 commits already on the branch (split into pushed and not yet pushed), the working tree (status, stats, filtered diffs, untracked
 previews), the resolved GitLab account, and the PR/MR template.
 
-Self-contained on purpose: /ship is the trial replacement for /commit and /pr,
+Self-contained on purpose: /deliver is the trial replacement for /commit and /pr,
 so it shares no code with them and survives their removal. apply.py imports the
 pure derivation functions from here by path.
 """
@@ -29,8 +29,8 @@ EXIT_NO_BASE = 5
 EXIT_NO_BRANCH = 6
 
 RUN_TIMEOUT = 60
-DIFF_FILE_CAP = int(os.environ.get("SHIP_DIFF_FILE_CAP") or 250)
-UNTRACKED_CAP = int(os.environ.get("SHIP_UNTRACKED_CAP") or 80)
+DIFF_FILE_CAP = int(os.environ.get("DELIVER_DIFF_FILE_CAP") or 250)
+UNTRACKED_CAP = int(os.environ.get("DELIVER_UNTRACKED_CAP") or 80)
 RECENT_SUBJECTS = 10
 
 # Noisy paths excluded from the drafting view only; they still appear in the

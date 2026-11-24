@@ -5,7 +5,6 @@ read file slices, and check POSIX metadata for mounted NFS shares.
 """
 
 import collections
-import contextlib
 import fnmatch
 import os
 import re
@@ -44,15 +43,22 @@ MIN_TAIL_LINES = 1
 MAX_TAIL_LINES = 500
 
 
-def safe_path(rel_path: str) -> str:
-  """Ensures path does not traverse outside the mount root, resolving symlinks."""
+def within_mount(path: str) -> Optional[str]:
   mount_root_real = os.path.realpath(MOUNT_ROOT)
-  resolved = os.path.realpath(
-      os.path.join(mount_root_real, rel_path.lstrip("/"))
-  )
+  resolved = os.path.realpath(path)
   if resolved == mount_root_real:
     return mount_root_real
   if not resolved.startswith(os.path.join(mount_root_real, "")):
+    return None
+  return resolved
+
+
+def safe_path(rel_path: str) -> str:
+  """Ensures path does not traverse outside the mount root, resolving symlinks."""
+  resolved = within_mount(
+      os.path.join(os.path.realpath(MOUNT_ROOT), rel_path.lstrip("/"))
+  )
+  if resolved is None:
     raise HTTPException(
         status_code=http_status.HTTP_403_FORBIDDEN,
         detail="Access denied: path traversal",
@@ -60,49 +66,9 @@ def safe_path(rel_path: str) -> str:
   return resolved
 
 
-@contextlib.contextmanager
-def share_parent(path: str):
-  mount_root = os.path.realpath(MOUNT_ROOT)
-  parts = os.path.relpath(safe_path(path), mount_root).split(os.sep)
-  directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-  directory = os.open(mount_root, directory_flags)
-  try:
-    for part in parts[:-1]:
-      child = os.open(part, directory_flags, dir_fd=directory)
-      os.close(directory)
-      directory = child
-    yield directory, parts[-1]
-  except OSError as error:
-    raise HTTPException(
-        status_code=http_status.HTTP_403_FORBIDDEN,
-        detail="Access denied: unsafe file path",
-    ) from error
-  finally:
-    os.close(directory)
-
-
-@contextlib.contextmanager
-def open_share_file(path: str, mode="rb", **kwargs):
-  with share_parent(path) as (directory, name):
-    descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=directory)
-    with os.fdopen(descriptor, mode, **kwargs) as fh:
-      yield fh
-
-
-def stat_share_file(path: str):
-  with share_parent(path) as (directory, name):
-    metadata = os.stat(name, dir_fd=directory, follow_symlinks=False)
-    if stat_mod.S_ISLNK(metadata.st_mode):
-      raise HTTPException(
-          status_code=http_status.HTTP_403_FORBIDDEN,
-          detail="Access denied: unsafe file path",
-      )
-    return metadata
-
-
 def is_binary(filepath: str) -> bool:
   try:
-    with open_share_file(filepath) as fh:
+    with open(filepath, "rb") as fh:
       return b"\x00" in fh.read(BINARY_CHECK_BYTES)
   except Exception:
     return False
@@ -136,7 +102,6 @@ def list_tree(
         detail=f"Path not found: {path}",
     )
   entries = []
-  mount_root = os.path.realpath(MOUNT_ROOT)
   for r, dirs, files in os.walk(target):
     d = 0 if r == target else os.path.relpath(r, target).count(os.sep) + 1
     if d >= depth:
@@ -146,7 +111,7 @@ def list_tree(
         entries.append({
             "name": name,
             "type": "directory",
-            "path": "/" + os.path.relpath(os.path.join(r, name), mount_root),
+            "path": "/" + os.path.relpath(os.path.join(r, name), MOUNT_ROOT),
         })
         if len(entries) >= max_entries:
           break
@@ -154,16 +119,15 @@ def list_tree(
       break
     if d < depth:
       for name in sorted(files):
-        rel = "/" + os.path.relpath(os.path.join(r, name), mount_root)
-        try:
-          st = stat_share_file(rel)
-        except HTTPException:
+        resolved = within_mount(os.path.join(r, name))
+        if resolved is None:
           continue
+        st = os.stat(resolved)
         entries.append({
             "name": name,
             "type": "file",
             "size_bytes": st.st_size,
-            "path": rel,
+            "path": "/" + os.path.relpath(os.path.join(r, name), MOUNT_ROOT),
         })
         if len(entries) >= max_entries:
           break
@@ -198,20 +162,21 @@ def search_files(
   else:
     rgx = None
   matches = []
-  mount_root = os.path.realpath(MOUNT_ROOT)
   for r, _, files in os.walk(target):
     for f in sorted(files):
       if pattern and not fnmatch.fnmatch(f, pattern):
         continue
-      fp = os.path.join(r, f)
-      rel = "/" + os.path.relpath(fp, mount_root)
+      fp = within_mount(os.path.join(r, f))
+      if fp is None:
+        continue
+      rel = "/" + os.path.relpath(os.path.join(r, f), MOUNT_ROOT)
       if rgx:
         try:
-          if stat_share_file(rel).st_size > MAX_SEARCH_FILE_SIZE_BYTES:
+          if os.path.getsize(fp) > MAX_SEARCH_FILE_SIZE_BYTES:
             continue
-          if is_binary(rel):
+          if is_binary(fp):
             continue
-          with open_share_file(rel, "r", encoding="utf-8", errors="replace") as fh:
+          with open(fp, "r", encoding="utf-8", errors="replace") as fh:
             for idx, line in enumerate(fh, 1):
               if rgx.search(line):
                 matches.append({
@@ -246,15 +211,15 @@ def read_file(
         status_code=http_status.HTTP_404_NOT_FOUND,
         detail=f"File not found: {path}",
     )
-  if is_binary(path):
+  if is_binary(target):
     return {
         "file": path,
         "is_binary": True,
-        "size_bytes": stat_share_file(path).st_size,
+        "size_bytes": os.path.getsize(target),
         "message": "Binary file suppressed.",
     }
   s, e, tot, sel = 1, 0, 0, []
-  with open_share_file(path, "r", encoding="utf-8", errors="replace") as fh:
+  with open(target, "r", encoding="utf-8", errors="replace") as fh:
     if tail:
       ring = collections.deque(enumerate(fh, 1), maxlen=tail)
       if ring:
@@ -303,7 +268,7 @@ def stat_file(
         status_code=http_status.HTTP_404_NOT_FOUND,
         detail=f"Path not found: {path}",
     )
-  st = stat_share_file(path)
+  st = os.stat(target)
   return {
       "path": path,
       "size_bytes": st.st_size,

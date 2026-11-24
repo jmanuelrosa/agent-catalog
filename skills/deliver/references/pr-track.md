@@ -2,7 +2,7 @@
 
 One script, `scripts/track.py`, does every mechanical part with plain `gh`/`glab` and `git` calls: it polls, compares with the last snapshot, records only real changes, and after a model run it commits, pushes and replies.
 A model runs only when an event is something it can act on, after a burst has settled, inside a scratch worktree.
-It ships inside the `ship` skill, which `pr` depends on: global install `~/.claude/skills/ship/scripts/track.py`, project install `.claude/skills/ship/scripts/track.py`.
+It ships inside the `deliver` skill, which `pr` depends on: global install `~/.claude/skills/deliver/scripts/track.py`, project install `.claude/skills/deliver/scripts/track.py`.
 The user's shell has `prt` as a shortcut for the same script.
 
 ## Commands
@@ -51,7 +51,7 @@ A tracked PR is merged by the script, never by a model, once every one of these 
 - no event is pending, no run is in progress, no work is kept, and nothing is waiting on the user
 - nothing changed for `PR_TRACK_SETTLE` seconds, so a fresh push gets its checks registered first
 
-A stacked child shipped by `/ship` targets its parent's branch, never the default, which is what makes `parent-merged` fire when the parent lands.
+A stacked child shipped by `/deliver` targets its parent's branch, never the default, which is what makes `parent-merged` fire when the parent lands.
 
 GitHub merges with `--match-head-commit`, so a push that lands in between makes the merge fail instead of merging unreviewed code.
 The method is squash when the repo allows it, otherwise whichever of merge or rebase it allows. GitLab squashes unless the project forbids squashing, and otherwise follows the project's merge method.
@@ -65,9 +65,9 @@ Teammates are never replied to and their threads never resolved, whatever the re
 
 ### In-session watch (Claude Code)
 
-When the user is actively working on a PR and wants this session to react instead, arm a Monitor on `python3 ~/.claude/skills/ship/scripts/track.py watch <ref>` with `timeout_ms: 1800000`.
+When the user is actively working on a PR and wants this session to react instead, arm a Monitor on `python3 ~/.claude/skills/deliver/scripts/track.py watch <ref>` with `timeout_ms: 1800000`.
 The background job skips a PR while a watcher holds it.
-Handle each `event|<key>|<json>` line in the user's worktree with the judgment rules in React, then ship through `/ship` as usual.
+Handle each `event|<key>|<json>` line in the user's worktree with the judgment rules in React, then ship through `/deliver` as usual.
 Re-arm on expiry; stop on `all-closed`. Pi has no Monitor, so in Pi the background job is the only path.
 
 ## React
