@@ -46,11 +46,11 @@ MAX_TAIL_LINES = 500
 def within_mount(path: str) -> Optional[str]:
   mount_root_real = os.path.realpath(MOUNT_ROOT)
   resolved = os.path.realpath(path)
-  if resolved == mount_root_real or resolved.startswith(
-      os.path.join(mount_root_real, "")
-  ):
-    return resolved
-  return None
+  if resolved == mount_root_real:
+    return mount_root_real
+  if not resolved.startswith(os.path.join(mount_root_real, "")):
+    return None
+  return resolved
 
 
 def safe_path(rel_path: str) -> str:
