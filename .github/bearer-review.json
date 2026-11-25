@@ -540,13 +540,13 @@
       ]
     },
     "skills/pr/scripts/context.py": {
-      "sha256": "0cb9b862b4555e9a957c27f94e725641241bb3c3dad5e42414789c23515447ad",
+      "sha256": "845ed7a4ce08cb9fa88178f34d2f3f3e9a20ed55c98eaf99cd8b49500b82e156",
       "fingerprints": [
         "82032e23f4e5a01b9a78e3bd31ac4243_0"
       ]
     },
     "skills/deliver/scripts/apply.py": {
-      "sha256": "ccffdb03a989a47b4ae865c9677f1e6ac8f6c919735408fc9cc288324ce4fca5",
+      "sha256": "fbafd5333f6e7ee48a3c43a3aff4a2260c4c3d23da243a290d16d4c806ebcd5a",
       "fingerprints": [
         "1ddfdb4db580d35706ebe216c5fdd304_0",
         "95840599cda725fe8569668bbe9534ec_0",

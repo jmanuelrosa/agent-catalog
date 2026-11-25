@@ -5,7 +5,7 @@ import pytest
 import yaml
 from catalog_tree import ROOT
 
-REVIEWS = json.loads((ROOT / "docs/bearer-review.json").read_text())
+REVIEWS = json.loads((ROOT / ".github/bearer-review.json").read_text())
 IGNORED = json.loads((ROOT / "bearer.ignore").read_text())
 
 
