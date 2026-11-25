@@ -3,11 +3,7 @@ __pycache__/
 .ruff_cache/
 .DS_Store
 
-# Installed by kura from skills/ and agents/; regenerated on every sync
+# Harness directories: kura installs skills and agents here from skills/ and agents/, and agents keep per-machine memory here
 /.agents/
-/.claude/skills/
-/.claude/agents/
-/.pi/agents/
-# Per-machine agent memory
-/.claude/agent-memory/
-/.pi/agent-memory/
+/.claude/
+/.pi/
