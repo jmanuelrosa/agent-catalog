@@ -2,3 +2,12 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .DS_Store
+
+# Installed by kura from skills/ and agents/; regenerated on every sync
+/.agents/
+/.claude/skills/
+/.claude/agents/
+/.pi/agents/
+# Per-machine agent memory
+/.claude/agent-memory/
+/.pi/agent-memory/
