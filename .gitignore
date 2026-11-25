@@ -2,3 +2,8 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .DS_Store
+
+# Harness directories: kura installs skills and agents here from skills/ and agents/, and agents keep per-machine memory here
+/.agents/
+/.claude/
+/.pi/
