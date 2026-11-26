@@ -236,12 +236,12 @@
   },
   "95840599cda725fe8569668bbe9534ec_0": {
     "false_positive": true,
-    "comment": "skills/deliver/scripts/apply.py:338 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:384 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "95840599cda725fe8569668bbe9534ec_1": {
     "false_positive": true,
-    "comment": "skills/deliver/scripts/apply.py:384 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:430 (python_lang_path_traversal): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "52ea477767e802fbd6ba761b719b7be1_0": {
@@ -781,7 +781,7 @@
   },
   "1ddfdb4db580d35706ebe216c5fdd304_0": {
     "false_positive": true,
-    "comment": "skills/deliver/scripts/apply.py:84 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
+    "comment": "skills/deliver/scripts/apply.py:90 (python_lang_os_command_injection): Plan/body files are explicitly operator-approved inputs and may intentionally live outside the repository. Commands use fixed executable argument vectors; descriptions are files or single argument values.",
     "ignored_at": "2026-11-10T12:23:45.044Z"
   },
   "cb62edae573b9365087ad51880e2621d_0": {

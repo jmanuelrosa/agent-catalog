@@ -20,7 +20,11 @@ the account when one server backs several. File paths are relative to the
 repository root.
 
 `--from push` resumes after the commits landed; `--from pr` resumes after a
-push the caller ran by hand. Every check runs up front, before the first
+push the caller ran by hand. Before pushing, a branch that conflicts with the
+base gets the base merged in without a commit and the run exits with
+EXIT_CONFLICT, leaving the conflicts in the tree for the caller to resolve and
+`git add`; `--from push` then refuses while any conflict or marker remains,
+commits the merge with git's own message, and pushes. Every check runs up front, before the first
 mutation, and the run stops on the first failure.
 
 The git-skill-gate hook sees this command, not what it spawns, so it gates the
@@ -49,6 +53,7 @@ EXIT_BLOCKED = 2
 EXIT_COMMIT_FAILED = 3
 EXIT_PUSH_FAILED = 4
 EXIT_CREATE_FAILED = 5
+EXIT_CONFLICT = 6
 
 HEADER_MAX = 100
 BRANCH_ACTIONS = ("keep", "create", "create-from-base", "rename")
@@ -58,6 +63,7 @@ ATTRIBUTION_RE = re.compile(r"(?i)co-authored-by:.*claude|generated with.*\bclau
 # Built from codepoints so the em-dash-gate hook never trips on this file itself.
 DASH_RE = re.compile(f"[{chr(0x2014)}{chr(0x2013)}]")
 TASKS_PATH_RE = re.compile(r"(^|/)\.claude/tasks/")
+ADDED_MARKER_RE = re.compile(r"^\+(<{7}|>{7}|\|{7})( |$)")
 SECRET_BASENAME_GLOBS = (".env", ".env.*", "*.pem", "*-key.json", "credentials*")
 # `.env.*` also matches the sample files a repo deliberately tracks, and the committed,
 # non-secret env files test and local scripts load through `--env-file`.
@@ -204,6 +210,46 @@ def conflicts_with(base_ref):
     if proc.returncode != 1:
         return None
     return sorted({line for line in proc.stdout.splitlines()[1:] if line.strip()})
+
+
+def merge_in_progress():
+    return git("rev-parse", "-q", "--verify", "MERGE_HEAD").returncode == 0
+
+
+def start_merge(base_ref):
+    """Merge `base_ref` without committing, leaving its conflicts in the tree; False when git refused."""
+    git("merge", "--no-commit", "--no-ff", base_ref)
+    return merge_in_progress()
+
+
+def staged_markers():
+    """Files whose staged content adds a conflict marker the resolution left behind."""
+    diff = git("diff", "--cached", "-U0", "--no-color", "--no-ext-diff").stdout
+    found, path = set(), None
+    for line in diff.splitlines():
+        if line.startswith("+++ "):
+            path = line[len("+++ b/"):] if line.startswith("+++ b/") else None
+        elif path and ADDED_MARKER_RE.match(line):
+            found.add(path)
+    return sorted(found)
+
+
+def finish_merge():
+    unresolved = [path for path in git("diff", "--name-only", "--diff-filter=U", "-z").stdout.split("\0") if path]
+    leftover = staged_markers()
+    if unresolved or leftover:
+        fail(
+            "the merge with the base is not resolved yet:\n"
+            + "".join(f"    {path} (conflicted)\n" for path in unresolved)
+            + "".join(f"    {path} (conflict markers)\n" for path in leftover)
+            + "  Resolve and git add them, then rerun with --from push, or give up with git merge --abort.",
+            EXIT_CONFLICT,
+        )
+    committed = git("commit", "--no-edit")
+    if committed.returncode != 0:
+        fail(f"the merge commit failed, the resolution stays staged:\n{committed.stdout}{committed.stderr}",
+             EXIT_COMMIT_FAILED)
+    print(f"Synced: {git('log', '-1', '--format=%s').stdout.strip()}")
 
 
 def unplanned(staged, files):
@@ -389,6 +435,8 @@ def main():
     check_text("body", body)
 
     commits = plan.get("commits") or []
+    if args.stage == "commit" and merge_in_progress():
+        fail("a merge is in progress: resolve it and rerun with --from push, or git merge --abort", EXIT_BLOCKED)
     if args.stage == "commit":
         validate_commits(commits)
         action, branch = validate_branch_plan(
@@ -410,16 +458,25 @@ def main():
     body = with_closes(body, derived["closes"])
 
     if args.stage != "pr":
+        if merge_in_progress():
+            finish_merge()
         conflicts = conflicts_with(base_ref)
         if conflicts is None:
             print(f"Conflict check skipped: git merge-tree could not compare with {base_ref}")
         elif conflicts:
+            listing = "".join(f"    {path}\n" for path in conflicts)
+            if not start_merge(base_ref):
+                fail(
+                    f"{branch} conflicts with {base_ref} in:\n{listing}"
+                    f"  git refused to start the merge, likely uncommitted changes in the way. The commits\n"
+                    f"  are kept: merge {base_ref} in by hand and resolve it, then rerun with --from push.",
+                    EXIT_BLOCKED,
+                )
             fail(
-                f"{branch} conflicts with {base_ref} in:\n"
-                + "".join(f"    {path}\n" for path in conflicts)
-                + f"  The commits are kept. Bring {base_ref} into the branch and resolve them,\n"
-                "  then rerun with --from push.",
-                EXIT_BLOCKED,
+                f"{branch} conflicts with {base_ref}. The commits are kept and {base_ref} is merged in,\n"
+                f"  uncommitted, with conflicts in:\n{listing}"
+                "  Resolve and git add them, then rerun with --from push, or give up with git merge --abort.",
+                EXIT_CONFLICT,
             )
         push = push_argv(host, branch)
         pushed = run(push)

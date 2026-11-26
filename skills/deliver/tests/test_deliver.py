@@ -598,30 +598,67 @@ def test_keeping_a_branch_whose_pr_is_merged_is_refused(stubs, repo, tmp_path):
     assert head(repo) == before and pushes(stubs) == []
 
 
-def test_a_branch_that_conflicts_with_the_base_stops_before_the_push(stubs, repo, tmp_path):
-    git_out(repo, "switch", "-q", "-c", "fix/readme")
-    write(repo, "README.md", "# ours\n")
-    git_out(repo, "switch", "-q", "main")
-    write(repo, "README.md", "# theirs\n")
-    commit(repo, "docs: theirs")
-    git_out(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
-    git_out(repo, "reset", "-q", "--hard", "HEAD~1")
-    git_out(repo, "switch", "-q", "fix/readme")
-    write(repo, "README.md", "# ours\n")
-    plan = plan_file(tmp_path, {"action": "keep"}, [{"files": ["README.md"], "message": "docs: ours"}])
+def conflicting_branch(project, tmp_path):
+    """`fix/readme` about to commit a README line that origin/main rewrote meanwhile."""
+    git_out(project, "switch", "-q", "-c", "fix/readme")
+    git_out(project, "switch", "-q", "main")
+    write(project, "README.md", "# theirs\n")
+    commit(project, "docs: theirs")
+    git_out(project, "update-ref", "refs/remotes/origin/main", "HEAD")
+    git_out(project, "reset", "-q", "--hard", "HEAD~1")
+    git_out(project, "switch", "-q", "fix/readme")
+    write(project, "README.md", "# ours\n")
+    return plan_file(tmp_path, {"action": "keep"}, [{"files": ["README.md"], "message": "docs: ours"}])
+
+
+def merging(project):
+    return subprocess.run([REAL_GIT, "rev-parse", "-q", "--verify", "MERGE_HEAD"], cwd=project).returncode == 0
+
+
+def test_a_branch_that_conflicts_with_the_base_is_left_mid_merge_before_the_push(stubs, repo, tmp_path):
+    plan = conflicting_branch(repo, tmp_path)
 
     result = execute(stubs, repo, plan)
 
-    assert result.returncode == apply_deliver.EXIT_BLOCKED
+    assert result.returncode == apply_deliver.EXIT_CONFLICT
     assert subjects(repo, 1) == ["docs: ours"] and pushes(stubs) == []
-    assert "README.md" in result.stderr
+    assert "README.md" in result.stderr and merging(repo)
 
-    subprocess.run([REAL_GIT, "merge", "-q", "origin/main"], cwd=repo, capture_output=True)
+
+def test_an_unresolved_merge_is_never_pushed(stubs, repo, tmp_path):
+    plan = conflicting_branch(repo, tmp_path)
+    execute(stubs, repo, plan)
+
+    conflicted = execute(stubs, repo, plan, "--from", "push")
+    write(repo, "README.md", "<<<<<<< HEAD\n# ours\n=======\n# theirs\n>>>>>>> origin/main\n")
+    git_out(repo, "add", "README.md")
+    marked = execute(stubs, repo, plan, "--from", "push")
+
+    assert conflicted.returncode == marked.returncode == apply_deliver.EXIT_CONFLICT
+    assert pushes(stubs) == [] and merging(repo)
+
+
+def test_a_resolved_merge_is_committed_and_pushed(stubs, repo, tmp_path):
+    plan = conflicting_branch(repo, tmp_path)
+    execute(stubs, repo, plan)
     write(repo, "README.md", "# ours and theirs\n")
     git_out(repo, "add", "README.md")
-    git_out(repo, "commit", "-q", "--no-edit")
 
     resumed = execute(stubs, repo, plan, "--from", "push")
 
     assert resumed.returncode == apply_deliver.EXIT_OK, resumed.stderr
     assert [call[-1] for call in pushes(stubs)] == ["fix/readme"]
+    assert not merging(repo)
+    assert subprocess.run([REAL_GIT, "merge-base", "--is-ancestor", "origin/main", "HEAD"], cwd=repo).returncode == 0
+    assert subjects(repo, 1) != ["docs: ours"]
+
+
+def test_a_fresh_run_refuses_to_commit_over_a_merge_in_progress(stubs, repo, tmp_path):
+    plan = conflicting_branch(repo, tmp_path)
+    execute(stubs, repo, plan)
+    before = head(repo)
+
+    result = execute(stubs, repo, plan)
+
+    assert result.returncode == apply_deliver.EXIT_BLOCKED
+    assert head(repo) == before and pushes(stubs) == []
