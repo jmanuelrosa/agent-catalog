@@ -1,0 +1,218 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import WorkDiagram from '../../components/WorkDiagram.astro';
+import Terminal from '../../components/Terminal.astro';
+
+const stages = [
+  {
+    skill: 'lets-work',
+    title: 'opens the work',
+    does: 'Always the first step. You pick a short id and say what already exists: an RFC in Notion, specs, Jira tickets, an issue. Each is saved verbatim and mapped in, ready to be challenged.',
+    writes: ['work.md'],
+  },
+  {
+    skill: 'to-research',
+    title: 'finds out what is true first',
+    does: 'A spike: Slack threads, Notion pages, tickets and code, each saved with verbatim excerpts, then the findings tagged by origin, with contradictions and unknowns, and no recommendation.',
+    writes: ['sources.md', 'research.md'],
+  },
+  {
+    skill: 'to-rfc',
+    title: 'interviews you, then writes the RFC',
+    does: 'Rounds of questions from the research. Each point becomes your verdict, a product gap for the tickets, or a question for reviewers, and your answer is on disk before the next round. Reviewer comments come back as numbered rounds.',
+    writes: ['rfc.md', 'rfc.log.md', 'rfc-reviews/R1/round.md'],
+  },
+  {
+    skill: 'to-specs',
+    title: 'one small spec at a time',
+    does: 'It proposes the list, you reshape it, then it challenges each spec with you and writes only what you decided.',
+    writes: ['specs/INDEX.md', 'specs/S-01-….md', 'specs/S-01-….log.md'],
+  },
+  {
+    skill: 'to-tickets',
+    title: 'cuts tickets you can check',
+    does: 'Every acceptance criterion names how it is verified: a command, a test, or an observable behaviour.',
+    writes: ['tickets/T-001-…/ticket.md'],
+  },
+  {
+    skill: 'to-subtasks',
+    title: 'splits a ticket',
+    does: 'Small tasks, each with one repo, one owning staff seat, the files it owns and a check for done.',
+    writes: ['tasks.md'],
+  },
+  {
+    title: 'You approve the task list',
+    does: 'No code is written before a person has read the plan.',
+    gate: true,
+  },
+  {
+    skill: 'to-build',
+    title: 'runs the tasks through the seats',
+    does: 'One task at a time. An independent checker then verifies every criterion and writes the evidence into the ticket.',
+    writes: ['tasks.md', 'ticket.md'],
+  },
+  {
+    title: 'You ship a draft pull request',
+    does: 'Committing and pushing stay yours, with your own commands. No skill of this bundle does either.',
+    gate: true,
+  },
+  {
+    skill: 'to-review',
+    title: 'reviews your own pull request',
+    does: 'Only once CI is green. Every axis, a blind reader that sees nothing but the diff, and every nit.',
+    writes: ['reviews/R1/round.md'],
+  },
+  {
+    skill: 'to-triage',
+    title: 'rules on each item with you',
+    does: 'Fix, reject, defer or ask, one item at a time, with your reason saved before the next one. Fixes are applied at the end.',
+    writes: ['reviews/R1/round.md'],
+  },
+  {
+    title: 'You ship the fixes, and reviewers comment',
+    does: 'Each new review, yours or someone else’s, is a new numbered round handled the same way.',
+    gate: true,
+  },
+  {
+    skill: 'to-archive',
+    title: 'closes the work',
+    does: 'The whole directory moves to the archive. Nothing is deleted, so the reasons stay searchable.',
+    writes: ['~/.work-archive/…'],
+  },
+];
+---
+
+<Docs
+  title="Work"
+  description="A file-backed workflow from RFC to merged pull request: eleven small skills that keep sources, decisions, specs, tickets and review rounds in local files, so any session resumes from disk."
+  intro="Long work outlives a session. Every time a conversation is compacted or restarted, the reasons behind a decision go first. The work bundle keeps each step in local files instead: what was read, what you answered and why, what was built, what a review found and how you ruled on it."
+>
+  <h2>The idea</h2>
+  <p>
+    Each skill does one step, reads what it needs from disk, and writes its result back before it asks you anything else.
+    None of them depends on the conversation that came before, so you can run any of them in a fresh session, in any
+    order that makes sense for the work in front of you.
+  </p>
+  <table>
+    <thead><tr><th>Rule</th><th>What it means for you</th></tr></thead>
+    <tbody>
+      <tr><td>Write before asking</td><td>Your answers are saved before the next round of questions. A dead session loses nothing.</td></tr>
+      <tr><td>Outcome and reason are separate files</td><td>A spec stays a two-minute read. Its log holds every question, your answer and why.</td></tr>
+      <tr><td>One evidence file</td><td>Every source is kept with verbatim excerpts, so a link that rots costs nothing.</td></tr>
+      <tr><td>Nothing invented</td><td>What you did not decide is listed as an open question, never filled in.</td></tr>
+      <tr><td>Local only</td><td>No skill commits, pushes, posts a comment or publishes to a board. Those stay your steps.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>From an idea to a merged pull request</h2>
+  <WorkDiagram
+    stages={stages}
+    caption="Diamonds in ochre are yours: approving the plan and shipping. Dashed tiles are the files each step writes."
+  />
+
+  <h2>Start from wherever you are</h2>
+  <p>
+    <code>/lets-work</code> is always the first step. It asks once what already exists, saves each item verbatim, maps it
+    into the work's documents, and names the next step. The skill that owns an imported document then challenges it
+    instead of writing it again. Levels you do not need are simply skipped.
+  </p>
+  <table>
+    <thead><tr><th>Situation</th><th>Give <code>/lets-work</code></th><th>Then</th></tr></thead>
+    <tbody>
+      <tr><td>Personal project, a quick change</td><td>A description</td><td><code>/to-tickets</code>, <code>/to-subtasks</code>, <code>/to-build</code></td></tr>
+      <tr><td>Personal project, a feature with no RFC</td><td>A description</td><td><code>/to-specs</code>, then <code>/to-tickets</code></td></tr>
+      <tr><td>Job, a new feature from zero</td><td>The Slack threads and PRD links</td><td><code>/to-research</code>, <code>/to-rfc</code>, <code>/to-specs</code></td></tr>
+      <tr><td>Job, the RFC is already in Notion</td><td>The Notion URL</td><td><code>/to-rfc</code> challenges it</td></tr>
+      <tr><td>Job, specs written before</td><td>Their paths or URLs</td><td><code>/to-specs</code> challenges them</td></tr>
+      <tr><td>Job, tickets already in Jira</td><td>The Jira keys</td><td><code>/to-tickets</code> challenges them</td></tr>
+      <tr><td>Open source, an issue you will fix</td><td>The issue URL</td><td><code>/to-tickets</code>, <code>/to-subtasks</code></td></tr>
+      <tr><td>A session you are coming back to</td><td>Nothing: run <code>/work-status my-id</code></td><td>Whatever it names as next</td></tr>
+    </tbody>
+  </table>
+  <p>
+    <code>/to-review</code> and <code>/to-triage</code> are for your own tickets. Someone else's pull request, an
+    open-source one included, is reviewed with the review command instead.
+  </p>
+
+  <h2>Where the files live</h2>
+  <p>
+    Outside every repository, under one root (<code>~/.work</code> by default, or <code>WORK_ROOT</code>), keyed by the
+    repository name. A git worktree maps to its real repository, so every session of a project sees the same work.
+  </p>
+  <Terminal
+    label="One work"
+    lines={[
+      { kind: 'out', text: '~/.work/<repo>/<work-id>/' },
+      { kind: 'out', text: '  work.md' },
+      { kind: 'out', text: '  sources.md                 SRC-01, SRC-02, …' },
+      { kind: 'out', text: '  research.md   glossary.md   adr/' },
+      { kind: 'out', text: '  rfc.md   rfc.log.md   rfc-reviews/R1/round.md' },
+      { kind: 'out', text: '  specs/INDEX.md' },
+      { kind: 'out', text: '  specs/S-01-<slug>.md   S-01-<slug>.log.md' },
+      { kind: 'out', text: '  tickets/T-001-<slug>/ticket.md   ticket.log.md   tasks.md' },
+      { kind: 'out', text: '  tickets/T-001-<slug>/reviews/R1/round.md' },
+      { kind: 'out', text: '  tickets/T-001-<slug>/reviews/R2/round.md' },
+    ]}
+  />
+  <p>
+    Ids are stable and never reused: <code>SRC-04</code> for a source, <code>S-02</code> for a spec, <code>T-007</code> for
+    a ticket, <code>T-007.3</code> for a task, <code>R2-F05</code> for the fifth item of a ticket's second review round.
+    Every document carries its work id, so handing a skill a file is enough for it to know where it is.
+  </p>
+
+  <h2>An example, end to end</h2>
+  <Terminal
+    label="A feature across several sessions"
+    lines={[
+      { kind: 'agent', text: '/lets-work consent-v2 <slack thread> <PRD link>' },
+      { kind: 'agent', text: '/to-research consent-v2 <slack thread> <notion page>' },
+      { kind: 'agent', text: '/to-rfc consent-v2' },
+      { kind: 'comment', text: '# reviewers commented on the RFC' },
+      { kind: 'agent', text: '/to-rfc consent-v2 revise' },
+      { kind: 'comment', text: '# next day, fresh session' },
+      { kind: 'agent', text: '/work-status consent-v2' },
+      { kind: 'agent', text: '/to-specs consent-v2' },
+      { kind: 'agent', text: '/to-tickets consent-v2' },
+      { kind: 'comment', text: '# one ticket' },
+      { kind: 'agent', text: '/to-subtasks consent-v2 T-001' },
+      { kind: 'agent', text: '/to-build consent-v2 T-001' },
+      { kind: 'agent', text: '/ship' },
+      { kind: 'comment', text: '# once CI is green' },
+      { kind: 'agent', text: '/to-review consent-v2 T-001' },
+      { kind: 'agent', text: '/to-triage consent-v2 T-001' },
+      { kind: 'agent', text: '/ship' },
+      { kind: 'comment', text: '# a teammate reviews the PR' },
+      { kind: 'agent', text: '/to-triage consent-v2 T-001 comments' },
+      { kind: 'comment', text: '# merged' },
+      { kind: 'agent', text: '/to-archive consent-v2' },
+    ]}
+  />
+
+  <h2>Review rounds</h2>
+  <p>
+    A round is one pass over a pull request, numbered in the order it happened: your own review, a second one after the
+    fixes, a teammate's comments. Each lives in its own directory and is never rewritten once closed.
+  </p>
+  <table>
+    <thead><tr><th>Ruling</th><th>Means</th><th>What is recorded</th></tr></thead>
+    <tbody>
+      <tr><td><code>fix</code></td><td>Change the code</td><td>What was changed, per item</td></tr>
+      <tr><td><code>reject</code></td><td>Leave the code as it is</td><td>Your reason, in your words</td></tr>
+      <tr><td><code>defer</code></td><td>Real, but not in this pull request</td><td>The new ticket it became</td></tr>
+      <tr><td><code>ask</code></td><td>You need an answer first</td><td>The drafted question</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Replies to reviewers are drafted in the round file. Posting them, like committing the fixes, is a step you take
+    yourself.
+  </p>
+
+  <h2>Setting it up</h2>
+  <p>
+    Add the <code>work</code> bundle to the project with kura. Because the work directory sits outside the repository,
+    your agent needs permission to write there once, in your user-level settings. In Claude Code that is an
+    <code>Edit(~/.work/**)</code> and an <code>Edit(~/.work-archive/**)</code> allow rule, plus the same two paths under
+    <code>sandbox.filesystem.allowWrite</code>. A skill that cannot write to the root stops and says so; it never falls
+    back to a directory inside the repository.
+  </p>
+</Docs>

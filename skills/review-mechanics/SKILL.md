@@ -108,6 +108,9 @@ At most three nits per review, and zero when a blocker is present.
 Pick the three with the highest ratio of clarity gained to churn caused.
 Everything else is dropped, not deferred to a list, because an appendix of nits is the same cost as reporting them.
 
+One exception: when the dispatcher declares an author self-review with the nit cap lifted (the work bundle's `to-review` does), report every verified nit, sorted after the blockers and importants.
+The author asked for all of them and rules on each one, so the reader's cost the cap protects is the author's choice to pay.
+
 ## What is out of scope, because it writes
 
 The reviewer does not mutate, so none of these run during a review:

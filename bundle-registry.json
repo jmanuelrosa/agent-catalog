@@ -111,6 +111,22 @@
         "planning",
         "documentation",
         "workflow"
+      ],
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [
+          "work"
+        ],
+        "reason": "Superseded by the work bundle"
+      }
+    },
+    {
+      "name": "work",
+      "groups": [
+        "workflow",
+        "planning",
+        "documentation",
+        "review"
       ]
     },
     {
