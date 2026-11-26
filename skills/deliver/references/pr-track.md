@@ -79,7 +79,7 @@ This is what a headless run follows. Your working directory is a detached worktr
    - **Bot comment**: judge the claim against the code, not the bot's confidence. Valid: fix it. Not valid or out of scope: leave the code. Either way write a reply, one to three sentences naming the change or the reason.
    - **Teammate comment**: fix it when the ask is clear and inside the PR's scope, and draft a reply. When it is ambiguous, disputes the approach, asks a design question or reaches outside the PR, change nothing for it and escalate it in one sentence.
    - **CI failure**: `gh pr view <url> --json statusCheckRollup` names the failing check. Fix a cause in the code; a flaky or infrastructure failure is an escalation, not a code change.
-   - **Conflict, base changed, or parent merged**: `git merge --no-commit --no-ff origin/<base>`, with the base from the `branches` line. Resolve every hunk keeping both intents; when a stacked parent was squash-merged, its own changes already sit in the base, so prefer the base side for them. `git add` the resolved files and leave the merge uncommitted. A conflict you cannot resolve with confidence is an escalation: `git merge --abort` and say which files.
+   - **Conflict, base changed, or parent merged**: `git merge --no-commit --no-ff origin/<base>`, with the base from the `branches` line, then resolve it by [resolve-conflicts.md](resolve-conflicts.md), beside this file. Leave the merge uncommitted.
    - **Changes requested**: treat the review's comments as teammate comments.
 3. **Write the result** to the path in the prompt, as JSON:
 

@@ -19,6 +19,8 @@ allowed-tools:
   - Edit(//private/tmp/claude/**)
   - Read
   - AskUserQuestion
+  - Agent
+  - Bash(git merge --abort*)
 ---
 
 # Deliver
@@ -121,14 +123,16 @@ Prose that changes something (another base, another split, leave a file out) is 
    - A push failing on auth or a pre-push hook that needs the network → it prints the standalone `git …` push. Run it verbatim as its own call, never chained, then rerun `apply.py <plan> --from pr`.
    - Commits landed but a later step failed → rerun with `--from push` or `--from pr`, never from the start.
    - A pre-commit or pre-push hook failing on the code itself (lint, types, tests) → surface the full output and stop: fixing the code is a new task. Never `--no-verify`, never `--amend`.
-   - A conflict with the base: `apply.py` merges the branch against the base with `git merge-tree` before pushing, and on a conflict stops with the commits kept and the conflicting paths listed. Surface them and stop, since resolving is a new task; once resolved, `--from push` resumes.
+   - A conflict with the base (exit 6): `apply.py` checks the branch against the base with `git merge-tree` before pushing, and on a conflict merges the base in without committing, keeps the commits and lists the conflicting paths. Resolve it without asking, since a PR that opens conflicting is not shipped. Spawn one `general-purpose` agent for it rather than resolving yourself, because this skill runs on a small model and a merge needs judgment (where the harness has no subagent tool, resolve it yourself by the same reference). Give it the repo root, the base ref, the paths, and the absolute path of `references/resolve-conflicts.md` beside this file, and ask it to report `resolved` or the files it escalated.
+     On `resolved`, rerun `apply.py <plan> --from push`: it refuses while a conflict or marker remains, commits the merge with git's own message and pushes. Another exit 6 means the resolution is incomplete: send it back to the same agent once, then treat it as an escalation.
+     On an escalation, make sure the merge is aborted (`git merge --abort` when `git status` still shows it), then stop and list the files with the agent's reasons, since those are a new task. The commits stay on the branch, and `--from push` resumes once they are resolved.
    - `create-from-base` refused because the uncommitted changes differ on the base → nothing was committed: report it and stop. Re-asking with `Stacked` is a new gate, not a recovery.
 
 6. **Track** (only when the answer was `Track`, one call): `python3 ~/.claude/skills/deliver/scripts/track.py add <url> --agent <harness>`, where `<harness>` is `claude`, `pi` or `codex` for the harness you are running in. A tracking failure is reported, never retried, and never fails the ship.
 
 7. **Watch CI** (GitHub only, one call): `gh pr checks <url> --watch --fail-fast`. On a failure, name the failing check, pull its log with `gh run view <run-id> --log-failed | tail -n 80`, and report the cause. Skip on GitLab or when the repo has no checks.
 
-8. **Report**: the `Created:` or `Updated:` line, the commits made, the review line when one was requested (level and the number of `important` findings, the only severity that reaches this step, or `unavailable` with its reason), the tracking line when step 6 ran, and the CI result. Nothing else.
+8. **Report**: the `Created:` or `Updated:` line, the commits made, the `Synced:` line when the base was merged in (with the resolved files), the review line when one was requested (level and the number of `important` findings, the only severity that reaches this step, or `unavailable` with its reason), the tracking line when step 6 ran, and the CI result. Nothing else.
 
 ## Humanization (required)
 
