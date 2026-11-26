@@ -1,6 +1,6 @@
 ---
 name: product-lead
-description: Product Team guide and status board - explains the two-gate product pipeline, runs pt.py status over every initiative in the current repo, and tells you the exact next command to run.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team guide and status board - explains the two-gate product pipeline, runs pt.py status over every initiative in the current repo, and tells you the exact next command to run."
 argument-hint: "[initiative slug]"
 model: opus
 disable-model-invocation: true

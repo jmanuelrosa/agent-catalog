@@ -1,6 +1,6 @@
 ---
 name: feature-team
-description: Run a feature through the staff-engineer team - architect spec, plan approval, parallel dispatch to the installed seats, end-to-end verification, agent review rounds, integration report
+description: "[deprecated] Superseded by the work bundle (to-subtasks, to-build, to-review). Run a feature through the staff-engineer team - architect spec, plan approval, parallel dispatch to the installed seats, end-to-end verification, agent review rounds, integration report"
 disable-model-invocation: true
 ---
 Orchestrate the staff-engineer seats through a full feature pipeline.

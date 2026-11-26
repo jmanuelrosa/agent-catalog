@@ -1,6 +1,6 @@
 ---
 name: 8-living-spec
-description: "Product Team stage 8 - at ship time, merges the requirements whose tasks are all complete into docs/specs/{capability}/spec.md and appends the docs/LEARNINGS.md retrospective. Run it when work lands, not when the backlog is written."
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team stage 8 - at ship time, merges the requirements whose tasks are all complete into docs/specs/{capability}/spec.md and appends the docs/LEARNINGS.md retrospective. Run it when work lands, not when the backlog is written."
 argument-hint: "[initiative slug, if not inferable from the branch]"
 disable-model-invocation: true
 model: anthropic/claude-sonnet-5

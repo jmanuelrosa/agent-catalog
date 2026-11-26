@@ -1,6 +1,6 @@
 ---
 name: ac-writer
-description: Product Team acceptance-criteria seat - fills each story's Scenarios row with the PRD scenario ids that slice satisfies, and reports any slice needing a criterion no scenario covers. Use ONLY from /5-decompose with the PRD path and the story files; it never invents a requirement or a scenario.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team acceptance-criteria seat - fills each story's Scenarios row with the PRD scenario ids that slice satisfies, and reports any slice needing a criterion no scenario covers. Use ONLY from /5-decompose with the PRD path and the story files; it never invents a requirement or a scenario."
 tools: Read, Edit, Glob, Grep
 model: sonnet
 effort: high

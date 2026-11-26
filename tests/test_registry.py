@@ -167,7 +167,6 @@ def test_the_global_set_holds_exactly_the_documented_membership():
         "skill-writer",
         "teammate",
         "to-plan",
-        "to-rfc",
         "triage",
         "watch",
     }

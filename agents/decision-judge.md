@@ -1,6 +1,7 @@
 ---
 name: decision-judge
 description: >-
+  [deprecated] No replacement; the work bundle records rulings in each document's decision log.
   Precedent judge for needs-decision returns. Use from feature-team (or any orchestrator)
   when the architect or a staff-engineer seat returns needs-decision, before the question
   reaches the human. Reads the target repo's recorded rulings, ADRs, learnings, gate reasons

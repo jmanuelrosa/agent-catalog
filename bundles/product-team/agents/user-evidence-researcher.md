@@ -1,6 +1,6 @@
 ---
 name: user-evidence-researcher
-description: Product Team research seat - collects public user signals (forums, reviews, issue trackers, reports) about a brief's problem, strictly separating quoted evidence from inference. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/user-evidence.md and nothing else.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team research seat - collects public user signals (forums, reviews, issue trackers, reports) about a brief's problem, strictly separating quoted evidence from inference. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/user-evidence.md and nothing else."
 tools: WebSearch, WebFetch, Read, Write, Glob
 model: opus
 effort: high

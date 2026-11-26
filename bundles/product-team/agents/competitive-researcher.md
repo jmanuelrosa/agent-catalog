@@ -1,6 +1,6 @@
 ---
 name: competitive-researcher
-description: Product Team research seat - maps who solves a brief's problem today, how, and where the gaps are, from web evidence with cited URLs. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/competitive.md and nothing else.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team research seat - maps who solves a brief's problem today, how, and where the gaps are, from web evidence with cited URLs. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/competitive.md and nothing else."
 tools: WebSearch, WebFetch, Read, Write, Glob
 model: sonnet
 effort: high

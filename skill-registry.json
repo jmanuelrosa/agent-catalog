@@ -290,7 +290,14 @@
             "test-driven-development",
             "context-engineering"
           ],
-          "updated_at": "2026-10-05T18:49:02Z"
+          "updated_at": "2026-10-05T18:49:02Z",
+          "deprecated": {
+            "since": "2026-11-13",
+            "replaced_by": [
+              "to-specs"
+            ],
+            "reason": "Superseded by the work bundle"
+          }
         },
         {
           "upstream_path": "skills/test-driven-development",
@@ -357,7 +364,12 @@
             "prompt engineering",
             "claude"
           ],
-          "updated_at": "2026-09-23T18:45:17Z"
+          "updated_at": "2026-09-23T18:45:17Z",
+          "deprecated": {
+            "since": "2026-11-13",
+            "replaced_by": [],
+            "reason": "No replacement; the work directory keeps context on disk"
+          }
         }
       ]
     },
@@ -402,7 +414,14 @@
             "grilling",
             "domain-modeling"
           ],
-          "updated_at": "2026-09-23T18:45:32Z"
+          "updated_at": "2026-09-23T18:45:32Z",
+          "deprecated": {
+            "since": "2026-11-13",
+            "replaced_by": [
+              "to-rfc"
+            ],
+            "reason": "Superseded by to-rfc, which grills with domain-modeling"
+          }
         },
         {
           "upstream_path": "skills/productivity/grilling",
@@ -555,7 +574,12 @@
             "prompt engineering",
             "refactoring"
           ],
-          "updated_at": "2026-10-08T18:36:25Z"
+          "updated_at": "2026-10-08T18:36:25Z",
+          "deprecated": {
+            "since": "2026-11-13",
+            "replaced_by": [],
+            "reason": "Never used"
+          }
         }
       ]
     },
@@ -3288,26 +3312,16 @@
         "research",
         "grilling"
       ],
-      "note": "Locally authored; composes research and grilling into task plans"
-    },
-    {
-      "name": "to-rfc",
-      "global": true,
-      "groups": [
-        "engineering",
-        "architecture",
-        "documentation",
-        "writing",
-        "planning",
-        "workflow"
-      ],
-      "dependencies": [
-        "research",
-        "grilling",
-        "domain-modeling",
-        "unslop"
-      ],
-      "note": "Locally authored; composes research, grill-with-docs and unslop into a team RFC"
+      "note": "Locally authored; composes research and grilling into task plans",
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [
+          "to-research",
+          "to-specs",
+          "to-subtasks"
+        ],
+        "reason": "Superseded by the work bundle"
+      }
     },
     {
       "name": "ac",
@@ -3387,7 +3401,16 @@
         "workflow",
         "ai"
       ],
-      "note": "Locally authored"
+      "note": "Locally authored",
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [
+          "to-subtasks",
+          "to-build",
+          "to-review"
+        ],
+        "reason": "Superseded by the work bundle"
+      }
     },
     {
       "name": "triage",
@@ -3400,7 +3423,12 @@
       "note": "Locally authored; routes one incoming item to automate, spec, clarify or park",
       "dependencies": [
         "sentry"
-      ]
+      ],
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [],
+        "reason": "No replacement; start a ticket with lets-work"
+      }
     },
     {
       "name": "watch",
@@ -3414,7 +3442,12 @@
       "dependencies": [
         "triage",
         "sentry"
-      ]
+      ],
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [],
+        "reason": "No replacement; depends on triage, which is deprecated"
+      }
     },
     {
       "name": "sentry",

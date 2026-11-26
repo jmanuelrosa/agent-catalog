@@ -1,6 +1,6 @@
 ---
 name: market-sizer
-description: Product Team research seat - builds a rough, arithmetic-shown TAM/SAM or usage-based sizing for a brief, labeling every assumption. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/sizing.md and nothing else.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team research seat - builds a rough, arithmetic-shown TAM/SAM or usage-based sizing for a brief, labeling every assumption. Use ONLY from /1-research with a brief path and an output path; it writes 01-research/sizing.md and nothing else."
 tools: WebSearch, WebFetch, Read, Write, Glob
 model: sonnet
 effort: high
