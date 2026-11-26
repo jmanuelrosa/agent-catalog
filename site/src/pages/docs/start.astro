@@ -38,7 +38,7 @@ const globalCount = skills.filter((skill) => skill.global).length;
   <p>
     <code>kura config</code> chooses which harnesses get the global layer; drop <code>--harness pi</code> if you only use
     Claude Code. <code>kura sync</code> links the {globalCount} skills and the standalone agents that are useful in every
-    repository: triage, commit, pr, ship, review, the teammate skills, the architect and the
+    repository: triage, commit, pr, deliver, review, the teammate skills, the architect and the
     code-reviewer. <code>kura doctor</code> should come back clean.
   </p>
 
@@ -74,8 +74,8 @@ const globalCount = skills.filter((skill) => skill.global).length;
   <Terminal lines={[{ kind: 'agent', text: '/triage PROJ-123' }]} />
   <p>Triage reads the ticket and the code it touches, then says whether the work is ready to automate, needs a spec, needs a question answered, or should wait.</p>
   <h3>Ship a small change</h3>
-  <Terminal lines={[{ kind: 'agent', text: '/ship' }]} />
-  <p>After any change, <code>/ship</code> groups it into conventional commits and opens the pull request after one confirmation.</p>
+  <Terminal lines={[{ kind: 'agent', text: '/deliver' }]} />
+  <p>After any change, <code>/deliver</code> groups it into conventional commits and opens the pull request after one confirmation.</p>
 
   <h2>When something looks wrong</h2>
   <table>

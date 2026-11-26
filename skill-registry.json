@@ -13,7 +13,7 @@
             "frontend",
             "architecture"
           ],
-          "updated_at": "2026-11-03T09:35:13Z"
+          "updated_at": "2026-11-24T10:12:34Z"
         }
       ]
     },
@@ -133,7 +133,7 @@
             "ci",
             "workflow"
           ],
-          "updated_at": "2026-11-03T09:35:14Z"
+          "updated_at": "2026-11-24T10:12:36Z"
         },
         {
           "upstream_path": "skills/nx-cloud-api",
@@ -627,7 +627,7 @@
             "frontend",
             "graphql"
           ],
-          "updated_at": "2026-11-03T09:34:36Z"
+          "updated_at": "2026-11-24T10:12:00Z"
         },
         {
           "upstream_path": "skills/graphql-operations",
@@ -636,7 +636,7 @@
             "backend",
             "graphql"
           ],
-          "updated_at": "2026-11-03T09:34:36Z"
+          "updated_at": "2026-11-24T10:12:00Z"
         }
       ]
     },
@@ -701,22 +701,6 @@
             "testing"
           ],
           "updated_at": "2026-09-23T18:45:22Z"
-        }
-      ]
-    },
-    "brianlovin/agent-config": {
-      "branch": "main",
-      "commit": "1a9819ebf3fee811150fc76cbe177ea4e5f747ff",
-      "skills": [
-        {
-          "upstream_path": "skills/knip",
-          "groups": [
-            "engineering",
-            "backend",
-            "frontend",
-            "review"
-          ],
-          "updated_at": "2026-09-23T18:45:23Z"
         }
       ]
     },
@@ -978,9 +962,9 @@
         }
       ]
     },
-    "sickn33/antigravity-awesome-skills": {
+    "sickn33/agentic-awesome-skills": {
       "branch": "main",
-      "commit": "09e94102a5008d4d8066e14bdb8d0b95d365748c",
+      "commit": "444f05edf05566b0880ad34e8eba6e9034905483",
       "skills": [
         {
           "upstream_path": "skills/prisma-expert",
@@ -989,7 +973,7 @@
             "backend",
             "database"
           ],
-          "updated_at": "2026-09-23T18:46:11Z"
+          "updated_at": "2026-11-19T11:58:20Z"
         }
       ]
     },
@@ -1792,7 +1776,7 @@
             "gcp",
             "data"
           ],
-          "updated_at": "2026-10-28T07:33:16Z"
+          "updated_at": "2026-11-24T10:12:28Z"
         },
         {
           "upstream_path": "skills/cloud/detection-engineering-coverage-evaluation",
@@ -2455,7 +2439,7 @@
             "infrastructure",
             "gcp"
           ],
-          "updated_at": "2026-10-28T07:33:16Z"
+          "updated_at": "2026-11-24T10:12:28Z"
         },
         {
           "upstream_path": "skills/cloud/google-cloud-global-frontend-configuration",
@@ -3267,11 +3251,11 @@
       ],
       "note": "Locally authored",
       "dependencies": [
-        "ship"
+        "deliver"
       ]
     },
     {
-      "name": "ship",
+      "name": "deliver",
       "global": true,
       "groups": [
         "productivity",

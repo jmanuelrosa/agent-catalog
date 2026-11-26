@@ -32,6 +32,7 @@ EXIT_NO_BRANCH = 6
 
 RUN_TIMEOUT = 60
 DIFF_FILE_CAP = int(os.environ.get("PR_DIFF_FILE_CAP") or 250)
+DIFF_BYTE_CAP = int(os.environ.get("PR_DIFF_BYTE_CAP") or 24000)
 
 # Noisy paths excluded from the drafting view only; they still appear in the
 # stat section. The single-star form is deliberate: git's default pathspec
@@ -327,19 +328,27 @@ def derive_title(branch, files):
     return derived
 
 
-def cap_per_file(diff, cap):
-    lines, count = [], 0
-    for line in diff.splitlines():
-        if line.startswith("diff --git "):
-            count = 0
-            lines.append(line)
-            continue
-        count += 1
-        if count <= cap:
-            lines.append(line)
-        elif count == cap + 1:
-            lines.append(f"... [capped at {cap} lines; run git diff -- <path> for the rest]")
-    return "\n".join(lines)
+def cap_file(section, cap):
+    head, _, rest = section.partition("\n")
+    body = rest.splitlines()
+    if len(body) <= cap:
+        return section
+    kept = body[:cap]
+    return "\n".join([head, *kept, f"... [capped at {cap} lines; run git diff -- <path> for the rest]"]) + "\n"
+
+
+def cap_per_file(diff, cap, budget):
+    sections = [s for s in re.split(r"(?=^diff --git )", diff, flags=re.MULTILINE) if s]
+    out, used = [], 0
+    for index, section in enumerate(sections):
+        capped = cap_file(section, cap)
+        if out and used + len(capped) > budget:
+            left = sum(1 for s in sections[index:] if s.startswith("diff --git "))
+            out.append(f"... [{left} more files omitted, diff reached {budget} bytes; run git diff -- <path> for each]\n")
+            break
+        out.append(capped)
+        used += len(capped)
+    return "".join(out)
 
 
 def emit(key, value):
@@ -437,7 +446,7 @@ def main():
 
     print("\n== diff (noisy paths excluded, capped per file) ==")
     diff = git("diff", f"{base_ref}...HEAD", "--", ".", *EXCLUDES, strip=False)
-    print(cap_per_file(diff, DIFF_FILE_CAP))
+    print(cap_per_file(diff, DIFF_FILE_CAP, DIFF_BYTE_CAP))
 
     return EXIT_OK
 

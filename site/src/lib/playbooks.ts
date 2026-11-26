@@ -61,7 +61,7 @@ export const playbooks: Playbook[] = [
       { actor: 'You', kind: 'human', does: 'Approve the spec. Nothing is built before this gate.' },
       { actor: 'backend, database and frontend seats', kind: 'agent', does: 'Build their slices in parallel, each in its own git worktree, each checked against its failure-modes list.' },
       { actor: 'code-reviewer', kind: 'agent', does: 'Two read-only review rounds: the first returns fix briefs, the second only reports.' },
-      { actor: 'ship', kind: 'skill', does: 'You run it: conventional commits and a PR description after one confirmation.' },
+      { actor: 'deliver', kind: 'skill', does: 'You run it: conventional commits and a PR description after one confirmation.' },
     ],
     outcome:
       'A reviewed PR built from an approved spec, plus an integration report that lists what each seat did and every decision it escalated.',

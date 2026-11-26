@@ -13,10 +13,9 @@ It is the catalog [kura](https://github.com/jmanuelrosa/kura) projects into each
 | `skill-registry.json`, `agent-registry.json`, `bundle-registry.json` | What each artifact is, where it comes from, its groups and dependencies |
 | `lib/python/dotkit/` | The output module the catalog's own scripts print through, vendored from [dotkit](https://github.com/jmanuelrosa/dotkit) and pinned in `dotkit.json` |
 | `licenses.json`, `LICENSES/` | The license of every third-party source, and its text |
-| `docs/` | How the registries, seat bundles and the product-team pipeline work |
 
 The registries' `upstream` entries are skills copied from other repositories at a pinned commit, and `local` entries are written here.
-The layout is the contract kura reads, described in [docs/skill-registry.md](docs/skill-registry.md).
+The layout is the contract kura reads, described in [skills/agent-writer/references/skill-registry.md](skills/agent-writer/references/skill-registry.md).
 
 ## Using it
 
@@ -38,6 +37,10 @@ Without kura, any skill directory works on its own: copy or link `skills/<name>/
 | `make attribution` | Rewrite the third-party table below after the registry changes |
 | `make test` | Every python suite, plus the catalog's own consistency checks |
 | `make lint` | markdownlint, ruff and shellcheck over the files written here, never upstream copies |
+| `make prepush` | Run tests and lint, matching CI's test and lint gates; no security scans |
+| `make hooks` | Activate the tracked Git hooks for this clone (safe to rerun) |
+
+Run `make hooks` once per clone to activate `.githooks/pre-push`; it runs `make prepush` and blocks the push if either gate fails.
 
 A new upstream source also needs an entry in `licenses.json`, and its license text in `LICENSES/` when it has one; `make test` fails until both exist.
 
@@ -99,7 +102,6 @@ Each skill below is copied from its source at the commit the link points to.
 | [`launch-with-aws`](https://github.com/aws/agent-toolkit-for-aws/tree/b08b99f38098c30c0ee1a781accd8e349e5b145c/skills/core-skills/launch-with-aws) | [aws/agent-toolkit-for-aws](https://github.com/aws/agent-toolkit-for-aws) | [Apache-2.0](LICENSES/aws-agent-toolkit-for-aws.txt), [NOTICE](LICENSES/aws-agent-toolkit-for-aws.NOTICE.txt) |
 | [`signing-in-to-aws`](https://github.com/aws/agent-toolkit-for-aws/tree/b08b99f38098c30c0ee1a781accd8e349e5b145c/skills/core-skills/signing-in-to-aws) | [aws/agent-toolkit-for-aws](https://github.com/aws/agent-toolkit-for-aws) | [Apache-2.0](LICENSES/aws-agent-toolkit-for-aws.txt), [NOTICE](LICENSES/aws-agent-toolkit-for-aws.NOTICE.txt) |
 | [`humanizer`](https://github.com/blader/humanizer/tree/0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0) | [blader/humanizer](https://github.com/blader/humanizer) | [MIT](LICENSES/blader-humanizer.txt) |
-| [`knip`](https://github.com/brianlovin/agent-config/tree/1a9819ebf3fee811150fc76cbe177ea4e5f747ff/skills/knip) | [brianlovin/agent-config](https://github.com/brianlovin/agent-config) | No license |
 | [`ai-seo`](https://github.com/coreyhaines31/marketingskills/tree/28e4a81a3464475cbccc3c2bbcfe414bcabae32b/skills/ai-seo) | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | [MIT](LICENSES/coreyhaines31-marketingskills.txt) |
 | [`copywriting`](https://github.com/coreyhaines31/marketingskills/tree/28e4a81a3464475cbccc3c2bbcfe414bcabae32b/skills/copywriting) | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | [MIT](LICENSES/coreyhaines31-marketingskills.txt) |
 | [`cro`](https://github.com/coreyhaines31/marketingskills/tree/28e4a81a3464475cbccc3c2bbcfe414bcabae32b/skills/cro) | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | [MIT](LICENSES/coreyhaines31-marketingskills.txt) |
@@ -322,7 +324,7 @@ Each skill below is copied from its source at the commit the link points to.
 | [`rsbuild-best-practices`](https://github.com/rstackjs/agent-skills/tree/2ee8100ab8efb6d6c3c4c6d901fcb665b10163fc/skills/rsbuild-best-practices) | [rstackjs/agent-skills](https://github.com/rstackjs/agent-skills) | [MIT](LICENSES/rstackjs-agent-skills.txt) |
 | [`rsdoctor-analysis`](https://github.com/rstackjs/agent-skills/tree/2ee8100ab8efb6d6c3c4c6d901fcb665b10163fc/skills/rsdoctor-analysis) | [rstackjs/agent-skills](https://github.com/rstackjs/agent-skills) | [MIT](LICENSES/rstackjs-agent-skills.txt) |
 | [`rspack-best-practices`](https://github.com/rstackjs/agent-skills/tree/2ee8100ab8efb6d6c3c4c6d901fcb665b10163fc/skills/rspack-best-practices) | [rstackjs/agent-skills](https://github.com/rstackjs/agent-skills) | [MIT](LICENSES/rstackjs-agent-skills.txt) |
-| [`prisma-expert`](https://github.com/sickn33/antigravity-awesome-skills/tree/09e94102a5008d4d8066e14bdb8d0b95d365748c/skills/prisma-expert) | [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) | [MIT](LICENSES/sickn33-antigravity-awesome-skills.txt) |
+| [`prisma-expert`](https://github.com/sickn33/agentic-awesome-skills/tree/444f05edf05566b0880ad34e8eba6e9034905483/skills/prisma-expert) | [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | [MIT](LICENSES/sickn33-antigravity-awesome-skills.txt) |
 | [`spacelift`](https://github.com/spacelift-io/claude-plugins/tree/302d0fd67dff9d7ebef2b6839984bed9235fe706/plugins/spacelift/skills/spacelift) | [spacelift-io/claude-plugins](https://github.com/spacelift-io/claude-plugins) | [MIT](LICENSES/spacelift-io-claude-plugins.txt) |
 | [`vercel-composition-patterns`](https://github.com/vercel-labs/agent-skills/tree/063bee94c3f4df8453406c830b0a7df0f2860278/skills/composition-patterns) | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | MIT |
 | [`vercel-react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/063bee94c3f4df8453406c830b0a7df0f2860278/skills/react-best-practices) | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | MIT |
@@ -335,10 +337,9 @@ Each skill below is copied from its source at the commit the link points to.
 Notes on individual sources:
 
 - [astrolicious/agent-skills](https://github.com/astrolicious/agent-skills): MIT per the skill frontmatter only; no license file upstream.
-- [brianlovin/agent-config](https://github.com/brianlovin/agent-config): No license upstream; all rights reserved. Included with attribution.
 - [kadajett/agent-nestjs-skills](https://github.com/kadajett/agent-nestjs-skills): MIT per the skill frontmatter only; no license file upstream.
 - [module-federation/agent-skills](https://github.com/module-federation/agent-skills): No license upstream; all rights reserved. Included with attribution.
-- [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills): MIT collection; the skill is marked `source: community`, original author unknown.
+- [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills): MIT collection; the skill is marked `source: community`, original author unknown.
 - [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills): MIT per the repository README and skill frontmatter; no license file upstream.
 
 Written here, but distilled from third-party material, so they carry its license:

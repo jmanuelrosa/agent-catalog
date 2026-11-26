@@ -407,44 +407,6 @@
         "f40ded704115eaca3e693a269fe79335_0"
       ]
     },
-    "skills/dbt-sf-to-bq-translator/scripts/dbt_translator.py": {
-      "sha256": "adde94becd3057cf25e93a8e7f597044bad3fa1593bc5fc680300ddae930de61",
-      "fingerprints": [
-        "517d2e1cf035a7c3167b22269702f948_0",
-        "517d2e1cf035a7c3167b22269702f948_1",
-        "517d2e1cf035a7c3167b22269702f948_10",
-        "517d2e1cf035a7c3167b22269702f948_11",
-        "517d2e1cf035a7c3167b22269702f948_12",
-        "517d2e1cf035a7c3167b22269702f948_13",
-        "517d2e1cf035a7c3167b22269702f948_14",
-        "517d2e1cf035a7c3167b22269702f948_15",
-        "517d2e1cf035a7c3167b22269702f948_16",
-        "517d2e1cf035a7c3167b22269702f948_17",
-        "517d2e1cf035a7c3167b22269702f948_18",
-        "517d2e1cf035a7c3167b22269702f948_19",
-        "517d2e1cf035a7c3167b22269702f948_2",
-        "517d2e1cf035a7c3167b22269702f948_20",
-        "517d2e1cf035a7c3167b22269702f948_21",
-        "517d2e1cf035a7c3167b22269702f948_22",
-        "517d2e1cf035a7c3167b22269702f948_23",
-        "517d2e1cf035a7c3167b22269702f948_24",
-        "517d2e1cf035a7c3167b22269702f948_25",
-        "517d2e1cf035a7c3167b22269702f948_3",
-        "517d2e1cf035a7c3167b22269702f948_4",
-        "517d2e1cf035a7c3167b22269702f948_5",
-        "517d2e1cf035a7c3167b22269702f948_6",
-        "517d2e1cf035a7c3167b22269702f948_7",
-        "517d2e1cf035a7c3167b22269702f948_8",
-        "517d2e1cf035a7c3167b22269702f948_9",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_0",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_1",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_2",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_3",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_4",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_5",
-        "8ec54bcbb1d9eb00564bc19a4f10d2c8_6"
-      ]
-    },
     "skills/diagram/scripts/diagrams.py": {
       "sha256": "30e38bfe093b42f2fe82f89ad94ccae60bead5a0f23f3d3db5265e6b419b948f",
       "fingerprints": [
@@ -479,14 +441,8 @@
         "cf0deffefe50bdba3a40f3f01cbf0ff2_0"
       ]
     },
-    "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py": {
-      "sha256": "5443690aecb0a0db5095e0ca6f9f178108f981d9a00356dfb030b5c54064df99",
-      "fingerprints": [
-        "0f196906dfe04a86790aeb7de66b0236_0"
-      ]
-    },
     "skills/google-cloud-filestore-nfs-browser/scripts/jump_host_engine.py": {
-      "sha256": "07133f21072c1a4ded866eea96deb76601b4c8bf2f147fc15147d239773112dc",
+      "sha256": "515ea1a6dbc4981a4c2e45af8eb8db4bea852af4a99a24be8ad360cee0ac89ef",
       "fingerprints": [
         "325a43bed0610030e6c9570de8779b8e_0"
       ]
@@ -584,23 +540,23 @@
       ]
     },
     "skills/pr/scripts/context.py": {
-      "sha256": "0cb9b862b4555e9a957c27f94e725641241bb3c3dad5e42414789c23515447ad",
+      "sha256": "845ed7a4ce08cb9fa88178f34d2f3f3e9a20ed55c98eaf99cd8b49500b82e156",
       "fingerprints": [
         "82032e23f4e5a01b9a78e3bd31ac4243_0"
       ]
     },
-    "skills/ship/scripts/apply.py": {
-      "sha256": "7ebbc74aed994bc33819918cf48bd2a5eb05b997b1d74632b87df0637ad6f57f",
+    "skills/deliver/scripts/apply.py": {
+      "sha256": "acfc6f96a11d5294ae21ddd5df0142111d92386b70892cff914c5b1ef842528a",
       "fingerprints": [
-        "5103b4dbce032e25accbb8dda8230a74_0",
-        "5103b4dbce032e25accbb8dda8230a74_1",
-        "c667f31aa0c42305c09e455d5e9e3a96_0"
+        "1ddfdb4db580d35706ebe216c5fdd304_0",
+        "95840599cda725fe8569668bbe9534ec_0",
+        "95840599cda725fe8569668bbe9534ec_1"
       ]
     },
-    "skills/ship/scripts/context.py": {
-      "sha256": "1738f2b11727b77da50a0b22a2fbd3a2b537c59bd64cb7b3bb721fefadb088b7",
+    "skills/deliver/scripts/context.py": {
+      "sha256": "fa7f64e1675706448c33364cd410e0741b1216d44dc1daf3ce6b9694f1fdeb7d",
       "fingerprints": [
-        "b1bc22adfa0442d68d86efd03b2caf60_0"
+        "38e081ddef162c752b601a7feeec9703_0"
       ]
     },
     "skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py": {
@@ -613,6 +569,14 @@
       "sha256": "7d9c33de1146a274f6ca45790a25f4421ea697893e18a0a6b2ccfb401e245891",
       "fingerprints": [
         "be774e7e8c8f119b489b57cb0f872e4b_0"
+      ]
+    },
+    "skills/google-cloud-filestore-nfs-browser/scripts/bridge_server/main.py": {
+      "sha256": "0bbfb9175fbe49036b614820e5e86750cf9cacebf22ae673d8c69fcb307f7efa",
+      "fingerprints": [
+        "0f196906dfe04a86790aeb7de66b0236_0",
+        "0f196906dfe04a86790aeb7de66b0236_1",
+        "0f196906dfe04a86790aeb7de66b0236_2"
       ]
     }
   }

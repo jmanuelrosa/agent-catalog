@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
-"""apply.py - branch, commit, push and open the PR/MR for the /ship skill.
+"""apply.py - branch, commit, push and open the PR/MR for the /deliver skill.
 
 Reads the approved plan and runs the whole outward sequence in one Bash
 round-trip, so nothing after the confirmation gate waits on a human:
 
     {"branch": {"action": "keep", "name": "fix/gh-4-banner"},
      "commits": [{"files": ["src/a.ts"], "message": "fix(x): subject\\n\\n- why"}],
-     "pr": {"base": "main", "body_file": "/tmp/claude/ship-body-x.md",
+     "pr": {"base": "main", "body_file": "/tmp/claude/deliver-body-x.md",
             "repo": "gitlab.com-work/group/project"}}
 
 `branch.action` is `keep` (ship from the current branch), `create` (new branch
 at HEAD, carrying any commits already on it), `create-from-base` (new branch off
 the remote base, carrying only the working tree and leaving the existing
-commits behind) or `rename` (a nonstandard current branch). `commits` may be
+commits behind) or `rename` (a nonstandard current branch). A PR's base is the
+branch it forks from: `create` needs `pr.base` to be the current branch, which
+on a feature branch makes the new PR a stack on it. `commits` may be
 empty when the branch already holds the work. `pr.repo` is GitLab only and pins
 the account when one server backs several. File paths are relative to the
 repository root.
 
 `--from push` resumes after the commits landed; `--from pr` resumes after a
-push the caller ran by hand. Every check runs up front, before the first
+push the caller ran by hand. Before pushing, a branch that conflicts with the
+base gets the base merged in without a commit and the run exits with
+EXIT_CONFLICT, leaving the conflicts in the tree for the caller to resolve and
+`git add`; `--from push` then refuses while any conflict or marker remains,
+commits the merge with git's own message, and pushes. Every check runs up front, before the first
 mutation, and the run stops on the first failure.
 
 The git-skill-gate hook sees this command, not what it spawns, so it gates the
@@ -47,6 +53,7 @@ EXIT_BLOCKED = 2
 EXIT_COMMIT_FAILED = 3
 EXIT_PUSH_FAILED = 4
 EXIT_CREATE_FAILED = 5
+EXIT_CONFLICT = 6
 
 HEADER_MAX = 100
 BRANCH_ACTIONS = ("keep", "create", "create-from-base", "rename")
@@ -56,6 +63,7 @@ ATTRIBUTION_RE = re.compile(r"(?i)co-authored-by:.*claude|generated with.*\bclau
 # Built from codepoints so the em-dash-gate hook never trips on this file itself.
 DASH_RE = re.compile(f"[{chr(0x2014)}{chr(0x2013)}]")
 TASKS_PATH_RE = re.compile(r"(^|/)\.claude/tasks/")
+ADDED_MARKER_RE = re.compile(r"^\+(<{7}|>{7}|\|{7})( |$)")
 SECRET_BASENAME_GLOBS = (".env", ".env.*", "*.pem", "*-key.json", "credentials*")
 # `.env.*` also matches the sample files a repo deliberately tracks, and the committed,
 # non-secret env files test and local scripts load through `--env-file`.
@@ -64,7 +72,7 @@ SECRET_EXEMPT_SUFFIXES = (".example", ".sample", ".template", ".dist", ".env.tes
 
 def load_context():
     path = Path(__file__).with_name("context.py")
-    spec = importlib.util.spec_from_file_location("ship_context_for_apply", path)
+    spec = importlib.util.spec_from_file_location("deliver_context_for_apply", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -133,13 +141,21 @@ def branch_exists(name):
     return git("rev-parse", "--verify", "--quiet", f"refs/heads/{name}").returncode == 0
 
 
-def validate_branch_plan(branch, base):
+def validate_branch_plan(branch, base, pull_request=None):
     action, name = branch.get("action"), branch.get("name") or ""
     if action not in BRANCH_ACTIONS:
         fail(f"branch.action must be one of {', '.join(BRANCH_ACTIONS)}", EXIT_USAGE)
     current = git("branch", "--show-current").stdout.strip()
     if not current:
         fail("detached HEAD, no branch to ship from", EXIT_BLOCKED)
+    if action == "create" and base != current:
+        # HEAD carries every commit of the current branch, so a PR against any other
+        # base repeats them and conflicts once the current branch is squash-merged.
+        fail(
+            f"create forks from {current!r}, so the PR stacks on it: set pr.base to {current!r}, "
+            "or use create-from-base for work independent of it",
+            EXIT_BLOCKED,
+        )
     if action == "keep":
         if name and name != current:
             fail(f"plan keeps branch {name!r} but the current branch is {current!r}", EXIT_BLOCKED)
@@ -154,6 +170,14 @@ def validate_branch_plan(branch, base):
             "with the Conventional Branch types",
             EXIT_BLOCKED,
         )
+    if action == "keep" and pull_request:
+        merged = pull_request(name)
+        if merged and merged["state"] == "merged":
+            fail(
+                f"the PR for {name!r} is already merged ({merged['url']}); its commits sit on the "
+                "base, so reshipping them conflicts: use create-from-base",
+                EXIT_BLOCKED,
+            )
     return action, name
 
 
@@ -168,8 +192,64 @@ def switch_branch(action, name, base_ref):
         argv = ["branch", "-m", name]
     result = git(*argv)
     if result.returncode != 0:
-        fail(f"git {' '.join(argv)} failed, nothing was committed:\n{result.stderr}", EXIT_BLOCKED)
+        hint = ""
+        if action == "create-from-base":
+            hint = (
+                f"\n  The uncommitted changes touch files that differ on {base_ref}. Ship them as a stack"
+                "\n  on the current branch instead, or move them onto the base yourself first."
+            )
+        fail(f"git {' '.join(argv)} failed, nothing was committed:\n{result.stderr}{hint}", EXIT_BLOCKED)
     print(f"Branch: {name}")
+
+
+def conflicts_with(base_ref):
+    """Paths HEAD conflicts on when merged into `base_ref`, or None when git cannot tell."""
+    proc = git("merge-tree", "--write-tree", "--name-only", "--no-messages", base_ref, "HEAD")
+    if proc.returncode == 0:
+        return []
+    if proc.returncode != 1:
+        return None
+    return sorted({line for line in proc.stdout.splitlines()[1:] if line.strip()})
+
+
+def merge_in_progress():
+    return git("rev-parse", "-q", "--verify", "MERGE_HEAD").returncode == 0
+
+
+def start_merge(base_ref):
+    """Merge `base_ref` without committing, leaving its conflicts in the tree; False when git refused."""
+    git("merge", "--no-commit", "--no-ff", base_ref)
+    return merge_in_progress()
+
+
+def staged_markers():
+    """Files whose staged content adds a conflict marker the resolution left behind."""
+    diff = git("diff", "--cached", "-U0", "--no-color", "--no-ext-diff").stdout
+    found, path = set(), None
+    for line in diff.splitlines():
+        if line.startswith("+++ "):
+            path = line[len("+++ b/"):] if line.startswith("+++ b/") else None
+        elif path and ADDED_MARKER_RE.match(line):
+            found.add(path)
+    return sorted(found)
+
+
+def finish_merge():
+    unresolved = [path for path in git("diff", "--name-only", "--diff-filter=U", "-z").stdout.split("\0") if path]
+    leftover = staged_markers()
+    if unresolved or leftover:
+        fail(
+            "the merge with the base is not resolved yet:\n"
+            + "".join(f"    {path} (conflicted)\n" for path in unresolved)
+            + "".join(f"    {path} (conflict markers)\n" for path in leftover)
+            + "  Resolve and git add them, then rerun with --from push, or give up with git merge --abort.",
+            EXIT_CONFLICT,
+        )
+    committed = git("commit", "--no-edit")
+    if committed.returncode != 0:
+        fail(f"the merge commit failed, the resolution stays staged:\n{committed.stdout}{committed.stderr}",
+             EXIT_COMMIT_FAILED)
+    print(f"Synced: {git('log', '-1', '--format=%s').stdout.strip()}")
 
 
 def unplanned(staged, files):
@@ -183,9 +263,25 @@ def unplanned(staged, files):
     ]
 
 
+def stage(files):
+    """git add cannot name a path that is gone from the worktree, so a deletion goes through git rm --cached."""
+    present = [f for f in files if os.path.lexists(f)]
+    gone = [f for f in files if not os.path.lexists(f)]
+    added = git("add", "--", *present) if present else None
+    if added is not None and added.returncode != 0:
+        return added
+    for path in gone:
+        if git("cat-file", "-e", f"HEAD:{path}").returncode != 0:
+            return git("add", "--", path)
+        removed = git("rm", "--cached", "-q", "--ignore-unmatch", "--", path)
+        if removed.returncode != 0:
+            return removed
+    return added or git("status", "--porcelain")
+
+
 def commit_all(commits):
     for i, commit in enumerate(commits, 1):
-        added = git("add", "--", *commit["files"])
+        added = stage(commit["files"])
         if added.returncode != 0:
             fail(f"commit {i}: git add failed:\n{added.stderr}", EXIT_COMMIT_FAILED)
         staged = git("diff", "--cached", "--name-only").stdout.split("\n")
@@ -219,30 +315,12 @@ def changed_files(base_ref, *flags):
     return [path for path in proc.stdout.split("\0") if path] if proc.returncode == 0 else []
 
 
-def remote_host():
-    url = git("remote", "get-url", "origin").stdout.strip()
-    if "://" in url:
-        return url.split("://", 1)[1].partition("/")[0].rpartition("@")[2].partition(":")[0]
-    return url.partition(":")[0].rpartition("@")[2]
-
-
 def push_argv(host, branch):
-    """The push, with GitHub forced onto HTTPS and the gh credential helper.
-
-    This machine rewrites GitHub remotes to SSH globally and no session here can
-    read ~/.ssh, so the rewrite is flipped back for the push only, and the helper
-    chain is reset first so nothing is left in .git/config or ~/.gitconfig.
-    """
+    """The push, with GitHub forced onto HTTPS and the gh credential helper."""
     if host != "gh":
         return ["git", "push", "-u", "origin", branch]
-    name = remote_host()
-    return [
-        "git",
-        "-c", f"url.https://{name}/.pushInsteadOf=git@{name}:",
-        "-c", "credential.helper=",
-        "-c", "credential.helper=!gh auth git-credential",
-        "push", "-u", "origin", branch,
-    ]
+    remote = git("remote", "get-url", "origin").stdout.strip()
+    return ["git", *CONTEXT.github_https(remote, "pushInsteadOf"), "push", "-u", "origin", branch]
 
 
 def existing_pr(host, branch, repo):
@@ -357,9 +435,12 @@ def main():
     check_text("body", body)
 
     commits = plan.get("commits") or []
+    if args.stage == "commit" and merge_in_progress():
+        fail("a merge is in progress: resolve it and rerun with --from push, or git merge --abort", EXIT_BLOCKED)
     if args.stage == "commit":
         validate_commits(commits)
-        action, branch = validate_branch_plan(plan["branch"], base)
+        action, branch = validate_branch_plan(
+            plan["branch"], base, lambda name: CONTEXT.branch_pr(host, name, repo))
         switch_branch(action, branch, base_ref)
         commit_all(commits)
     else:
@@ -377,6 +458,26 @@ def main():
     body = with_closes(body, derived["closes"])
 
     if args.stage != "pr":
+        if merge_in_progress():
+            finish_merge()
+        conflicts = conflicts_with(base_ref)
+        if conflicts is None:
+            print(f"Conflict check skipped: git merge-tree could not compare with {base_ref}")
+        elif conflicts:
+            listing = "".join(f"    {path}\n" for path in conflicts)
+            if not start_merge(base_ref):
+                fail(
+                    f"{branch} conflicts with {base_ref} in:\n{listing}"
+                    f"  git refused to start the merge, likely uncommitted changes in the way. The commits\n"
+                    f"  are kept: merge {base_ref} in by hand and resolve it, then rerun with --from push.",
+                    EXIT_BLOCKED,
+                )
+            fail(
+                f"{branch} conflicts with {base_ref}. The commits are kept and {base_ref} is merged in,\n"
+                f"  uncommitted, with conflicts in:\n{listing}"
+                "  Resolve and git add them, then rerun with --from push, or give up with git merge --abort.",
+                EXIT_CONFLICT,
+            )
         push = push_argv(host, branch)
         pushed = run(push)
         if pushed.returncode != 0:

@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""context.py - one-shot repository context for the /ship skill.
+"""context.py - one-shot repository context for the /deliver skill.
 
 Prints everything the drafting steps need in a single Bash round-trip: host,
-base and current branch, the commits already on the branch (split into pushed
-and not yet pushed), the working tree (status, stats, filtered diffs, untracked
+base (fetched first) and current branch, the PR/MR the branch already has, the
+commits already on the branch (split into pushed and not yet pushed), the working tree (status, stats, filtered diffs, untracked
 previews), the resolved GitLab account, and the PR/MR template.
 
-Self-contained on purpose: /ship is the trial replacement for /commit and /pr,
+Self-contained on purpose: /deliver is the trial replacement for /commit and /pr,
 so it shares no code with them and survives their removal. apply.py imports the
 pure derivation functions from here by path.
 """
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -28,8 +29,8 @@ EXIT_NO_BASE = 5
 EXIT_NO_BRANCH = 6
 
 RUN_TIMEOUT = 60
-DIFF_FILE_CAP = int(os.environ.get("SHIP_DIFF_FILE_CAP") or 250)
-UNTRACKED_CAP = int(os.environ.get("SHIP_UNTRACKED_CAP") or 80)
+DIFF_FILE_CAP = int(os.environ.get("DELIVER_DIFF_FILE_CAP") or 250)
+UNTRACKED_CAP = int(os.environ.get("DELIVER_UNTRACKED_CAP") or 80)
 RECENT_SUBJECTS = 10
 
 # Noisy paths excluded from the drafting view only; they still appear in the
@@ -150,6 +151,61 @@ def resolve_ref(base):
 
 def upstream():
     return git("rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+
+
+def github_https(remote, key):
+    """`-c` options that route a GitHub remote over HTTPS with the gh credential helper.
+
+    This machine rewrites GitHub remotes to SSH globally and no session here can
+    read ~/.ssh, so the rewrite is flipped back for one command only, and the
+    helper chain is reset first so nothing is left in .git/config or ~/.gitconfig.
+    """
+    name, _ = parse_remote(remote)
+    return [
+        "-c", f"url.https://{name}/.{key}=git@{name}:",
+        "-c", "credential.helper=",
+        "-c", "credential.helper=!gh auth git-credential",
+    ]
+
+
+def fetch(host, remote, refs):
+    """Refresh the remote copies of `refs`; the base moves under a long session."""
+    options = github_https(remote, "insteadOf") if host == "gh" else []
+    proc = run(["git", *options, "fetch", "--quiet", "--no-tags", "origin", *refs])
+    if proc.returncode == 0:
+        return "yes"
+    reason = (proc.stderr.strip().splitlines() or ["fetch failed"])[-1]
+    return f"stale ({reason})"
+
+
+PR_STATES = {"open": "open", "opened": "open", "merged": "merged", "closed": "closed", "locked": "closed"}
+
+
+def branch_pr(host, branch, repo=""):
+    """The newest PR/MR whose head is `branch`, in any state, or None.
+
+    A merged PR means the branch's commits already reached the base, squashed or
+    not, so anything shipped from it again conflicts with that copy.
+    """
+    if host == "gh":
+        argv = ["gh", "pr", "list", "--head", branch, "--state", "all", "--limit", "1",
+                "--json", "url,state,baseRefName"]
+        keys = ("url", "state", "baseRefName")
+    else:
+        argv = ["glab", "mr", "list", "--source-branch", branch, "--all", "-F", "json",
+                *(["-R", repo] if repo else [])]
+        keys = ("web_url", "state", "target_branch")
+    proc = run(argv)
+    if proc.returncode != 0:
+        return None
+    try:
+        found = json.loads(proc.stdout or "[]")
+    except ValueError:
+        return None
+    if not found or not isinstance(found, list):
+        return None
+    url, state, base = (found[0].get(key) or "" for key in keys)
+    return {"url": url, "state": PR_STATES.get(state.lower(), state.lower()), "base": base}
 
 
 def glab_accounts():
@@ -380,14 +436,20 @@ def main():
     if not branch:
         fail("detached HEAD, no branch to ship from", EXIT_NO_BRANCH)
 
-    base = args.base or default_branch(host)
+    default = default_branch(host)
+    pull_request = branch_pr(host, branch) if branch != default else None
+    stacked_base = pull_request["base"] if pull_request and pull_request["state"] == "open" else ""
+    base = args.base or (stacked_base if stacked_base and stacked_base != default else default)
     if not base:
         fail("could not determine the default branch", EXIT_NO_BASE)
+
+    tracking = upstream()
+    refs = [base] + ([tracking.removeprefix("origin/")] if tracking.startswith("origin/") else [])
+    freshness = fetch(host, remote, refs)
     base_ref = resolve_ref(base)
     if not base_ref:
         fail(f"base branch {base} resolves to nothing locally, fetch it first", EXIT_NO_BASE)
 
-    tracking = upstream()
     unpushed_range = [f"{base_ref}..HEAD"] + ([f"^{tracking}"] if tracking else [])
     unpushed = git("log", *unpushed_range, "--pretty=%h %s")
     pushed = git("log", f"{base_ref}..{tracking}", "--pretty=%h %s") if tracking else ""
@@ -400,12 +462,19 @@ def main():
     emit("HOST", host)
     emit("BASE", base)
     emit("BASE_REF", base_ref)
+    emit("BASE_FRESH", freshness)
+    emit("DEFAULT_BRANCH", default or "<unknown>")
     emit("BRANCH", branch)
-    emit("BRANCH_CONVENTION", branch_convention(branch, base))
+    emit("BRANCH_CONVENTION", branch_convention(branch, default or base))
     emit("UPSTREAM", tracking or "<none>")
     emit("WORKTREE", "dirty" if status else "clean")
     emit("UNPUSHED_COMMITS", len(unpushed.splitlines()))
     emit("PUSHED_COMMITS", len(pushed.splitlines()))
+    emit("BRANCH_PR", pull_request["url"] if pull_request else "<none>")
+    emit("BRANCH_PR_STATE", pull_request["state"] if pull_request else "none")
+    emit("BRANCH_PR_BASE", pull_request["base"] if pull_request else "<none>")
+    shipped = pushed or (pull_request and pull_request["state"] in ("open", "merged"))
+    emit("STACK_CANDIDATE", branch if branch != default and shipped else "<none>")
     emit("TITLE", derived["title"])
     emit("TICKET", derived["ticket"])
     emit("TICKET_KIND", derived["ticket_kind"])

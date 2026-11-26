@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""track.py - push-and-forget tracking of open PRs/MRs for the ship and pr skills.
+"""track.py - push-and-forget tracking of open PRs/MRs for the deliver and pr skills.
 
 Polls GitHub and GitLab with plain gh/glab calls, compares each PR with the
 last snapshot it saw, and turns only real changes into events. A model is
@@ -75,7 +75,7 @@ CLAUDE_TOOLS = (
     "Read,Edit,Write,Glob,Grep,"
     "Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),"
     "Bash(git merge:*),Bash(git add:*),Bash(gh pr view:*),Bash(gh pr diff:*),"
-    "Bash(python3 *ship/scripts/track.py events *)"
+    "Bash(python3 *deliver/scripts/track.py events *)"
 )
 DEFAULT_AGENT_COMMANDS = {
     "claude": ["claude", "-p", "{prompt}", "--permission-mode", "acceptEdits",
@@ -1102,7 +1102,7 @@ def cmd_take(args):
             ui.ok(f"Applied the uncommitted changes to {ui.path(target)}")
         drop_prep(pr)
         pr.pop("attention", None)
-    ui.done(f"Review the changes in {ui.path(target)}, then /ship")
+    ui.done(f"Review the changes in {ui.path(target)}, then /deliver")
     return EXIT_OK
 
 

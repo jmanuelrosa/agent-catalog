@@ -76,7 +76,7 @@ Always edit the registry via a python3 round-trip with `json.dump(..., indent=2)
 
 ## Groups vocabulary
 
-Artifact tags come from the controlled vocabulary in `docs/skill-registry.md`, in facet order: discipline, persona, technology, topic.
+Artifact tags come from the controlled vocabulary in `skill-registry.md`, in facet order: discipline, persona, technology, topic.
 Reuse an existing tag before coining one; the tooling treats groups as opaque, so no code change is needed either way.
 Coining is legitimate when the fleet already carries the tag: add it to the matching facet list in the registry documentation as part of the same change.
 Bundle tags live only in the registry; their paired skills carry no group list.

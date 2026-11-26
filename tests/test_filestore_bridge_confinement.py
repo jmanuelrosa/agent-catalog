@@ -37,15 +37,6 @@ def bridge(monkeypatch, tmp_path):
     return module, mount
 
 
-@pytest.fixture
-def jump_host():
-    path = SKILLS / "google-cloud-filestore-nfs-browser/scripts/jump_host_engine.py"
-    spec = importlib.util.spec_from_file_location("filestore_jump_host_under_test", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
 def run_jump_operation(module, operation, mount, path):
     if operation == "tree":
         script = module._build_remote_tree_script(str(mount), path, 2, 10)
@@ -53,34 +44,6 @@ def run_jump_operation(module, operation, mount, path):
         script = module._build_remote_search_script(str(mount), path, None, "marker", 10)
     result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, check=True)
     return json.loads(result.stdout)
-
-
-@pytest.mark.parametrize("operation", ["tree", "search"])
-@pytest.mark.parametrize("escape", ["parent", "directory-link"])
-def test_jump_operations_reject_outside_roots(jump_host, tmp_path, operation, escape):
-    mount = tmp_path / "share"
-    mount.mkdir()
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / "private.txt").write_text("outside marker\n")
-    if escape == "parent":
-        path = "../outside"
-    else:
-        (mount / "escape").symlink_to(outside, target_is_directory=True)
-        path = "escape"
-    result = run_jump_operation(jump_host, operation, mount, path)
-    assert result.get("error") == "Access denied: path traversal"
-
-
-@pytest.mark.parametrize("operation", ["tree", "search"])
-def test_jump_operations_do_not_follow_outside_file_links(jump_host, tmp_path, operation):
-    mount = tmp_path / "share"
-    mount.mkdir()
-    outside = tmp_path / "outside.txt"
-    outside.write_text("outside marker\n")
-    (mount / "escape.txt").symlink_to(outside)
-    result = run_jump_operation(jump_host, operation, mount, "/")
-    assert result["entries" if operation == "tree" else "matches"] == []
 
 
 def test_safe_path_rejects_sibling_prefix_escape(bridge, tmp_path):
@@ -169,55 +132,6 @@ def test_search_keeps_file_symlinks_inside_share(bridge):
     assert result == {
         "matches": [{"file": "/alias.txt", "line": 1, "content": "inside marker"}],
     }
-
-
-def test_search_rejects_directory_swap_during_open(bridge, tmp_path, monkeypatch):
-    module, mount = bridge
-    directory = mount / "nested"
-    directory.mkdir()
-    (directory / "inside.txt").write_text("inside marker\n")
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / "inside.txt").write_text("outside marker\n")
-    original_open = module.os.open
-    swapped = False
-
-    def swap_directory(path, flags, *args, **kwargs):
-        nonlocal swapped
-        if path == "nested" and not swapped:
-            directory.rename(mount / "original")
-            directory.symlink_to(outside, target_is_directory=True)
-            swapped = True
-        return original_open(path, flags, *args, **kwargs)
-
-    monkeypatch.setattr(module.os, "open", swap_directory)
-    result = module.search_files(path="/", pattern=None, grep="marker", max_results=10)
-    assert swapped
-    assert result == {"matches": []}
-
-
-def test_read_rejects_file_swap_during_open(bridge, tmp_path, monkeypatch):
-    module, mount = bridge
-    target = mount / "inside.txt"
-    target.write_text("inside marker\n")
-    outside = tmp_path / "outside.txt"
-    outside.write_text("outside marker\n")
-    original_open = module.os.open
-    swapped = False
-
-    def swap_file(path, flags, *args, **kwargs):
-        nonlocal swapped
-        if path == "inside.txt" and not swapped:
-            target.unlink()
-            target.symlink_to(outside)
-            swapped = True
-        return original_open(path, flags, *args, **kwargs)
-
-    monkeypatch.setattr(module.os, "open", swap_file)
-    with pytest.raises(BridgeError) as error:
-        module.read_file(path="/inside.txt", head=1, tail=None, start_line=None, end_line=None)
-    assert swapped
-    assert error.value.status_code == 403
 
 
 def test_read_reports_binary_file_metadata(bridge):

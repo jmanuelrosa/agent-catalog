@@ -184,6 +184,13 @@ def execute(stubs, project, plan, *extra):
 # The three worked examples the skill documented before the derivation moved here.
 
 
+def test_the_drafting_diff_stops_at_the_byte_budget_and_says_what_it_dropped():
+    diff = "".join(f"diff --git a/f{i} b/f{i}\n+{'x' * 500}\n" for i in range(20))
+    out = context.cap_per_file(diff, 250, 3000)
+    assert 0 < out.count("diff --git ") < 20
+    assert "more files omitted" in out
+
+
 def test_a_feature_branch_with_a_jira_key_becomes_a_feat_title():
     """Given a feature branch carrying a Jira key, When the title is derived, Then
     the type is feat, the scope is the package and the key is a suffix."""
