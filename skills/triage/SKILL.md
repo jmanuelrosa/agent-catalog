@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Decide what an incoming request deserves - automate, spec, clarify, or park - after reading the code it touches. Takes a Jira key, a GitHub or GitLab issue, a Slack thread, or a Sentry short id handed over by a watcher. Use when asked to triage a ticket, issue or thread, or what to do with a request. Read-only; it routes and drafts, it never fixes, implements or posts.
+description: "[deprecated] No replacement in the work bundle; start a ticket with lets-work. Decide what an incoming request deserves - automate, spec, clarify, or park - after reading the code it touches. Takes a Jira key, a GitHub or GitLab issue, a Slack thread, or a Sentry short id handed over by a watcher. Use when asked to triage a ticket, issue or thread, or what to do with a request. Read-only; it routes and drafts, it never fixes, implements or posts."
 argument-hint: "<PROJ-123 | gh-456 | 456 | issue or MR URL | Slack thread link | Sentry issue id>"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: strategy-checker
-description: Product Team alignment judge - reads an opportunity brief against docs/strategy/strategy.md and docs/strategy/okrs.md and returns a blunt verdict naming the bet/OKR it serves, or "none - recommend kill". Use ONLY from /0-refine-idea; it writes nothing, its final message IS the verdict, pasted verbatim into the brief.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team alignment judge - reads an opportunity brief against docs/strategy/strategy.md and docs/strategy/okrs.md and returns a blunt verdict naming the bet/OKR it serves, or \"none - recommend kill\". Use ONLY from /0-refine-idea; it writes nothing, its final message IS the verdict, pasted verbatim into the brief."
 tools: Read, Glob, Grep
 model: opus
 effort: high

@@ -1,6 +1,6 @@
 ---
 name: setup-strategy
-description: One-time Product Team foundation - interviews you for vision, bets, non-bets, and OKRs (optionally seeded by an /idea-refine ideation session when you arrive with a raw idea), then scaffolds docs/strategy/ including product-team.yml, docs/LEARNINGS.md, CODEOWNERS, and a three-line CLAUDE.md pointer.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). One-time Product Team foundation - interviews you for vision, bets, non-bets, and OKRs (optionally seeded by an /idea-refine ideation session when you arrive with a raw idea), then scaffolds docs/strategy/ including product-team.yml, docs/LEARNINGS.md, CODEOWNERS, and a three-line CLAUDE.md pointer."
 argument-hint: "[guidance or revision notes]"
 model: anthropic/claude-sonnet-5
 disable-model-invocation: true

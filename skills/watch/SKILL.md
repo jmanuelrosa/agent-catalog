@@ -1,6 +1,6 @@
 ---
 name: watch
-description: A recurring, report-only sweep of one signal source, meant to be scheduled - `sentry` (new and regressed production errors, routed through triage) or `janitor` (dead code, unused dependencies, and agent-instruction workarounds a newer model no longer needs). Use when asked to watch production errors, run the janitor, or set up a recurring sweep. Writes one report outside the repo; files nothing, posts nothing, edits no source.
+description: "[deprecated] No replacement; depends on triage, which is deprecated. A recurring, report-only sweep of one signal source, meant to be scheduled - `sentry` (new and regressed production errors, routed through triage) or `janitor` (dead code, unused dependencies, and agent-instruction workarounds a newer model no longer needs). Use when asked to watch production errors, run the janitor, or set up a recurring sweep. Writes one report outside the repo; files nothing, posts nothing, edits no source."
 argument-hint: "sentry | janitor"
 ---
 

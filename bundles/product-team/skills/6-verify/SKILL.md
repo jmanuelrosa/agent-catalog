@@ -1,6 +1,6 @@
 ---
 name: 6-verify
-description: "Product Team stage 6 - runs pt.py check for the mechanical Definition of Ready items, judges only the four a script cannot decide, and writes the PASS/FAIL report that blocks stage 7. Verifier only, never fixes. No gate."
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team stage 6 - runs pt.py check for the mechanical Definition of Ready items, judges only the four a script cannot decide, and writes the PASS/FAIL report that blocks stage 7. Verifier only, never fixes. No gate."
 argument-hint: "[initiative slug, if not inferable from the branch]"
 disable-model-invocation: true
 model: anthropic/claude-sonnet-5

@@ -1,0 +1,16 @@
+{
+  "name": "work",
+  "description": "A file-backed workflow from RFC to merged PR: sources, RFC, atomic specs, tickets, subtasks, build, review rounds and triage, each a small skill that reads and writes a local work directory so any session resumes from disk. Not for: committing, pushing or publishing (ship, commit, pr), or reviewing someone else's PR.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jose Manuel Rosa",
+    "email": "josemanuel.rosamoncayo@gmail.com"
+  },
+  "requires": {
+    "skills": [
+      "research",
+      "grilling",
+      "domain-modeling"
+    ]
+  }
+}

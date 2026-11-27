@@ -1,6 +1,6 @@
 ---
 name: 0-refine-idea
-description: "Product Team stage 0 - turns a raw idea into an opportunity brief: creates the initiative branch and folder, interviews you, runs the strategy-checker, and opens Gate 0 (kill or proceed)."
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team stage 0 - turns a raw idea into an opportunity brief: creates the initiative branch and folder, interviews you, runs the strategy-checker, and opens Gate 0 (kill or proceed)."
 argument-hint: "\"<raw idea>\" (or the slug of an existing initiative to revise)"
 model: anthropic/claude-sonnet-5
 disable-model-invocation: true

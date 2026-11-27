@@ -1,6 +1,6 @@
 ---
 name: 1-research
-description: Product Team stage 1 - fans out the configured researchers (competitive, user evidence, market sizing) in parallel over an approved brief and synthesizes 01-research/summary.md with confidence levels. No gate; feeds Gate 1.
+description: "[deprecated] Superseded by the work bundle (lets-work, to-rfc, to-specs, to-tickets, to-build, to-review). Product Team stage 1 - fans out the configured researchers (competitive, user evidence, market sizing) in parallel over an approved brief and synthesizes 01-research/summary.md with confidence levels. No gate; feeds Gate 1."
 argument-hint: "[initiative slug, if not inferable from the branch]"
 model: opus
 disable-model-invocation: true

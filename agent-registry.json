@@ -61,7 +61,12 @@
         "architecture",
         "workflow"
       ],
-      "note": "Locally authored; answers needs-decision from recorded precedent, never Tier-1"
+      "note": "Locally authored; answers needs-decision from recorded precedent, never Tier-1",
+      "deprecated": {
+        "since": "2026-11-13",
+        "replaced_by": [],
+        "reason": "No replacement; decisions are recorded in each document's log"
+      }
     },
     {
       "name": "code-reviewer",
